@@ -159,6 +159,7 @@ export const Scn = ({ question }: IProps) => {
       renderRequestPanel={renderRequestPanel}
       onAskQuestion={onAskQuestion}
       question={question}
+      className={styles.container}
     />
   );
 };
