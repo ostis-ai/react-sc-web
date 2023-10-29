@@ -1,8 +1,3 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { App } from '@components/App';
-import { Provider } from 'react-redux';
-import { store } from '@store/index';
 import {
   LanguageProvider,
   ClientProvider,
@@ -10,6 +5,11 @@ import {
   TLanguage,
   ToastProvider,
 } from 'ostis-ui-lib';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { App } from '@components/App';
+import { store } from '@store/index';
 
 import './assets/styles/index.scss';
 import { client } from './api';

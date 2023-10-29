@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import { getHistory } from '@api/requests/userHistory';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
+import Logo from '@assets/images/Logo.svg';
 import Sections from '@assets/images/Sections.svg';
 import { Accordion } from '@components/Accordion';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
