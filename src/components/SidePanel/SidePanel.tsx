@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router';
 import { getHistory } from '@api/requests/userHistory';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
-import Logo from '@assets/images/Logo.svg';
 import Sections from '@assets/images/Sections.svg';
 import { Accordion } from '@components/Accordion';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
@@ -15,7 +14,11 @@ import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
 import { selectUser, setFormat } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
+import { IconButton } from '@components/IconButton';
 import styles from './SidePanel.module.scss';
+
+import AskAIButtonIcon from '@assets/images/AskAIButton.svg';
+import SCNButtonIcon from '@assets/images/SCNButton.svg';
 
 interface IProps {
   className?: string;
@@ -52,6 +55,13 @@ export const SidePanel: FC<IProps> = ({ className }) => {
       <div className={styles.sideBarContent}>
         <div className={styles.searchFieldWrap}>
           <SearchField className={styles.searchField} />
+        </div>
+        <div className={styles.switchModeButtonsWrapper}>
+          {[SCNButtonIcon, AskAIButtonIcon].map((ButtonIcon, index) => (
+            <button key={index} className={styles.switchModeButton}>
+              <ButtonIcon />
+            </button>
+          ))}
         </div>
         <div
           className={classNames(styles.accordionContent, {
