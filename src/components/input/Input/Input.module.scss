@@ -8,7 +8,7 @@
 
   width: 100%;
   height: 40px;
-  
+
   padding: 8px 16px;
 
   border: 2px solid $border-white;
@@ -16,7 +16,7 @@
 
   outline: none;
   cursor: text;
-  
+
   background-color: $white;
 
   &:hover {
@@ -62,7 +62,8 @@
   line-height: 23px;
   color: $dark-grey;
 
-  &:hover, &_focused {
+  &:hover,
+  &_focused {
     border: 1px solid $grey-blue;
   }
 

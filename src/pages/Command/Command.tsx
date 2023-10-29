@@ -1,3 +1,4 @@
+import { Spinner, useTranslate } from 'ostis-ui-lib';
 import { useCallback, useEffect, useState } from 'react';
 import { generatePath, useMatch, useNavigate } from 'react-router';
 import { appendHistoryItem } from '@api/requests/userHistory';
@@ -7,7 +8,6 @@ import { useDispatch, useErrorToast, useSelector } from '@hooks';
 import { selectArgAddrs } from '@store';
 import { selectUserAddr } from '@store/commonSlice';
 import { addRequest } from '@store/requestHistorySlice';
-import { Spinner, useTranslate } from 'ostis-ui-lib';
 
 import styles from './Command.module.scss';
 
@@ -54,7 +54,9 @@ const Command = () => {
 
     if (isAxiosError(cmdRes)) {
       setIsLoading(false);
-      return addError(translate({ ru: 'Не удалось выполнить запрос', en: `It's failed to get request` }));
+      return addError(
+        translate({ ru: 'Не удалось выполнить запрос', en: `It's failed to get request` }),
+      );
     }
 
     const question = cmdRes.data.question;
@@ -66,7 +68,9 @@ const Command = () => {
     if (!isLast) return;
 
     setIsLoading(false);
-    navigate(generatePath(routes.QUESTION, { format, question: String(question) }), { replace: true });
+    navigate(generatePath(routes.QUESTION, { format, question: String(question) }), {
+      replace: true,
+    });
   }, [addError, appendToHistory, args, dispatch, match, navigate, translate]);
 
   useEffect(() => {

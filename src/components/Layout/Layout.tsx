@@ -1,10 +1,11 @@
 import { FC, ReactNode } from 'react';
+import { Language } from '@components/Language';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
+import Logo from '@assets/images/Logo.svg';
 
 import styles from './Layout.module.scss';
-import { Language } from '@components/Language';
 
 export interface IProps {
   children?: ReactNode;
@@ -13,8 +14,13 @@ export interface IProps {
 export const Layout: FC<IProps> = ({ children }) => {
   return (
     <div className={styles.root}>
+      <div className={styles.logoWrapper}>
+        <Logo />
+      </div>
       <header className={styles.header}>
-        <Language />
+        <div className={styles.languageWrapper}>
+          <Language />
+        </div>
       </header>
       <SidePanelWrapper>
         <SidePanel className={styles.sideBar} />
