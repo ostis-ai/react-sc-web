@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { getHistory } from '@api/requests/userHistory';
@@ -16,9 +16,7 @@ import { selectUser, setFormat } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import { IconButton } from '@components/IconButton';
 import styles from './SidePanel.module.scss';
-
-import AskAIButtonIcon from '@assets/images/AskAIButton.svg';
-import SCNButtonIcon from '@assets/images/SCNButton.svg';
+import { SwitchMode } from './SwitchMode';
 
 interface IProps {
   className?: string;
@@ -56,13 +54,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
         <div className={styles.searchFieldWrap}>
           <SearchField className={styles.searchField} />
         </div>
-        <div className={styles.switchModeButtonsWrapper}>
-          {[SCNButtonIcon, AskAIButtonIcon].map((ButtonIcon, index) => (
-            <button key={index} className={styles.switchModeButton}>
-              <ButtonIcon />
-            </button>
-          ))}
-        </div>
+        <SwitchMode />
         <div
           className={classNames(styles.accordionContent, {
             [styles.accordionContent_userCanEdit]: !!user?.can_edit,
