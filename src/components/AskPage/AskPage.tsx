@@ -27,7 +27,7 @@ export const AskPage = () => {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.askMessage}>
-        <h1>
+        <h1 className={styles.message}>
           {translate({
             ru: 'Спросите что-нибудь и IMS найдет ответ! ',
             en: 'Ask anything and IMS will find the answer!',
@@ -44,9 +44,11 @@ export const AskPage = () => {
           );
         })}
       </div>
-      <div>
-        <input />
-        <button></button>
+      <div className={styles.dialogBox}>
+        <div>
+          <input />
+          <button></button>
+        </div>
       </div>
     </div>
   );
