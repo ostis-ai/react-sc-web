@@ -30,11 +30,11 @@ export const SwitchMode = () => {
         {activeLink === routes.MAIN ? <SCNButtonIconFocus /> : <SCNButtonIcon />}
       </Link>
       <Link
-        to={routes.ASK_AI_HOME}
+        to={routes.ASK_AI}
         className={styles.switchModeButton}
-        onClick={() => handleLinkClick(routes.ASK_AI_HOME)}
+        onClick={() => handleLinkClick(routes.ASK_AI)}
       >
-        {activeLink === routes.ASK_AI_HOME ? <AskAIButtonIconFocus /> : <AskAIButtonIcon />}
+        {activeLink === routes.ASK_AI ? <AskAIButtonIconFocus /> : <AskAIButtonIcon />}
       </Link>
     </div>
   );
