@@ -5,6 +5,7 @@ import { AskPage } from '@components/AskPage';
 import { routes, DEFAULT_COMMAND_PATH } from '@constants';
 import { Command } from '@pages/Command';
 import { Main } from '@pages/Main';
+import { AskMain } from '@pages/AskMain';
 import { Question } from '@pages/Question';
 
 export const Router = () => {
@@ -22,7 +23,16 @@ export const Router = () => {
           <Route index element={<Navigate to={DEFAULT_COMMAND_PATH} replace />} />
           <Route path={routes.COMMAND} element={<Command />} />
           <Route path={routes.QUESTION} element={<Question />} />
-          <Route path={routes.ASK_AI_HOME} element={<AskPage />} />
+        </Route>
+        <Route
+          path={routes.ASK_AI}
+          element={
+            <Layout>
+              <AskMain />
+            </Layout>
+          }
+        >
+          <Route index element={<AskPage />} />
         </Route>
       </Routes>
     </Suspense>
