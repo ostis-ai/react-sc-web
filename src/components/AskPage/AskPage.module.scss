@@ -7,8 +7,7 @@
 }
 
 .askMessage {
-  margin-top: 252px;
-  margin-bottom: 376px;
+  margin-top: 150px;
   display: flex;
   flex-direction: center;
   align-items: center;
@@ -23,12 +22,56 @@
   line-height: normal;
 }
 
+.suggestedQuestion {
+  margin-top: 176px;
+  display: flex;
+  width: 822px;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+.hintAskButton {
+  padding: 16px;
+  color: #454545;
+  font-family: Roboto;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border-radius: 10px;
+  border: none;
+  background: #f8f8f8;
+}
+
+.hintAskButton:hover {
+  background-color: #E8E8E8;
+}
+
 .dialogBox {
-    margin-top: 70px;
-    margin-bottom: 304px;
-    max-width: 1457px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 304px;
+  margin-top: 70px;
+  margin-bottom: 304px;
+  display: flex;
+  width: 1457px;
+  padding: 24px 29px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.dialogBoxInput {
+  width: 957px;
+  height: 58px;
+  border-radius: 10px;
+  border: 1px solid #ebebeb;
+  background: #fff;
+  padding-left: 29px;
+}
+
+
+.dialogBoxButton {
+  background: #fff;
+  border: none;
 }
