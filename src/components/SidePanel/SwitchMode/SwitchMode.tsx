@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import styles from './SwitchMode.module.scss';
 
 import AskAIButtonIcon from '@assets/images/AskAIButton.svg';
@@ -10,14 +8,15 @@ import SCNButtonIconFocus from '@assets/images/SCNButtonFocused.svg';
 
 import { Link } from 'react-router-dom';
 import { routes } from '@constants';
+import { selectActiveLink, setActiveLink } from '@store/activeLinkSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const SwitchMode = () => {
+  const dispatch = useDispatch();
 
-  // FIX: use url path as an active link
-  const [activeLink, setActiveLink] = useState<string>(routes.MAIN);
-
-  const handleLinkClick = (link: string) => {
-    setActiveLink(link);
+  const activeLink = useSelector(selectActiveLink);
+  const handleLinkClick = (newActiveLink: string) => {
+    dispatch(setActiveLink({ newActiveLink }));
   };
 
   return (
