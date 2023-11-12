@@ -4,8 +4,12 @@ import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
 import Logo from '@assets/images/Logo.svg';
+import { setActiveLink } from '@store/activeLinkSlice';
 
 import styles from './Layout.module.scss';
+import { Link } from 'react-router-dom';
+import { routes } from '@constants';
+import { useDispatch } from 'react-redux';
 
 export interface IProps {
   children?: ReactNode;
@@ -21,7 +25,9 @@ export const Layout: FC<IProps> = ({ children }) => {
   return (
     <div className={styles.root}>
       <div className={styles.logoWrapper}>
-        <Logo />
+        <Link to={routes.MAIN} onClick={handleLogoOnClick}>
+          <Logo />
+        </Link>
       </div>
       <header className={styles.header}>
         <div className={styles.languageWrapper}>

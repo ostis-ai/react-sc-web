@@ -1,4 +1,4 @@
-import { Outlet, } from 'react-router';
+import { Outlet } from 'react-router';
 import styles from './AskMain.module.scss';
 
 const Main = () => {
