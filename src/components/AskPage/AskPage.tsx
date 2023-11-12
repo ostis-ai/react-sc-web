@@ -1,5 +1,7 @@
 import { useTranslate } from 'ostis-ui-lib';
 
+import { ChangeEvent, useState } from 'react';
+
 import styles from './AskPage.module.scss';
 
 const hintButtons: { ru: string; en: string }[] = [
@@ -24,6 +26,11 @@ const hintButtons: { ru: string; en: string }[] = [
 export const AskPage = () => {
   const translate = useTranslate();
 
+  const [query, setQuery] = useState<string>();
+  const [placeholder, setPlaceholder] = useState<string>('🪄 Ask IMS');
+
+  const handleOnFocus = () => setPlaceholder('');
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value);
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.askMessage}>
@@ -45,7 +52,13 @@ export const AskPage = () => {
         })}
       </div>
       <div className={styles.dialogBox}>
-        <input className={styles.dialogBoxInput} />
+        <input
+          className={styles.dialogBoxInput}
+          placeholder={placeholder}
+          onFocus={handleOnFocus}
+          value={query}
+          onChange={handleOnChange}
+        />
 
         <button className={styles.dialogBoxButton}>
           <svg
