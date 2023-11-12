@@ -7,6 +7,7 @@ import { Command } from '@pages/Command';
 import { Main } from '@pages/Main';
 import { AskMain } from '@pages/AskMain';
 import { Question } from '@pages/Question';
+import { AskAnswer } from '@components/AskAnswer';
 
 export const Router = () => {
   return (

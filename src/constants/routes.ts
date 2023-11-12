@@ -4,3 +4,4 @@ export const QUESTION = '/q/:question/:format' as const;
 
 export const ASK_AI = '/ask' as const;
 export const ASK_AI_ANSWER = '/answer' as const;
+export const ASK_AI_QUESTION = '/question' as const;
