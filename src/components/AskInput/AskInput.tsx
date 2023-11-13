@@ -5,9 +5,10 @@ import styles from './AskInput.module.scss';
 interface IProps {
   onChange: (value: string) => void;
   onSubmit: () => void;
+  className?: string;
 }
 
-export const AskInput: FC<IProps> = ({ onChange, onSubmit }) => {
+export const AskInput: FC<IProps> = ({ onChange, onSubmit, className }) => {
   const [query, setQuery] = useState<string>('');
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -18,7 +19,7 @@ export const AskInput: FC<IProps> = ({ onChange, onSubmit }) => {
   const handleOnFocus = () => setPlaceholder('');
 
   return (
-    <>
+    <div className={`${className} ${styles.dialogBox}`}>
       <input
         className={styles.dialogBoxInput}
         placeholder={placeholder}
@@ -44,6 +45,6 @@ export const AskInput: FC<IProps> = ({ onChange, onSubmit }) => {
           />
         </svg>
       </button>
-    </>
+    </div>
   );
 };
