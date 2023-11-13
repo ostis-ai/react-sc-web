@@ -46,12 +46,12 @@ export const AskAnswer = () => {
   const translate = useTranslate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [query, setQuery] = useState<string>(state.query);
+  const [query, setQuery] = useState<string>();
 
   const onInputChange = (value: string) => setQuery(value);
   const onInputSubmit = async () => await fetchAnswerByQuery(query);
 
-  const fetchAnswerByQuery = async (query: string) => {
+  const fetchAnswerByQuery = async (query: string | undefined) => {
     if (!query) return;
 
     console.log(query);
@@ -76,7 +76,7 @@ export const AskAnswer = () => {
 
   // Initial request
   useEffect(() => {
-    fetchAnswerByQuery(query);
+    fetchAnswerByQuery(state.query);
   }, [state]);
 
   if (!state) return null;
@@ -85,10 +85,16 @@ export const AskAnswer = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      {historyState.history.map((entry) => (
-        <AskElement key={entry.query} {...entry} />
-      ))}
-      <AskInput onChange={onInputChange} onSubmit={onInputSubmit} />
+      <div className={styles.history}>
+        {historyState.history.map((entry) => (
+          <AskElement key={entry.query} {...entry} />
+        ))}
+      </div>
+      <AskInput
+        className={styles.inputQueryBar}
+        onChange={onInputChange}
+        onSubmit={onInputSubmit}
+      />
     </div>
   );
 };
