@@ -34,6 +34,7 @@ export const Router = () => {
           }
         >
           <Route index element={<AskPage />} />
+          <Route path={routes.ASK_AI_ANSWER} element={<AskAnswer />} />
         </Route>
       </Routes>
     </Suspense>
