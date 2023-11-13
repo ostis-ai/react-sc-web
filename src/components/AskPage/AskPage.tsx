@@ -1,8 +1,11 @@
 import { useTranslate } from 'ostis-ui-lib';
 
-import { ChangeEvent, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 import styles from './AskPage.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { routes } from '@constants';
+import { AskInput } from '@components/AskInput';
 
 const hintButtons: { ru: string; en: string }[] = [
   {
@@ -25,12 +28,16 @@ const hintButtons: { ru: string; en: string }[] = [
 
 export const AskPage = () => {
   const translate = useTranslate();
+  const navigate = useNavigate();
 
   const [query, setQuery] = useState<string>();
-  const [placeholder, setPlaceholder] = useState<string>('🪄 Ask IMS');
 
-  const handleOnFocus = () => setPlaceholder('');
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value);
+  const handleInputChange = (value: string) => setQuery(value);
+
+  const handleButtonClick = () => {
+    navigate(routes.ASK_AI_ANSWER, { state: { query }, replace: true });
+  };
+
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.askMessage}>
@@ -45,38 +52,22 @@ export const AskPage = () => {
         {hintButtons.map((translateText, index) => {
           const val = translate(translateText);
           return (
-            <button key={index} className={styles.hintAskButton}>
+            <button
+              key={index}
+              className={styles.hintAskButton}
+              onClick={() => {
+                console.log(val);
+                setQuery(val);
+                handleButtonClick();
+              }}
+            >
               {val}
             </button>
           );
         })}
       </div>
       <div className={styles.dialogBox}>
-        <input
-          className={styles.dialogBoxInput}
-          placeholder={placeholder}
-          onFocus={handleOnFocus}
-          value={query}
-          onChange={handleOnChange}
-        />
-
-        <button className={styles.dialogBoxButton}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="36"
-            height="36"
-            viewBox="0 0 36 36"
-            fill="none"
-          >
-            <path
-              d="M7.49997 18L6.59397 9.84449C6.33447 7.51049 8.73747 5.79599 10.86 6.80249L28.776 15.2895C31.0635 16.3725 31.0635 19.6275 28.776 20.7105L10.86 29.1975C8.73747 30.2025 6.33447 28.4895 6.59397 26.1555L7.49997 18ZM7.49997 18H18"
-              stroke="#5896C0"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
+        <AskInput onChange={handleInputChange} onSubmit={handleButtonClick} />
       </div>
     </div>
   );
