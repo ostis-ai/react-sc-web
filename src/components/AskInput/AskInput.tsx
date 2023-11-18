@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, KeyboardEvent, useState } from 'react';
 
 import styles from './AskInput.module.scss';
 
@@ -15,16 +15,20 @@ export const AskInput: FC<IProps> = ({ onChange, onSubmit, className }) => {
     onChange(e.target.value);
   };
 
-  const [placeholder, setPlaceholder] = useState<string>('🪄 Ask IMS');
-  const handleOnFocus = () => setPlaceholder('');
+  const handleOnKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == 'Enter') {
+      e.preventDefault();
+      onSubmit();
+    }
+  };
 
   return (
     <div className={`${className} ${styles.dialogBox}`}>
       <input
         className={styles.dialogBoxInput}
-        placeholder={placeholder}
-        onFocus={handleOnFocus}
+        placeholder={'🪄 Ask IMS'}
         value={query}
+        onKeyDown={handleOnKeyDown}
         onChange={handleOnChange}
       />
 

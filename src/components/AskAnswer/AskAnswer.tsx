@@ -1,8 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
-import { useErrorToast } from '@hooks/useErrorToast';
-import { Spinner, useTranslate } from 'ostis-ui-lib';
+import { Spinner } from 'ostis-ui-lib';
 import { SPINER_COLOR } from '@constants';
 import { AskElement } from './AskElement';
 
@@ -42,8 +41,6 @@ export const AskAnswer = () => {
 
   const [historyState, dispatch] = useReducer(historyReducer, { history: [] });
 
-  const addError = useErrorToast();
-  const translate = useTranslate();
   const [isLoading, setIsLoading] = useState(false);
 
   const [query, setQuery] = useState<string>();
@@ -54,29 +51,22 @@ export const AskAnswer = () => {
   const fetchAnswerByQuery = async (query: string | undefined) => {
     if (!query) return;
 
-    console.log(query);
-
     setIsLoading(true);
 
     try {
       const resp = await axios.get(`https://jsonplaceholder.typicode.com/posts/${query}`);
-      const data = resp.data;
-      dispatch({ type: 'ADD', payload: { query: query, answer: data } });
+      dispatch({ type: 'ADD', payload: { query: query, answer: resp.data } });
     } catch (error) {
-      addError(
-        translate({
-          ru: 'Не удалось выполнить запрос',
-          en: "It's failed to fetch the external API",
-        }),
-      );
+      dispatch({ type: 'ADD', payload: { query: query, answer: 'Failed to fetch data' } });
     }
 
     setIsLoading(false);
   };
 
-  // Initial request
   useEffect(() => {
-    fetchAnswerByQuery(state.query);
+    if (state) {
+      fetchAnswerByQuery(state.query);
+    }
   }, [state]);
 
   if (!state) return null;
