@@ -7,7 +7,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: center;
 }
 
 .history {
@@ -15,5 +14,8 @@
 }
 
 .inputQueryBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 1em;
 }

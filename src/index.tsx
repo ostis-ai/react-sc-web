@@ -27,19 +27,17 @@ const getDefaultLanguage = () => {
 };
 
 root.render(
-  <StrictMode>
-    <LanguageProvider defaultLanguage={getDefaultLanguage()}>
-      <Provider store={store}>
-        <BrowserRouter basename={BASE_PATH}>
-          <ClientProvider client={client}>
-            <ScUtilsProvider>
-              <ToastProvider>
-                <App />
-              </ToastProvider>
-            </ScUtilsProvider>
-          </ClientProvider>
-        </BrowserRouter>
-      </Provider>
-    </LanguageProvider>
-  </StrictMode>,
+  <LanguageProvider defaultLanguage={getDefaultLanguage()}>
+    <Provider store={store}>
+      <BrowserRouter basename={BASE_PATH}>
+        <ClientProvider client={client}>
+          <ScUtilsProvider>
+            <ToastProvider>
+              <App />
+            </ToastProvider>
+          </ScUtilsProvider>
+        </ClientProvider>
+      </BrowserRouter>
+    </Provider>
+  </LanguageProvider>,
 );
