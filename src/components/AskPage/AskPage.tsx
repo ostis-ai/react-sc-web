@@ -1,8 +1,9 @@
 import { useTranslate } from 'ostis-ui-lib';
 
-import { MouseEvent, useState } from 'react';
+import { useState, useCallback } from 'react';
 
 import styles from './AskPage.module.scss';
+
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
 import { AskInput } from '@components/AskInput';
@@ -34,9 +35,9 @@ export const AskPage = () => {
 
   const handleInputChange = (value: string) => setQuery(value);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = useCallback(() => {
     navigate(routes.ASK_AI_ANSWER, { state: { query }, replace: true });
-  };
+  }, [query]);
 
   return (
     <div className={styles.pageWrapper}>
