@@ -9,6 +9,8 @@ export const getWhatIsIMS = async () => {
     'knowledge_base_IMS',
   );
 
+  console.log(uiMenuSummary, knowledgeBaseIMS)
+
   const commandResult = await doCommand(uiMenuSummary.value, knowledgeBaseIMS.value);
 
   if (isAxiosError(commandResult)) return null;
@@ -16,20 +18,15 @@ export const getWhatIsIMS = async () => {
   const questionNode = commandResult.data.question;
   const answer = await scUtils.getAnswer(new ScAddr(questionNode));
 
+  console.log(answer)
+
   if (!answer) return null;
 
-  const linkAlias = '_link';
-  const linkTemplate = new ScTemplate();
-  linkTemplate.triple(answer, ScType.EdgeAccessVarPosPerm, [ScType.LinkVar, linkAlias]);
-
-  const linkRes = await client.templateSearch(linkTemplate);
-
-  if (!linkRes.length) return null;
-
-  const linkAddr = linkRes[0].get(linkAlias);
-
-  const contents = await client.getLinkContents([linkAddr]);
+  const contents = await client.getLinkContents([answer]);
   const content = contents[0].data;
+
+  console.log(String(content))
 
   return String(content);
 };
+
