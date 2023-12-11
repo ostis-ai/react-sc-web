@@ -8,7 +8,6 @@ export const appendHistoryItem = async (itemAddr: number, userAddr: number) => {
     'ui_menu_view_add_action_to_user_history',
   );
 
-
   return await doCommand(uiMenuViewAddActionToUserHistory.value, userAddr, itemAddr);
 };
 

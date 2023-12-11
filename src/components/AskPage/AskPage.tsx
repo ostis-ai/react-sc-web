@@ -7,23 +7,24 @@ import styles from './AskPage.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
 import { AskInput } from '@components/AskInput';
+import { getWhatIsIMS } from '@api/requests/getWhatIsIMS';
 
-const hintButtons: { ru: string; en: string }[] = [
+const hintButtons: { text: { ru: string; en: string }; onClick: () => Promise<string | null> }[] = [
   {
-    ru: 'Что ты можешь?',
-    en: 'What can you do?',
+    text: { ru: 'Что ты можешь?', en: 'What can you do?' },
+    onClick: async () => null,
   },
   {
-    ru: 'Что такое IMS?',
-    en: 'What is IMS',
+    text: { ru: 'Что такое IMS?', en: 'What is IMS' },
+    onClick: getWhatIsIMS,
   },
   {
-    ru: 'Что такое граф?',
-    en: 'What is a graph?',
+    text: { ru: 'Что такое граф?', en: 'What is a graph?' },
+    onClick: async () => null,
   },
   {
-    ru: 'Расскажи про историю развития IMS',
-    en: 'Tell me about the history of IMS ',
+    text: { ru: 'Расскажи про историю развития IMS', en: 'Tell me about the history of IMS ' },
+    onClick: async () => null,
   },
 ];
 
@@ -50,17 +51,13 @@ export const AskPage = () => {
         </h1>
       </div>
       <div className={styles.suggestedQuestion}>
-        {hintButtons.map((translateText, index) => {
-          const val = translate(translateText);
+        {hintButtons.map((button, index) => {
+          const val = translate(button.text);
           return (
             <button
               key={index}
               className={styles.hintAskButton}
-              onClick={() => {
-                console.log(val);
-                setQuery(val);
-                handleButtonClick();
-              }}
+              onClick={button.onClick}
             >
               {val}
             </button>
