@@ -7,26 +7,13 @@ import styles from './AskPage.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
 import { AskInput } from '@components/AskInput';
-import { getWhatIsIMS } from '@api/requests/getWhatIsIMS';
+import { hintButtons } from 'src/constants/hintButtons';
+import { transferableAbortSignal } from 'util';
 
-const hintButtons: { text: { ru: string; en: string }; onClick: () => Promise<string | null> }[] = [
-  {
-    text: { ru: 'Что ты можешь?', en: 'What can you do?' },
-    onClick: async () => null,
-  },
-  {
-    text: { ru: 'Что такое IMS?', en: 'What is IMS' },
-    onClick: getWhatIsIMS,
-  },
-  {
-    text: { ru: 'Что такое граф?', en: 'What is a graph?' },
-    onClick: async () => null,
-  },
-  {
-    text: { ru: 'Расскажи про историю развития IMS', en: 'Tell me about the history of IMS ' },
-    onClick: async () => null,
-  },
-];
+interface NavigateState {
+  query?: string;
+  isHintButton: boolean;
+}
 
 export const AskPage = () => {
   const translate = useTranslate();
@@ -36,9 +23,9 @@ export const AskPage = () => {
 
   const handleInputChange = (value: string) => setQuery(value);
 
-  const handleButtonClick = useCallback(() => {
-    navigate(routes.ASK_AI_ANSWER, { state: { query }, replace: true });
-  }, [query]);
+  const handleButtonClick = (state: NavigateState) => {
+    navigate(routes.ASK_AI_ANSWER, { state, replace: true });
+  };
 
   return (
     <div className={styles.pageWrapper}>
@@ -52,20 +39,25 @@ export const AskPage = () => {
       </div>
       <div className={styles.suggestedQuestion}>
         {hintButtons.map((button, index) => {
-          const val = translate(button.text);
+          const translatedText = translate(button.text);
           return (
             <button
               key={index}
               className={styles.hintAskButton}
-              onClick={button.onClick}
+              onClick={() => {
+                handleButtonClick({ query: translatedText, isHintButton: true });
+              }}
             >
-              {val}
+              {translatedText}
             </button>
           );
         })}
       </div>
       <div className={styles.dialogBox}>
-        <AskInput onChange={handleInputChange} onSubmit={handleButtonClick} />
+        <AskInput
+          onChange={handleInputChange}
+          onSubmit={() => handleButtonClick({ query, isHintButton: false })}
+        />
       </div>
     </div>
   );

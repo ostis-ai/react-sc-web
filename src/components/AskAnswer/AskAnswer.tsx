@@ -1,12 +1,21 @@
+import axios from 'axios';
+
 import { useLocation } from 'react-router-dom';
 import { useEffect, useReducer, useState } from 'react';
-import axios from 'axios';
-import { Spinner } from 'ostis-ui-lib';
+
+import { Spinner, useLanguage } from 'ostis-ui-lib';
 import { SPINER_COLOR } from '@constants';
 import { AskElement } from './AskElement';
 
 import styles from './AskAnswer.module.scss';
 import { AskInput } from '@components/AskInput';
+import { getDescriptionOfElement } from '@api/requests/getDescription';
+import { getHintButtonHandler } from 'src/constants/hintButtons';
+
+interface NavigateState {
+  query?: string;
+  isHintButton: boolean;
+}
 
 interface ElementPayload {
   query: string;
@@ -37,7 +46,9 @@ const historyReducer = (state: State, action: Action): State => {
 };
 
 export const AskAnswer = () => {
-  const { state } = useLocation();
+  const state = useLocation().state as NavigateState;
+
+  const lang = useLanguage();
 
   const [historyState, dispatch] = useReducer(historyReducer, { history: [] });
 
@@ -48,23 +59,42 @@ export const AskAnswer = () => {
   const onInputChange = (value: string) => setQuery(value);
   const onInputSubmit = async () => await fetchAnswerByQuery(query);
 
+  const isDescribeQuery = (query: string): boolean => {
+    const starts =
+      lang === 'ru'
+        ? ['Что это', 'Что это такое', 'Расскажи про']
+        : ['What is', 'Tell me about', 'Describe'];
+    return starts.some((start) => query.startsWith(start));
+  };
+
   const fetchAnswerByQuery = async (query: string | undefined) => {
+    console.log(query);
     if (!query) return;
 
     setIsLoading(true);
 
-    try {
-      const resp = await axios.get(`https://jsonplaceholder.typicode.com/posts/${query}`);
-      dispatch({ type: 'ADD', payload: { query: query, answer: resp.data } });
-    } catch (error) {
-      dispatch({ type: 'ADD', payload: { query: query, answer: 'Failed to fetch data' } });
+    let answer: string | null = null;
+
+    if (state.isHintButton) {
+      const handler = getHintButtonHandler(lang, state.query!);
+      console.log(handler);
+      answer = await handler();
+    }
+    //    } else if (isDescribeQuery(state.query)) {
+    //      answer = await getDescriptionOfElement(state.query);
+    //    }
+
+    if (answer) {
+      dispatch({ type: 'ADD', payload: { query, answer } });
+    } else {
+      dispatch({ type: 'ADD', payload: { query, answer: 'Failed to fetch data' } });
     }
 
     setIsLoading(false);
   };
 
   useEffect(() => {
-    if (state) {
+    if (state.query) {
       fetchAnswerByQuery(state.query);
     }
   }, [state]);
