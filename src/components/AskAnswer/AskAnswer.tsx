@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { useTranslate } from 'ostis-ui-lib';
+
 import { useLocation } from 'react-router-dom';
 import { ChangeEvent, useEffect, useReducer, useState, useRef } from 'react';
 
@@ -20,7 +22,7 @@ interface NavigateState {
 
 interface ElementPayload {
   query: string;
-  answer: string;
+  answer: any;
 }
 
 interface State {
@@ -59,6 +61,8 @@ export const AskAnswer = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const translate = useTranslate();
+
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
   const onInputSubmit = async () => await fetchAnswerByQuery(query);
 
@@ -85,7 +89,16 @@ export const AskAnswer = () => {
     if (answer) {
       dispatch({ type: 'ADD', payload: { query, answer } });
     } else {
-      dispatch({ type: 'ADD', payload: { query, answer: 'Failed to fetch data' } });
+      dispatch({
+        type: 'ADD',
+        payload: {
+          query,
+          answer: translate({
+            ru: 'К сожалению, в настоящее время нет информации, соответствующей вашему вопросу в базе знаний. Приносим извинения за неудобства.',
+            en: 'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
+          }),
+        },
+      });
     }
   };
 

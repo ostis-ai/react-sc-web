@@ -14,7 +14,7 @@ export const AskElement: FC<IProps> = ({ query, answer }) => {
       <div className={styles.elementQuery}>{query}</div>
       <div className={styles.elementAnswer}>
         <div>{<AskAIMessageIcon />}</div>
-        <div>{JSON.stringify(answer)}</div>
+        <div>{answer}</div>
       </div>
     </div>
   );
