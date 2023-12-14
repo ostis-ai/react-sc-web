@@ -20,17 +20,6 @@ interface IProps {
   className?: string;
 }
 
-const dummyUser = {
-  login: 'adm2',
-  sc_addr: 1111,
-  is_admin: 0,
-  can_edit: 0,
-  avatar: '#6CBF97',
-  has_entered: false,
-  first_time: 0,
-  public_url: '',
-};
-
 export const SidePanel: FC<IProps> = ({ className }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -85,7 +74,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                 className={styles.errorBoundary}
               >
-                {<DecompositionPanel user={dummyUser} />}
+                {<DecompositionPanel />}
               </ErrorBoundary>
             </Accordion>
           </div>
