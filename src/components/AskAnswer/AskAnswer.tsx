@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { useLocation } from 'react-router-dom';
-import { useEffect, useReducer, useState } from 'react';
+import { ChangeEvent, useEffect, useReducer, useState } from 'react';
 
 import { Spinner, useLanguage } from 'ostis-ui-lib';
 import { SPINER_COLOR } from '@constants';
@@ -9,8 +9,9 @@ import { AskElement } from './AskElement';
 
 import styles from './AskAnswer.module.scss';
 import { AskInput } from '@components/AskInput';
-import { getDescriptionOfElement } from '@api/requests/getDescription';
+
 import { getHintButtonHandler } from 'src/constants/hintButtons';
+import { getDescriptionById } from '@api/requests/getDescription';
 
 interface NavigateState {
   query?: string;
@@ -56,7 +57,7 @@ export const AskAnswer = () => {
 
   const [query, setQuery] = useState<string>();
 
-  const onInputChange = (value: string) => setQuery(value);
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
   const onInputSubmit = async () => await fetchAnswerByQuery(query);
 
   const isDescribeQuery = (query: string): boolean => {
@@ -68,29 +69,22 @@ export const AskAnswer = () => {
   };
 
   const fetchAnswerByQuery = async (query: string | undefined) => {
-    console.log(query);
     if (!query) return;
-
-    setIsLoading(true);
 
     let answer: string | null = null;
 
     if (state.isHintButton) {
-      const handler = getHintButtonHandler(lang, state.query!);
-      console.log(handler);
+      const handler = getHintButtonHandler(lang, query!);
       answer = await handler();
+    } else {
+      answer = await getDescriptionById(query);
     }
-    //    } else if (isDescribeQuery(state.query)) {
-    //      answer = await getDescriptionOfElement(state.query);
-    //    }
 
     if (answer) {
       dispatch({ type: 'ADD', payload: { query, answer } });
     } else {
       dispatch({ type: 'ADD', payload: { query, answer: 'Failed to fetch data' } });
     }
-
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -106,8 +100,8 @@ export const AskAnswer = () => {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.history}>
-        {historyState.history.map((entry) => (
-          <AskElement key={entry.query} {...entry} />
+        {historyState.history.map((entry, idx) => (
+          <AskElement key={idx} {...entry} />
         ))}
       </div>
       <AskInput
