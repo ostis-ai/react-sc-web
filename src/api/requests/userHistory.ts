@@ -16,7 +16,7 @@ export const getHistory = async (userAddr: number) => {
     'ui_menu_view_get_user_action_history',
   );
 
-  const res = await doCommand(uiMenuViewGetUserActionHistory.value, userAddr);
+  const res = await doCommand(uiMenuViewGetUserActionHistory.value);
 
   if (isAxiosError(res)) return null;
 
