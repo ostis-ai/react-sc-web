@@ -26,14 +26,16 @@ const getLanguage = async (lang: TLanguage) => {
 export const getDecomposition = async (lang: TLanguage): Promise<Decomposition | null> => {
   const LEVEL = '10';
 
-  const { imsStartElement, uiMenuViewGetDecomposition } = await scUtils.findKeynodes(
-    'ims_start_element',
-    'ui_menu_view_get_decomposition',
-  );
+  const { uiStartScElement, uiMenuViewGetDecomposition, nrelSectionDecomposition } =
+    await scUtils.findKeynodes(
+      'ui_start_sc_element',
+      'ui_menu_view_get_decomposition',
+      'nrel_section_decomposition',
+    );
 
   const subjectDomainAlias = '_subjDomain';
   const subjectDomainTemplate = new ScTemplate();
-  subjectDomainTemplate.triple(imsStartElement, ScType.EdgeAccessVarPosPerm, [
+  subjectDomainTemplate.triple(uiStartScElement, ScType.EdgeAccessVarPosPerm, [
     ScType.NodeVar,
     subjectDomainAlias,
   ]);
@@ -56,6 +58,7 @@ export const getDecomposition = async (lang: TLanguage): Promise<Decomposition |
     subjDomainAddr.value,
     linkAddr.value,
     foundLang.value,
+    nrelSectionDecomposition.value,
   );
 
   //Добавить вызов тоста

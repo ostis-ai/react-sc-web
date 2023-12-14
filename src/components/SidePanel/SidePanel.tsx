@@ -74,7 +74,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                 className={styles.errorBoundary}
               >
-                <DecompositionPanel user={user} />
+                {<DecompositionPanel />}
               </ErrorBoundary>
             </Accordion>
           </div>
