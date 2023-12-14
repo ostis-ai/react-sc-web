@@ -62,6 +62,7 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
       const preventKeys = ['Enter'];
       if (preventKeys.includes(code)) {
         e.preventDefault();
+        resetInput();
       }
     };
 
@@ -90,6 +91,15 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
       en: '🪄 Ask IMS',
     });
 
+    const handleSubmit = () => {
+      onSubmit();
+      resetInput();
+    };
+
+    const resetInput = () => {
+      setSearchValue('');
+    };
+
     return (
       <div
         className={cn(className, styles.inputWrapper)}
@@ -107,7 +117,7 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
           onKeyDown={onInputKeyDown}
           onChange={onInputChange}
         />
-        <button className={styles.dialogBoxButton} onClick={onSubmit}>
+        <button className={styles.dialogBoxButton} onClick={handleSubmit}>
           <AskAIInputButton />
         </button>
       </div>
