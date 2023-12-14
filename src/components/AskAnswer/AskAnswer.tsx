@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { useLocation } from 'react-router-dom';
-import { ChangeEvent, useEffect, useReducer, useState } from 'react';
+import { ChangeEvent, useEffect, useReducer, useState, useRef } from 'react';
 
 import { Spinner, useLanguage } from 'ostis-ui-lib';
 import { SPINER_COLOR } from '@constants';
@@ -57,6 +57,8 @@ export const AskAnswer = () => {
 
   const [query, setQuery] = useState<string>();
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
   const onInputSubmit = async () => await fetchAnswerByQuery(query);
 
@@ -93,6 +95,16 @@ export const AskAnswer = () => {
     }
   }, [state]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [historyState]);
+
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  };
+
   if (!state) return null;
 
   if (isLoading) return <Spinner className={styles.spinner} appearance={SPINER_COLOR} />;
@@ -103,6 +115,7 @@ export const AskAnswer = () => {
         {historyState.history.map((entry, idx) => (
           <AskElement key={idx} {...entry} />
         ))}
+        <div ref={scrollRef} />
       </div>
       <AskInput
         className={styles.inputQueryBar}
