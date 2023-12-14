@@ -2,6 +2,8 @@ import { ChangeEventHandler, FC } from 'react';
 import BackArrow from '@assets/images/backArrow.svg';
 import { useScNavigation } from '@hooks/useScNavigation';
 
+import SearchIcon from '@assets/images/Search.svg';
+
 import styles from './ManagmentHeader.module.scss';
 
 import { SearchBar } from './SearchBar';
@@ -24,7 +26,11 @@ export const ManagmentHeader: FC<IProps> = ({ title, inputPlaceholder, onInputCh
         <div className={styles.headerContent}>
           {title}
           {inputPlaceholder && onInputChange && (
-            <SearchBar inputPlaceholder={inputPlaceholder} onInputChange={onInputChange} />
+            <SearchBar
+              iconLeft={<SearchIcon />}
+              inputPlaceholder={inputPlaceholder}
+              onInputChange={onInputChange}
+            />
           )}
         </div>
       </div>
