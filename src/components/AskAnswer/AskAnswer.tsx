@@ -14,46 +14,21 @@ import { AskInput } from '@components/AskInput';
 
 import { getHintButtonHandler } from 'src/constants/hintButtons';
 import { getDescriptionById } from '@api/requests/getDescription';
+import { useDispatch, useSelector } from 'react-redux';
+import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
 
 interface NavigateState {
   query?: string;
   isHintButton: boolean;
 }
 
-interface ElementPayload {
-  query: string;
-  answer: any;
-}
-
-interface State {
-  history: ElementPayload[];
-}
-
-type Action = { type: 'ADD'; payload: ElementPayload } | { type: 'RESET' };
-
-const historyReducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'ADD':
-      return {
-        ...state,
-        history: [...state.history, action.payload],
-      };
-    case 'RESET':
-      return {
-        ...state,
-        history: [],
-      };
-    default:
-      throw new Error('Unknown action type');
-  }
-};
-
 export const AskAnswer = () => {
   const state = useLocation().state as NavigateState;
 
   const lang = useLanguage();
 
-  const [historyState, dispatch] = useReducer(historyReducer, { history: [] });
+  const dispatch = useDispatch();
+  const history = useSelector(selectRequests);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,33 +41,32 @@ export const AskAnswer = () => {
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
   const onInputSubmit = async () => await fetchAnswerByQuery(query);
 
-  const fetchAnswerByQuery = async (query: string | undefined) => {
+  const fetchAnswerByQuery = async (query: string | undefined, isHintButton: boolean = false) => {
     if (!query) return;
 
     let answer: string | null = null;
 
     setIsLoading(true);
 
-    if (state.isHintButton) {
-      const handler = getHintButtonHandler(lang, query!);
+    if (isHintButton) {
+      const handler = getHintButtonHandler(query, lang);
       answer = await handler();
     } else {
-      answer = await getDescriptionById(query);
+      answer = await getDescriptionById(query, lang);
     }
 
     if (answer) {
-      dispatch({ type: 'ADD', payload: { query, answer } });
+      dispatch(addInHistory({ query, answer }));
     } else {
-      dispatch({
-        type: 'ADD',
-        payload: {
+      dispatch(
+        addInHistory({
           query,
           answer: translate({
             ru: 'К сожалению, в настоящее время нет информации, соответствующей вашему вопросу в базе знаний. Приносим извинения за неудобства.',
             en: 'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
           }),
-        },
-      });
+        }),
+      );
     }
 
     setIsLoading(false);
@@ -100,13 +74,13 @@ export const AskAnswer = () => {
 
   useEffect(() => {
     if (state.query) {
-      fetchAnswerByQuery(state.query);
+      fetchAnswerByQuery(state.query, state.isHintButton);
     }
   }, [state]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [historyState]);
+  }, [history]);
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
@@ -121,7 +95,7 @@ export const AskAnswer = () => {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.history}>
-        {historyState.history.map((entry, idx) => (
+        {history.map((entry, idx) => (
           <AskElement key={idx} {...entry} />
         ))}
         <div ref={scrollRef} />

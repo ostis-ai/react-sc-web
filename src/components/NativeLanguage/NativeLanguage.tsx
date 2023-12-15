@@ -107,7 +107,10 @@ export const NativeLanguage: FC<IProps> = ({ question }) => {
       nativeLanguageRes.response.data === 'Timeout waiting for answer translation';
     if (!isTimeoutError) {
       resetTimeoutToast();
-      return addError({ ru: 'Не удалось получить код естественного языка', en: `It's failed to get native language code` });
+      return addError({
+        ru: 'Не удалось получить код естественного языка',
+        en: `It's failed to get native language code`,
+      });
     }
     timeoutRequestCountRef.current++;
     requestNativeLanguage();

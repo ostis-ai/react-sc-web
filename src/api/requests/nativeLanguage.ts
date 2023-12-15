@@ -6,14 +6,15 @@ import { client, isAxiosError } from '@api';
 import { translate } from './requests';
 import { shiftMap } from '@utils';
 
-
 interface IReturnNativeLanguageTree {
-    tree: IScnNode;
+  tree: IScnNode;
 }
 
-// Copy of the scn request now, but i guess in future 
+// Copy of the scn request now, but i guess in future
 // would have own specific logic here (meybe less JSON things inside in response etc)
-const requestNativeLanguageTree = async (question: number): Promise<IReturnNativeLanguageTree | AxiosError | null> => {
+const requestNativeLanguageTree = async (
+  question: number,
+): Promise<IReturnNativeLanguageTree | AxiosError | null> => {
   const res = await translate(question, 'format_scn_json', 'lang_ru');
   if (isAxiosError(res)) return res;
   const { link } = res.data;

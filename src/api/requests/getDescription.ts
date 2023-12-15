@@ -3,6 +3,12 @@ import { client, isAxiosError, scUtils } from '@api';
 
 import { doCommand } from './command';
 import { searchAddrById } from '@api/sc/search/search';
+import { TLanguage, langToKeynode, snakeToCamelCase } from 'ostis-ui-lib';
+
+const getLanguage = async (lang: TLanguage) => {
+  const keynodes = await scUtils.findKeynodes(langToKeynode[lang]);
+  return keynodes[snakeToCamelCase(langToKeynode[lang])];
+};
 
 export const getWhatIsIMS = async () => {
   const { knowledgeBaseIMS } = await scUtils.findKeynodes('knowledge_base_IMS');
@@ -34,8 +40,6 @@ export const getWhatIsSetTheory = async () => {
 export const getDescriptionByAddr = async (elementAddr: number) => {
   const { uiMenuSummary } = await scUtils.findKeynodes('ui_menu_summary');
 
-    console.log(elementAddr, elementAddr, uiMenuSummary)
-
   const commandResult = await doCommand(uiMenuSummary.value, elementAddr);
 
   if (isAxiosError(commandResult)) return null;
@@ -51,14 +55,16 @@ export const getDescriptionByAddr = async (elementAddr: number) => {
   return String(content);
 };
 
-export const getDescriptionById = async (str: string) => {
+export const getDescriptionById = async (id: string, lang: TLanguage) => {
+  console.log(id, lang);
   const { uiMenuSummary } = await scUtils.findKeynodes('ui_menu_summary');
 
-  console.log(str, uiMenuSummary)
-  const elementAddr = await searchAddrById(str);
+  const elementAddr = await searchAddrById(id);
   if (!elementAddr) return null;
 
-  const commandResult = await doCommand(uiMenuSummary.value, elementAddr.value);
+  const foundLang = await getLanguage(lang);
+
+  const commandResult = await doCommand(uiMenuSummary.value, elementAddr.value, foundLang.value);
 
   if (isAxiosError(commandResult)) return null;
 
