@@ -18,7 +18,7 @@ interface IUserBody {
   status: IUserStatus;
 }
 
-export type TFormat = 'scn' | 'scg';
+export type TFormat = 'scn' | 'scg' | 'native';
 
 interface IInitialState {
   user: IUserBody;

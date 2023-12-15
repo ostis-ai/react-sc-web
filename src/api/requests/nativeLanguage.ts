@@ -2,15 +2,18 @@ import { AxiosError } from 'axios';
 import { IScnNode } from 'ostis-ui-lib';
 import { ScAddr } from 'ts-sc-client';
 import { client, isAxiosError } from '@api';
-import { shiftMap } from '@utils';
 
 import { translate } from './requests';
+import { shiftMap } from '@utils';
 
-interface IReturnScnTree {
-  tree: IScnNode;
+
+interface IReturnNativeLanguageTree {
+    tree: IScnNode;
 }
 
-const requestScnTree = async (question: number): Promise<IReturnScnTree | AxiosError | null> => {
+// Copy of the scn request now, but i guess in future 
+// would have own specific logic here (meybe less JSON things inside in response etc)
+const requestNativeLanguageTree = async (question: number): Promise<IReturnNativeLanguageTree | AxiosError | null> => {
   const res = await translate(question, 'format_scn_json', 'lang_ru');
   if (isAxiosError(res)) return res;
   const { link } = res.data;
@@ -26,20 +29,20 @@ const requestScnTree = async (question: number): Promise<IReturnScnTree | AxiosE
 
 const DEFAULT_CACHE_SIZE = 50;
 
-const memoizedScnTree = (cacheSize = DEFAULT_CACHE_SIZE) => {
-  const cache = new Map<number, IReturnScnTree>();
+const memoizedNativeLanguageTree = (cacheSize = DEFAULT_CACHE_SIZE) => {
+  const cache = new Map<number, IReturnNativeLanguageTree>();
 
   const removeFromCache = (question: number) => cache.delete(question);
 
   const request = async (
     question: number,
     onRequestStarted?: () => void,
-  ): Promise<IReturnScnTree | AxiosError | null> => {
+  ): Promise<IReturnNativeLanguageTree | AxiosError | null> => {
     const nodeInCache = cache.get(question);
     if (nodeInCache) return nodeInCache;
 
     onRequestStarted?.();
-    const newNode = await requestScnTree(question);
+    const newNode = await requestNativeLanguageTree(question);
 
     if (newNode === null) {
       return null;
@@ -55,4 +58,4 @@ const memoizedScnTree = (cacheSize = DEFAULT_CACHE_SIZE) => {
   return [request, removeFromCache] as const;
 };
 
-export const [getScnTree, removeFromCache] = memoizedScnTree();
+export const [getNativeLanguageTree, removeFromCache] = memoizedNativeLanguageTree();

@@ -34,6 +34,8 @@ export const getWhatIsSetTheory = async () => {
 export const getDescriptionByAddr = async (elementAddr: number) => {
   const { uiMenuSummary } = await scUtils.findKeynodes('ui_menu_summary');
 
+    console.log(elementAddr, elementAddr, uiMenuSummary)
+
   const commandResult = await doCommand(uiMenuSummary.value, elementAddr);
 
   if (isAxiosError(commandResult)) return null;
@@ -52,10 +54,10 @@ export const getDescriptionByAddr = async (elementAddr: number) => {
 export const getDescriptionById = async (str: string) => {
   const { uiMenuSummary } = await scUtils.findKeynodes('ui_menu_summary');
 
+  console.log(str, uiMenuSummary)
   const elementAddr = await searchAddrById(str);
   if (!elementAddr) return null;
 
-  console.log(str, elementAddr, uiMenuSummary)
   const commandResult = await doCommand(uiMenuSummary.value, elementAddr.value);
 
   if (isAxiosError(commandResult)) return null;
