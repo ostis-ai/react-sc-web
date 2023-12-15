@@ -66,18 +66,12 @@ export const AskAnswer = () => {
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
   const onInputSubmit = async () => await fetchAnswerByQuery(query);
 
-  const isDescribeQuery = (query: string): boolean => {
-    const starts =
-      lang === 'ru'
-        ? ['Что это', 'Что это такое', 'Расскажи про']
-        : ['What is', 'Tell me about', 'Describe'];
-    return starts.some((start) => query.startsWith(start));
-  };
-
   const fetchAnswerByQuery = async (query: string | undefined) => {
     if (!query) return;
 
     let answer: string | null = null;
+
+    setIsLoading(true);
 
     if (state.isHintButton) {
       const handler = getHintButtonHandler(lang, query!);
@@ -100,6 +94,8 @@ export const AskAnswer = () => {
         },
       });
     }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
