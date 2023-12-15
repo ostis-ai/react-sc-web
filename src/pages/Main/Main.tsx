@@ -24,15 +24,14 @@ const Main = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  
 
   let activeTab: TScLanguageTab;
-  if (location.pathname.includes("scg")) {
-    activeTab = "scg";
-  } else if (location.pathname.includes("scn")) {
-    activeTab = "scn";
+  if (location.pathname.includes('scg')) {
+    activeTab = 'scg';
+  } else if (location.pathname.includes('scn')) {
+    activeTab = 'scn';
   } else {
-    activeTab = "native";
+    activeTab = 'native';
   }
 
   const onChange = (newActiveTab: TScLanguageTab) => {

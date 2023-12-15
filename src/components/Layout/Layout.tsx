@@ -4,22 +4,20 @@ import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
 import Logo from '@assets/images/Logo.svg';
-import { setActiveLink } from '@store/activeLinkSlice';
 
 import styles from './Layout.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
-import { useDispatch } from 'react-redux';
 
 export interface IProps {
   children?: ReactNode;
 }
 
 export const Layout: FC<IProps> = ({ children }) => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogoOnClick = () => {
-    dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
+    navigate(routes.MAIN);
   };
 
   return (

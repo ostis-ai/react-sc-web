@@ -21,8 +21,8 @@ export const hintButtons: { text: TTexts; handler: () => Promise<string | null> 
 ];
 
 export const getHintButtonHandler = (
-  lang: TLanguage,
   query: string,
+  lang: TLanguage,
 ): (() => Promise<string | null>) => {
   const matchedButton = hintButtons.find((button) => button.text[lang] == query.trim());
 

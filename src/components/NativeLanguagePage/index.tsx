@@ -1,1 +1,1 @@
-export * from "./NativeLanguagePage";
+export * from './NativeLanguagePage';

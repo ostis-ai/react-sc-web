@@ -8,12 +8,11 @@ const Question = () => {
 
   if (match?.params.format === 'scn') {
     return <ScnPage />;
-  } else if (match?.params.format === "native") {
+  } else if (match?.params.format === 'native') {
     return <NativeLanguagePage />;
   }
 
   return null;
-
 };
 
 export default Question;

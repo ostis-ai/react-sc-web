@@ -1,10 +1,10 @@
-import { routes } from "@constants";
-import { useTranslate } from "ostis-ui-lib"
-import { useMatch } from "react-router-dom";
+import { routes } from '@constants';
+import { useTranslate } from 'ostis-ui-lib';
+import { useMatch } from 'react-router-dom';
 
-import styles from "./NativeLanguagePage.module.scss"
-import ErrorBoundary from "@components/ErrorBoundary/ErrorBoundary";
-import { NativeLanguage } from "@components/NativeLanguage/NativeLanguage";
+import styles from './NativeLanguagePage.module.scss';
+import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
+import { NativeLanguage } from '@components/NativeLanguage/NativeLanguage';
 
 export const NativeLanguagePage = () => {
   const translate = useTranslate();
