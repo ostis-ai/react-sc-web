@@ -28,8 +28,8 @@ export const getWhatIsGraph = async () => {
 };
 
 export const getWhatIsSingleton = async () => {
-  const { singleton } = await scUtils.findKeynodes('singleton');
-  return getDescriptionByAddr(singleton.value);
+  const { singletone } = await scUtils.findKeynodes('singletone');
+  return getDescriptionByAddr(singletone.value);
 };
 
 export const getWhatIsSetTheory = async () => {
@@ -56,7 +56,6 @@ export const getDescriptionByAddr = async (elementAddr: number) => {
 };
 
 export const getDescriptionById = async (id: string, lang: TLanguage) => {
-  console.log(id, lang);
   const { uiMenuSummary } = await scUtils.findKeynodes('ui_menu_summary');
 
   const elementAddr = await searchAddrById(id);

@@ -1,10 +1,15 @@
-import { getHistoryOfIMS, getWhatIsGraph, getWhatIsIMS } from '@api/requests/getDescription';
+import {
+  getHistoryOfIMS,
+  getWhatIsGraph,
+  getWhatIsIMS,
+  getWhatIsSingleton,
+} from '@api/requests/getDescription';
 import { TLanguage, TTexts } from 'ostis-ui-lib';
 
 export const hintButtons: { text: TTexts; handler: () => Promise<string | null> }[] = [
   {
-    text: { ru: 'Что ты можешь?', en: 'What can you do?' },
-    handler: () => Promise.resolve(null),
+    text: { ru: 'Что такое синглтон?', en: 'What is singleton?' },
+    handler: getWhatIsSingleton,
   },
   {
     text: { ru: 'Что такое IMS?', en: 'What is IMS' },

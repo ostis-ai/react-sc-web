@@ -18,7 +18,7 @@ import { refSetter, useTranslate } from 'ostis-ui-lib';
 interface IProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'onFocus' | 'onBlur'> {
   className?: string;
-  onEmptySubmit?: () => void;
+  onEmptySubmit: () => void;
   onSubmit: () => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
@@ -27,7 +27,15 @@ interface IProps
 
 export const AskInput = forwardRef<HTMLInputElement, IProps>(
   (
-    { className, onChange, onSubmit, onFocus: onFocusFromProps, onBlur: onBlurFromProps, ...props },
+    {
+      className,
+      onChange,
+      onSubmit,
+      onEmptySubmit,
+      onFocus: onFocusFromProps,
+      onBlur: onBlurFromProps,
+      ...props
+    },
     ref,
   ) => {
     const [searchValue, setSearchValue] = useState('');
@@ -42,16 +50,15 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
     };
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setSearchValue(e.target.value);
+      setSearchValue(e.currentTarget.value);
       onChange(e);
     };
 
     const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
       const code = e.code;
-
       switch (code) {
         case 'Enter': {
-          onSubmit();
+          handleSubmit();
           break;
         }
       }
@@ -73,7 +80,6 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
 
     const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(false);
-
       if (e.currentTarget.contains(e.relatedTarget)) {
         onBlurFromProps?.(e);
       }
@@ -84,11 +90,6 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
         innerRef.current?.value.length,
         innerRef.current?.value.length,
       );
-    });
-
-    const emptyMessage = translate({
-      ru: '🪄 Спросите IMS',
-      en: '🪄 Ask IMS',
     });
 
     const handleSubmit = () => {
@@ -111,7 +112,10 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
       >
         <input
           className={styles.dialogInput}
-          placeholder={emptyMessage}
+          placeholder={translate({
+            ru: '🪄 Спросите IMS',
+            en: '🪄 Ask IMS',
+          })}
           ref={refSetter<HTMLInputElement>(ref, innerRef)}
           value={searchValue}
           onKeyDown={onInputKeyDown}

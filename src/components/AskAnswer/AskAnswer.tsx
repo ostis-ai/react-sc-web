@@ -1,9 +1,7 @@
-import axios from 'axios';
-
-import { useTranslate } from 'ostis-ui-lib';
+import { useToast, useTranslate } from 'ostis-ui-lib';
 
 import { useLocation } from 'react-router-dom';
-import { ChangeEvent, useEffect, useReducer, useState, useRef } from 'react';
+import { ChangeEvent, useEffect, useReducer, useState, useRef, useCallback } from 'react';
 
 import { Spinner, useLanguage } from 'ostis-ui-lib';
 import { SPINER_COLOR } from '@constants';
@@ -16,6 +14,7 @@ import { getHintButtonHandler } from 'src/constants/hintButtons';
 import { getDescriptionById } from '@api/requests/getDescription';
 import { useDispatch, useSelector } from 'react-redux';
 import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
+import { Notification } from '@components/Notification';
 
 interface NavigateState {
   query?: string;
@@ -33,6 +32,8 @@ export const AskAnswer = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [query, setQuery] = useState<string>();
+
+  const { addToast } = useToast();
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -88,6 +89,22 @@ export const AskAnswer = () => {
     }
   };
 
+  const onEmptySubmit = useCallback(() => {
+    addToast(
+      <Notification
+        type="warning"
+        title={{
+          ru: 'Вы не можете отправить пустой запрос',
+          en: `It's impossible to save an empty fragment`,
+        }}
+      />,
+      {
+        position: 'bottomRight',
+        duration: 2000,
+      },
+    );
+  }, [addToast]);
+
   if (!state) return null;
 
   if (isLoading) return <Spinner className={styles.spinner} appearance={SPINER_COLOR} />;
@@ -104,6 +121,7 @@ export const AskAnswer = () => {
         className={styles.inputQueryBar}
         onChange={onInputChange}
         onSubmit={onInputSubmit}
+        onEmptySubmit={onEmptySubmit}
       />
     </div>
   );
