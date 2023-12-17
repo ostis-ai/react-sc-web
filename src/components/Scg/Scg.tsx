@@ -46,45 +46,6 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
     [question],
   );
 
-  const onOpenFragment = useCallback(
-    (fragmentAddr: number) => {
-      goToActiveFormatCommand(fragmentAddr, 'ui_menu_view_get_user_fragment');
-    },
-    [goToActiveFormatCommand],
-  );
-
-  const onEmptyFragment = useCallback(() => {
-    addToast(
-      <Notification
-        type="warning"
-        title={{
-          ru: 'Вы не можете сохранить пустой фрагмент',
-          en: `It's impossible to save an empty fragment`,
-        }}
-      />,
-      {
-        position: 'bottomRight',
-        duration: 2000,
-      },
-    );
-  }, [addToast]);
-
-  const onFullfilledFragment = useCallback(() => {
-    addToast(
-      <Notification
-        type="success"
-        title={{
-          ru: 'Сохранено',
-          en: `Saved`,
-        }}
-      />,
-      {
-        position: 'bottomRight',
-        duration: 2000,
-      },
-    );
-  }, [addToast]);
-
   // ****************************************************
   // ****************************************************
   // ****************************************************
@@ -189,23 +150,13 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
           if (!question) break;
           onUpdateScg?.(question);
           break;
-        case EWindowEvents.openFragment:
-          if (!event.data?.payload?.fragmentAddr) break;
-          onOpenFragment?.(event.data.payload.fragmentAddr);
-          break;
-        case EWindowEvents.emptyFragment:
-          onEmptyFragment?.();
-          break;
-        case EWindowEvents.fullfilledFragment:
-          onFullfilledFragment?.();
-          break;
 
         case EWindowEvents.onContextMenu:
           onContextMenu(event.data.payload && event.data.payload);
           break;
       }
     };
-  }, [onUpdateScg, onOpenFragment, onEmptyFragment, onFullfilledFragment, question]);
+  }, [onUpdateScg, question]);
 
   // useEffect(() => {
   // (async () => {

@@ -28,19 +28,3 @@ export const Frame = styled.iframe`
 
   border: 0;
 `;
-
-export const Popup = styled.div<{ isClear?: boolean }>`
-  width: ${(props) => (props.isClear ? '383px' : '344px')};
-
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 21px;
-
-  color: #323232;
-
-  b {
-    font-weight: 500;
-  }
-`;
