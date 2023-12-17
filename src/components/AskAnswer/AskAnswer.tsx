@@ -85,7 +85,7 @@ export const AskAnswer = () => {
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      scrollRef.current.scrollIntoView({ behavior: 'auto', block: 'end' });
     }
   };
 

@@ -85,13 +85,6 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
       }
     };
 
-    useEffect(() => {
-      innerRef.current?.setSelectionRange(
-        innerRef.current?.value.length,
-        innerRef.current?.value.length,
-      );
-    });
-
     const handleSubmit = () => {
       onSubmit();
       resetInput();
