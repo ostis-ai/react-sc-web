@@ -1,10 +1,10 @@
 import {
-  ContextMenu,
-  Scg as UiKitScg,
-  useBooleanState,
-  useLanguage,
-  useScUtils,
-  useToast,
+    ContextMenu, langToKeynode,
+    Scg as UiKitScg, snakeToCamelCase,
+    useBooleanState,
+    useLanguage,
+    useScUtils,
+    useToast,
 } from 'ostis-ui-lib';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { removeFromCache } from '@api/requests/scn';
@@ -14,6 +14,7 @@ import { useScNavigation } from '@hooks/useScNavigation';
 import { Frame, StyledSpinner, Wrap } from './styled';
 
 import { EWindowEvents, ITarget, IWindowEventData } from './types';
+import {scUtils} from "@api";
 
 interface IProps {
   question?: number;
@@ -34,10 +35,6 @@ const readonlyStyle = `
 export const Scg: FC<IProps> = ({ question, className, show = false }) => {
   const { goToActiveFormatCommand } = useScNavigation();
   const { addToast } = useToast();
-
-  const onRenderScg = useCallback((iframe: any) => {
-    console.log(iframe.renderScg);
-  }, []);
 
   const onUpdateScg = useCallback(
     (question: any) => {
@@ -85,7 +82,9 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
   useEffect(() => {
     setIsLoading(true);
     const iframe = ref.current;
-    if (!iframe) return setIsLoading(false);
+      console.log("loading");
+    if (!iframe) return
+    setIsLoading(false);
     // if (!iframe.contentWindow) return;
 
     // const command = { type: 'onInitializationFinished' };
@@ -99,6 +98,7 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
     // };
 
     setTimeout(() => {
+        console.log("REACT post demoImplementation");
       iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'demoImplementation' }, '*');
 
       // iframe.contentWindow?.addEventListener('DOMContentLoaded', () => {
@@ -118,58 +118,64 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
   }, []);
 
   useEffect(() => {
-    console.log(targetNode);
-  }, [targetNode]);
-
-  useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
 
     window.onmessage = function (event: MessageEvent<IWindowEventData>) {
+        console.log("React event.data.type = ", event.data.type);
       switch (event.data.type) {
         case EWindowEvents.onInitializationFinished:
+          console.log("REACT get onInitializationFinished");
           setIsready(true);
           setIsLoading(false);
           break;
-        case EWindowEvents.readyForRender:
-          iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'renderScg' }, '*');
+        case EWindowEvents.readyForRender: // возможно не нужно
+            console.log("REACT get readyForRender and do nothing");
+          // iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'renderScg', addr: question }, '*');
           break;
         case EWindowEvents.deleteScgElement:
+            console.log("REACT get deleteScgElement");
           showConfirmDeletePopup();
           setConfirmDeleteElementsFunc(() => (iframe.contentWindow as any)?.deleteScgElement);
           break;
         case EWindowEvents.deleteScgElements:
+            console.log("REACT get deleteScgElements");
           showConfirmDeletePopup();
           setConfirmDeleteElementsFunc(() => (iframe.contentWindow as any)?.deleteScgElements);
           break;
         case EWindowEvents.clearScene:
+            console.log("REACT get clearScene");
           showConfirmClearScenePopup();
           setconfirmClearSceneFunc(() => (iframe.contentWindow as any)?.clearScene);
           break;
-        case EWindowEvents.updateScg:
+        case EWindowEvents.updateScg: // возможно не нужно
+            console.log("REACT get updateScg");
           if (!question) break;
           onUpdateScg?.(question);
           break;
-
         case EWindowEvents.onContextMenu:
+            console.log("REACT get onContextMenu");
           onContextMenu(event.data.payload && event.data.payload);
           break;
       }
     };
   }, [onUpdateScg, question]);
 
-  // useEffect(() => {
-  // (async () => {
-  // if (!isReady || !show || !question) return;
-
-  // const iframe = ref.current;
-  // if (!iframe) return;
-
-  // const { ...rest } = await findKeynodes(langToKeynode[lang]);
-  // const activeLangKeynode = rest[snakeToCamelCase(langToKeynode[lang])];
-  // (iframe.contentWindow as any).renderScg?.(question, activeLangKeynode.value);
-  // })();
-  // }, [isReady, question, show, lang, findKeynodes]);
+  useEffect(() => {
+      (async () => {
+          console.log("use effect with render ", isReady, show, question);
+      if (!isReady || !show || !question) return;
+          console.log("after if isReady, show, question", isReady, show, question);
+      const iframe = ref.current;
+      if (!iframe) return;
+          console.log()
+      const { ...rest } = await scUtils.findKeynodes(langToKeynode[lang]);
+      const activeLangKeynode = rest[snakeToCamelCase(langToKeynode[lang])];
+          console.log("REACT post renderScg=", question);
+          removeFromCache(question);
+          iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'renderScg', addr: question, lang: activeLangKeynode }, '*');
+      })();
+  }, [isReady, question, show, lang]);
 
   targetRef.current = targetNode?.element || null;
 
