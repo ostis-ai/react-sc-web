@@ -171,9 +171,9 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
           console.log()
       const { ...rest } = await scUtils.findKeynodes(langToKeynode[lang]);
       const activeLangKeynode = rest[snakeToCamelCase(langToKeynode[lang])];
-          console.log("REACT post renderScg=", question);
+          console.log("REACT post renderScg=", question, activeLangKeynode.value);
           removeFromCache(question);
-          iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'renderScg', addr: question, lang: activeLangKeynode }, '*');
+          iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'renderScg', addr: question, lang: activeLangKeynode.value }, '*');
       })();
   }, [isReady, question, show, lang]);
 
