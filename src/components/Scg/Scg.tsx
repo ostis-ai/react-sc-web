@@ -15,6 +15,9 @@ import { Frame, StyledSpinner, Wrap } from './styled';
 
 import { EWindowEvents, ITarget, IWindowEventData } from './types';
 import {scUtils} from "@api";
+import {confirmClearScenePopupContent, confirmDeletePopupContent} from "./constants";
+import {ConfirmAction} from "@components/ConfirmAction";
+import {Popup} from "@components/Popup";
 
 interface IProps {
   question?: number;
@@ -80,73 +83,23 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    const iframe = ref.current;
-      console.log("loading");
-    if (!iframe) return
-    setIsLoading(false);
-    // if (!iframe.contentWindow) return;
-
-    // const command = { type: 'onInitializationFinished' };
-
-    // if (iframe.contentWindow) {
-    //   console.log(123);
-    //   iframe.contentWindow.postMessage({ type: 'onInitializationFinished' }, '*');
-    // }
-    // (iframe.contentWindow as any).onInitializationFinished = () => {
-    //   setIsready(true);
-    // };
-
-    setTimeout(() => {
-        console.log("REACT post demoImplementation");
-      iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'demoImplementation' }, '*');
-
-      // iframe.contentWindow?.addEventListener('DOMContentLoaded', () => {
-      //   iframe.contentDocument?.addEventListener('click', onClose);
-      //   iframe.contentDocument?.addEventListener('contextmenu', onContextMenu);
-      //   setTimeout(() => setIsLoading(false), 800);
-      // });
-    }, 1000);
-
-    // (iframe.contentWindow as any).demoImplementation = true;
-
-    // iframe.contentWindow?.addEventListener('DOMContentLoaded', () => {
-    //   iframe.contentDocument?.addEventListener('click', onClose);
-    //   iframe.contentDocument?.addEventListener('contextmenu', onContextMenu);
-    //   setTimeout(() => setIsLoading(false), 800);
-    // });
-  }, []);
-
-  useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
 
     window.onmessage = function (event: MessageEvent<IWindowEventData>) {
-        console.log("React event.data.type = ", event.data.type);
+        console.log("event.data.type =", event.data.type);
       switch (event.data.type) {
         case EWindowEvents.onInitializationFinished:
           console.log("REACT get onInitializationFinished");
           setIsready(true);
           setIsLoading(false);
           break;
-        case EWindowEvents.readyForRender: // возможно не нужно
-            console.log("REACT get readyForRender and do nothing");
-          // iframe.contentWindow && iframe.contentWindow.postMessage({ type: 'renderScg', addr: question }, '*');
-          break;
         case EWindowEvents.deleteScgElement:
-            console.log("REACT get deleteScgElement");
           showConfirmDeletePopup();
-          setConfirmDeleteElementsFunc(() => (iframe.contentWindow as any)?.deleteScgElement);
-          break;
-        case EWindowEvents.deleteScgElements:
-            console.log("REACT get deleteScgElements");
-          showConfirmDeletePopup();
-          setConfirmDeleteElementsFunc(() => (iframe.contentWindow as any)?.deleteScgElements);
           break;
         case EWindowEvents.clearScene:
             console.log("REACT get clearScene");
           showConfirmClearScenePopup();
-          setconfirmClearSceneFunc(() => (iframe.contentWindow as any)?.clearScene);
           break;
         case EWindowEvents.updateScg: // возможно не нужно
             console.log("REACT get updateScg");
@@ -163,12 +116,10 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
 
   useEffect(() => {
       (async () => {
-          console.log("use effect with render ", isReady, show, question);
       if (!isReady || !show || !question) return;
           console.log("after if isReady, show, question", isReady, show, question);
       const iframe = ref.current;
       if (!iframe) return;
-          console.log()
       const { ...rest } = await scUtils.findKeynodes(langToKeynode[lang]);
       const activeLangKeynode = rest[snakeToCamelCase(langToKeynode[lang])];
           console.log("REACT post renderScg=", question, activeLangKeynode.value);
@@ -180,6 +131,32 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
   targetRef.current = targetNode?.element || null;
 
   return (
+      <>
+      {isConfirmDeletePopupShown && (
+          <Popup onClose={hideConfirmDeletePopup}>
+              <ConfirmAction
+                  onComplete={() => (ref.current && ref.current.contentWindow &&
+                      ref.current.contentWindow.postMessage({ type: 'deleteScgElement' }, '*'))
+                  }
+                  onClose={hideConfirmDeletePopup}
+                  title="Удаление"
+                  content={confirmDeletePopupContent}
+                  completeBtnText="Удалить"
+              />
+          </Popup>
+      )}
+      {isConfirmClearScenePopupShown && (
+          <Popup onClose={hideConfirmClearScenePopup}>
+              <ConfirmAction
+                  onComplete={() => (ref.current && ref.current.contentWindow &&
+                      ref.current.contentWindow.postMessage({ type: 'clearScene' }, '*'))}
+                  onClose={hideConfirmClearScenePopup}
+                  title="Очистка пространства"
+                  content={confirmClearScenePopupContent}
+                  completeBtnText="Очистить"
+              />
+          </Popup>
+      )}
     <Wrap show={show} className={className}>
       {isLoading && <StyledSpinner appearance={SPINER_COLOR} />}
       <Frame src={scgUrl} ref={ref} title="SCg codes" />
@@ -192,5 +169,6 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
         />
       )}
     </Wrap>
+  </>
   );
 };
