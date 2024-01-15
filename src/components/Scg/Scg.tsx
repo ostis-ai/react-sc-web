@@ -67,21 +67,6 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
 
   const onClose = () => setTargetNode(null);
 
-  // const onContextMenu = (e: MouseEvent) => {
-  const onContextMenu = (target: any) => {
-    const elements = document.querySelectorAll(`[sc_addr="${Number(target)}"]`);
-
-    if (!target) return;
-    const addr = Number(target) || undefined;
-    setTargetNode(null);
-    setTimeout(() => {
-      setTargetNode({
-        element: elements[0] as HTMLElement,
-        addr,
-      });
-    }, 10);
-  };
-
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
@@ -101,18 +86,9 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
             console.log("REACT get clearScene");
           showConfirmClearScenePopup();
           break;
-        case EWindowEvents.updateScg: // возможно не нужно
-            console.log("REACT get updateScg");
-          if (!question) break;
-          onUpdateScg?.(question);
-          break;
-        case EWindowEvents.onContextMenu:
-            console.log("REACT get onContextMenu");
-          onContextMenu(event.data.payload && event.data.payload);
-          break;
       }
     };
-  }, [onUpdateScg, question]);
+  }, [question]);
 
   useEffect(() => {
       (async () => {
@@ -160,14 +136,6 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
     <Wrap show={show} className={className}>
       {isLoading && <StyledSpinner appearance={SPINER_COLOR} />}
       <Frame src={scgUrl} ref={ref} title="SCg codes" />
-      {targetNode && (
-        <ContextMenu
-          onClose={onClose}
-          addr={targetNode.addr}
-          relativeRef={ref}
-          targetRef={targetRef}
-        />
-      )}
     </Wrap>
   </>
   );
