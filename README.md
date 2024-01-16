@@ -32,6 +32,9 @@ cd ostis-web-platform
 # *or launch in docker*
 docker compose run -p 8090:8090 machine
 # *in another terminal*
+cd sc-web
+git checkout feature/add-scg-iframe
+./scripts/build_sc_web.sh
 # Launch semantic web interface
 python3 sc-web/server/app.py --allowed_origins=http://localhost:3000
 ```
