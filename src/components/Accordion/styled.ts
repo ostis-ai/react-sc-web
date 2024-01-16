@@ -18,8 +18,6 @@ export const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 
-  margin-right: 28px;
-
   height: 36px;
 `;
 

@@ -13,12 +13,12 @@ export interface IProps {
 export const Layout: FC<IProps> = ({ children }) => {
   return (
     <div className={styles.root}>
-      <header className={styles.header}>
-        <Language />
-      </header>
       <SidePanelWrapper>
         <SidePanel className={styles.sideBar} />
       </SidePanelWrapper>
+      <header className={styles.header}>
+          <Language />
+      </header>
       <main className={styles.main}>
         <ScgPage />
         {children}
