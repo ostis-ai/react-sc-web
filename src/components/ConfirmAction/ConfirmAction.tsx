@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react';
 import { Button } from '@components/Button';
-// import { StyledButton } from './ConfirmAction.m.scss';
 import styles from './ConfirmAction.module.scss';
 
 interface IProps {
