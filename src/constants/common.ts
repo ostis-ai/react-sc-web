@@ -32,4 +32,4 @@ export const defaultValues = {
   xmlData: '',
 };
 
-export const scgUrl = IS_DEV ? `${API_URL}/scg` : `${API_URL}/scg`;
+export const scgUrl = `${API_URL}/scg`;

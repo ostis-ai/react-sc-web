@@ -1,8 +1,10 @@
-# SCWeb
+# React sc-web
 
 ### Environment
 
-The following .env example file is required for the correct work of the application.
+The following .env example file is required for the correct work of the application. 
+
+You can copy the file _.env.example_ and rename it to the _.env_
 
 ```
 PORT=3000
@@ -10,34 +12,69 @@ SC_URL="ws://localhost:8090/ws_json"
 API_URL="http://localhost:8000"
 ```
 
-### Installation
+### Installation, build and run
 
-The installation process should be done with `npm install`.
+To start the project you need to do three steps:
+1. Install ostis-web-platform with correct branches
+2. Build ostis-web-platform
+3. Install react-sc-web
+4. Run ostis-web-platform and react-sc-web
 
-### Running locally
+#### Install ostis-web-platform with correct branches
+Installation instructions you can find in the repository [**ostis-web-platform**](https://github.com/ostis-ai/ostis-web-platform). 
 
-Application starts with `npm start` on port 3000.
+But you should use the following branches
+- sc-machine - _main_
+- sc-web - _feature/add-scg-iframe_
+- ims.ostis.kb - _main_
 
-**IMPORTANT!!!**
-
-Before start react-sc-web install and start
-[**ostis-web-platform**](https://github.com/ostis-ai/ostis-web-platform).
-
-To start the platform use next commands:
-
+To checkout them, use the following commands:
 ```sh
-# Launch knowledge processing machine
 cd ostis-web-platform
-./scripts/run_sc_server.sh
-# *or launch in docker*
-docker compose run -p 8090:8090 machine
-# *in another terminal*
-cd sc-web
-git checkout feature/add-scg-iframe
-./scripts/build_sc_web.sh
-# Launch semantic web interface
-python3 sc-web/server/app.py --allowed_origins=http://localhost:3000
+cd sc-machine
+git fetch origin main
+git checkout FETCH_HEAD
+
+cd ../ims.ostis.kb
+git fetch origin main
+git checkout FETCH_HEAD
+
+cd ../sc-web
+git fetch origin feature/add-scg-iframe
+git checkout FETCH_HEAD
 ```
+
+#### Build ostis-web-platform
+```sh
+cd ostis-web-platform
+./scripts/build_sc_machine.sh
+./scripts/build_sc_web.sh
+./scripts/build_sc_kb.sh
+```
+
+#### Install react-sc-web
+```sh
+cd ostis-web-platform
+git clone git@github.com:ostis-ai/react-sc-web.git
+cd react-sc-web
+npm install
+```
+
+#### Run ostis-web-platform and react-sc-web
+```sh
+cd ostis-web-platform
+./scripts/run_sc_server.sh # *or launch in docker* docker compose run -p 8090:8090 machine
+
+# *in another terminal*
+cd ostis-web-platform
+python3 sc-web/server/app.py --allowed_origins=http://localhost:3000
+
+# *in another terminal*
+cd ostis-web-platform/react-sc-web
+npm start
+```
+
+Application starts on port 3000.
 
 ### Creating production build
 
@@ -79,6 +116,5 @@ To analyze the code and find problems according to the given rules, described in
 ├── README.md
 ├── package-lock.json
 ├── package.json
-├── tsconfig.json
 └── tsconfig.json
 ```
