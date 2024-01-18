@@ -1,9 +1,8 @@
-import { langToKeynode, snakeToCamelCase, useBooleanState, useLanguage } from 'ostis-ui-lib';
+import { langToKeynode, snakeToCamelCase, useBooleanState, useLanguage, Popup } from 'ostis-ui-lib';
 import { FC, useEffect, useRef, useState } from 'react';
 import { scUtils } from '@api';
 import { removeFromCache } from '@api/requests/scn';
 import { ConfirmAction } from '@components/ConfirmAction';
-import { Popup } from '@components/Popup';
 import { scgUrl } from '@constants';
 import { confirmClearScenePopupContent, confirmDeletePopupContent } from './constants';
 import { Frame, StyledSpinner, Wrap } from './styled';
