@@ -1,9 +1,13 @@
-import { Scg as UiKitScg, useToast } from 'ostis-ui-lib';
-import { FC, useCallback } from 'react';
+import { langToKeynode, snakeToCamelCase, useBooleanState, useLanguage, Popup } from 'ostis-ui-lib';
+import { FC, useEffect, useRef, useState } from 'react';
+import { scUtils } from '@api';
 import { removeFromCache } from '@api/requests/scn';
-import { Notification } from '@components/Notification';
+import { ConfirmAction } from '@components/ConfirmAction';
 import { scgUrl } from '@constants';
-import { useScNavigation } from '@hooks/useScNavigation';
+import { confirmClearScenePopupContent, confirmDeletePopupContent } from './constants';
+import { Frame, StyledSpinner, Wrap } from './styled';
+
+import { EWindowEvents, ITarget, IWindowEventData } from './types';
 
 interface IProps {
   question?: number;
@@ -11,63 +15,94 @@ interface IProps {
   show?: boolean;
 }
 
-export const Scg: FC<IProps> = ({ question, className, show = false }) => {
-  const { goToActiveFormatCommand } = useScNavigation();
-  const { addToast } = useToast();
+const SPINER_COLOR = '#5896C0';
 
-  const onUpdateScg = useCallback(() => {
-    if (question) removeFromCache(question);
+export const Scg: FC<IProps> = ({ question, className, show = false }) => {
+  const [isReady, setIsready] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [targetNode, setTargetNode] = useState<ITarget | null>(null);
+  const [isConfirmDeletePopupShown, showConfirmDeletePopup, hideConfirmDeletePopup] =
+    useBooleanState(false);
+  const [isConfirmClearScenePopupShown, showConfirmClearScenePopup, hideConfirmClearScenePopup] =
+    useBooleanState(false);
+  const ref = useRef<HTMLIFrameElement>(null);
+  const targetRef = useRef<HTMLElement | null>(null);
+  const lang = useLanguage();
+
+  useEffect(() => {
+    const iframe = ref.current;
+    if (!iframe) return;
+
+    window.onmessage = function (event: MessageEvent<IWindowEventData>) {
+      switch (event.data.type) {
+        case EWindowEvents.onInitializationFinished:
+          setIsready(true);
+          setIsLoading(false);
+          break;
+        case EWindowEvents.deleteScgElement:
+          showConfirmDeletePopup();
+          break;
+        case EWindowEvents.clearScene:
+          showConfirmClearScenePopup();
+          break;
+      }
+    };
   }, [question]);
 
-  const onOpenFragment = useCallback(
-    (fragmentAddr: number) => {
-      goToActiveFormatCommand(fragmentAddr, 'ui_menu_view_get_user_fragment');
-    },
-    [goToActiveFormatCommand],
-  );
+  useEffect(() => {
+    (async () => {
+      if (!isReady || !show || !question) return;
+      const iframe = ref.current;
+      if (!iframe) return;
+      const { ...rest } = await scUtils.findKeynodes(langToKeynode[lang]);
+      const activeLangKeynode = rest[snakeToCamelCase(langToKeynode[lang])];
+      removeFromCache(question);
+      iframe.contentWindow &&
+        iframe.contentWindow.postMessage(
+          { type: 'renderScg', addr: question, lang: activeLangKeynode.value },
+          '*',
+        );
+    })();
+  }, [isReady, question, show, lang]);
 
-  const onEmptyFragment = useCallback(() => {
-    addToast(
-      <Notification
-        type="warning"
-        title={{
-          ru: 'Вы не можете сохранить пустой фрагмент',
-          en: `It's impossible to save an empty fragment`,
-        }}
-      />,
-      {
-        position: 'bottomRight',
-        duration: 2000,
-      },
-    );
-  }, [addToast]);
-
-  const onFullfilledFragment = useCallback(() => {
-    addToast(
-      <Notification
-        type="success"
-        title={{
-          ru: 'Сохранено',
-          en: `Saved`,
-        }}
-      />,
-      {
-        position: 'bottomRight',
-        duration: 2000,
-      },
-    );
-  }, [addToast]);
+  targetRef.current = targetNode?.element || null;
 
   return (
-    <UiKitScg
-      question={question}
-      className={className}
-      show={show}
-      url={scgUrl}
-      onUpdateScg={onUpdateScg}
-      onOpenFragment={onOpenFragment}
-      onEmptyFragment={onEmptyFragment}
-      onFullfilledFragment={onFullfilledFragment}
-    />
+    <>
+      {isConfirmDeletePopupShown && (
+        <Popup onClose={hideConfirmDeletePopup}>
+          <ConfirmAction
+            onComplete={() =>
+              ref.current &&
+              ref.current.contentWindow &&
+              ref.current.contentWindow.postMessage({ type: 'deleteScgElement' }, '*')
+            }
+            onClose={hideConfirmDeletePopup}
+            title="Удаление"
+            content={confirmDeletePopupContent}
+            completeBtnText="Удалить"
+          />
+        </Popup>
+      )}
+      {isConfirmClearScenePopupShown && (
+        <Popup onClose={hideConfirmClearScenePopup}>
+          <ConfirmAction
+            onComplete={() =>
+              ref.current &&
+              ref.current.contentWindow &&
+              ref.current.contentWindow.postMessage({ type: 'clearScene' }, '*')
+            }
+            onClose={hideConfirmClearScenePopup}
+            title="Очистка пространства"
+            content={confirmClearScenePopupContent}
+            completeBtnText="Очистить"
+          />
+        </Popup>
+      )}
+      <Wrap show={show} className={className}>
+        {isLoading && <StyledSpinner appearance={SPINER_COLOR} />}
+        <Frame src={scgUrl} ref={ref} title="SCg codes" />
+      </Wrap>
+    </>
   );
 };
