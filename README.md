@@ -30,26 +30,12 @@ But you should use the following branches
 
 To checkout them, use the following commands:
 ```sh
+git clone https://github.com/ostis-ai/ostis-web-platform
 cd ostis-web-platform
-cd sc-machine
-git fetch origin main
-git checkout FETCH_HEAD
-
-cd ../ims.ostis.kb
-git fetch origin main
-git checkout FETCH_HEAD
-
-cd ../sc-web
-git fetch origin feature/add-scg-iframe
-git checkout FETCH_HEAD
-```
-
-#### Build ostis-web-platform
-```sh
-cd ostis-web-platform
-./scripts/build_sc_machine.sh
-./scripts/build_sc_web.sh
-./scripts/build_sc_kb.sh
+git checkout 0.9.0
+git clone https://github.com/ostis-ai/sc-web
+cd sc-web && git fetch origin feature/add-scg-iframe && git checkout feature/add-scg-iframe && cd ..
+./scripts/install_platform.sh
 ```
 
 #### Install react-sc-web
