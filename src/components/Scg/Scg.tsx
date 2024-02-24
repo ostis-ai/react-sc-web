@@ -1,13 +1,16 @@
 import { langToKeynode, snakeToCamelCase, useBooleanState, useLanguage, Popup } from 'ostis-ui-lib';
 import { FC, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { scUtils } from '@api';
 import { removeFromCache } from '@api/requests/scn';
 import { ConfirmAction } from '@components/ConfirmAction';
 import { scgUrl } from '@constants';
+import { addRequest } from '@store/requestHistorySlice';
 import { confirmClearScenePopupContent, confirmDeletePopupContent } from './constants';
 import { Frame, StyledSpinner, Wrap } from './styled';
 
 import { EWindowEvents, ITarget, IWindowEventData } from './types';
+import { useScNavigation } from '@hooks/useScNavigation';
 
 interface IProps {
   question?: number;
@@ -28,7 +31,14 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
   const ref = useRef<HTMLIFrameElement>(null);
   const targetRef = useRef<HTMLElement | null>(null);
   const lang = useLanguage();
+  const dispatch = useDispatch();
+  const scNavigation = useScNavigation();
 
+  const onCommandExecuted = (data: IWindowEventData) => {
+    if (!data.payload || !data.payload['state'] || !data.payload['response']) return;
+    dispatch(addRequest({ question: Number(data.payload.response.question) }));
+    scNavigation.goToActiveFormatQuestion(data.payload.response.question);
+  };
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
@@ -44,6 +54,9 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
           break;
         case EWindowEvents.clearScene:
           showConfirmClearScenePopup();
+          break;
+        case EWindowEvents.commandExecuted:
+          onCommandExecuted(event.data);
           break;
       }
     };
