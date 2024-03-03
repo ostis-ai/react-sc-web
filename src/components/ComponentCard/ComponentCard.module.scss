@@ -1,0 +1,16 @@
+.container {
+  width: 445px;
+  height: 195px;
+  background-color: aqua;
+  padding: 15px;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+
