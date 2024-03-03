@@ -5,22 +5,24 @@ import { routes, DEFAULT_COMMAND_PATH } from '@constants';
 import { Command } from '@pages/Command';
 import { Main } from '@pages/Main';
 import { Question } from '@pages/Question';
+import { Liberary } from '@pages/Liberary'
 
 export const Router = () => {
   return (
     <Suspense fallback={<>loading...</>}>
       <Routes>
-        <Route
-          path={routes.MAIN}
-          element={
-            <Layout>
-              <Main />
-            </Layout>
-          }
-        >
+          <Route
+            path={routes.MAIN}
+            element={
+              <Layout>
+                <Main />
+              </Layout>
+            }
+          >
           <Route index element={<Navigate to={DEFAULT_COMMAND_PATH} replace />} />
           <Route path={routes.COMMAND} element={<Command />} />
           <Route path={routes.QUESTION} element={<Question />} />
+          <Route path={routes.LIBERARY} element={<Liberary />} />
         </Route>
       </Routes>
     </Suspense>
