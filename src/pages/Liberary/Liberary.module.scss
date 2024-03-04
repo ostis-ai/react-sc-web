@@ -24,5 +24,67 @@
     border: 6px white solid;
     border-radius: 16;
 }
+
+.Header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.Search input[type=text] {
+    border: 1px solid #E8E8E8;
+    border-radius: 10px;
+    padding: 8px 0px 8px 8px;
+    margin: 20px 10px 20px 10px;
+    color: #737373;
+}
+
+.Search input[type=text]::placeholder {
+    color: #737373;
+}
+
+.Search input[type=text]:focus {
+    border-color:  #cfcfcf;
+    outline: none;
+}
+.Filter {
+    position: relative; /* Ensure relative positioning for absolute positioning of the form */
+}
+
+.Filter button {
+    border: 1px solid #E8E8E8;
+    border-radius: 10px;
+    padding: 8px 16px 8px 16px;
+    color: #737373;
+    background-color: #fff;
+}
+
+.Filter form {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 0; 
+    z-index: 100; 
+    background-color: #fff; 
+    padding: 16px; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14); 
+}
+
+.Filter form.visible {
+    display: flex;
+    flex-direction: column;
+}
+
+.Option {
+    color: #737373;
+    display: flex;
+    width: 200px;
+}
+
+.CardsContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
   
   
