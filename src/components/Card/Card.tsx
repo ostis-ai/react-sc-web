@@ -10,12 +10,13 @@ import Subsystem from '@assets/images/DefaultPluginImages/Subsystem.svg';
 import GithubIcon from '@assets/images/GithubIcon.svg';
 
 interface ComponentCardProps {
+  title: string
   subtitle: CardComponentType;
   description: string;
   logo: CardComponentImageType;
 }
 
-export const Card: React.FC<ComponentCardProps> = ({ subtitle, description, logo }) => {
+export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, description, logo }) => {
   let logoComponent: React.ReactNode;
   let subtitleClassName = classNames(styles.subtitle, styles.defaultSubtitle);
 
@@ -47,7 +48,7 @@ export const Card: React.FC<ComponentCardProps> = ({ subtitle, description, logo
 
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>
-            <div className={styles.title}>Name</div>
+            <div className={styles.title}>{title}</div>
             <div className={subtitleClassName}>{subtitle}</div>
           </div>
 

@@ -10,27 +10,31 @@ const Library = () => {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   const toggleFilterVisibility = () => {
-    setIsFilterVisible(!isFilterVisible); 
+    setIsFilterVisible(!isFilterVisible);
   };
 
   const test = Array.from({ length: 50 }, (_, index) => (
     <div key={index}>
       <Card
+        title="Name"
         subtitle={CardComponentType.knowledgeBase}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
         logo={CardComponentImageType.knowledgeBaseImg}
       />
       <Card
+        title="Name"
         subtitle={CardComponentType.interface}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
         logo={CardComponentImageType.interfaceImg}
       />
       <Card
+        title="Name"
         subtitle={CardComponentType.problemSolver}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
         logo={CardComponentImageType.problemSolverImg}
       />
       <Card
+        title="Name"
         subtitle={CardComponentType.subSystem}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
         logo={CardComponentImageType.subSystemImg}
