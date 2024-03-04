@@ -21,16 +21,16 @@ export const ComponentCard = () => {
             <div className={styles.subtitle}>knowledge base</div>
           </div>
 
-          <div className={styles.infoItem}>
+          <div className={styles.description}>
             Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.
           </div>
         </div>
       </div>
 
       <div className={styles.infoUrl}>
-        <span className={styles.icon}>
+        <div className={styles.icon}>
           <GithubIcon />
-        </span>
+        </div>
 
         <button className={styles.installLink}>Install</button>
       </div>
