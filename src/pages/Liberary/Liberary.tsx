@@ -1,19 +1,54 @@
 import  { useEffect, useState } from 'react'
 import { useMatch } from 'react-router';
 import { routes } from '@constants';
+import { ComponentCard } from '@components/ComponentCard/ComponentCard';
 import styles from './Liberary.module.scss';
 
 const Liberary = () => {
   const match = useMatch(routes.LIBERARY);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible(!isFilterVisible); // Toggle the visibility state
+  };
 
   const test = Array.from({ length: 50 }, (_, index) => (
-    <div key={index}>test</div>
+    <div key={index}><ComponentCard /></div>
   ));
 
   return (
     <div className={styles.libraryContainer}>
       <div className={styles.scrollableContent}>
-        {test}
+        <div className={styles.Header}>
+          <div className={styles.Search}>
+            <input type="text" placeholder="Search for components"/>
+          </div>
+          <div className={styles.Filter}>
+            <button onClick={toggleFilterVisibility}> Filter </button>
+            <form className={isFilterVisible ? styles.visible : ''}>
+              <div className={styles.Option}>
+                <input type="checkbox" id="knowledge-base" name="options[]" value="knowledge-base" />
+                <label>knowledge base</label>
+              </div>
+
+              <div className={styles.Option}>
+                <input type="checkbox" id="problem-solver" name="options[]" value="problem-solver" />
+                <label>problem solver</label>
+              </div>
+              
+              <div className={styles.Option}>
+                <input type="checkbox" id="interface" name="options[]" value="interface" />
+                <label>interface</label>
+              </div>
+
+              <div className={styles.Option}>
+                <input type="checkbox" id="subsystem" name="options[]" value="subsystem" />
+                <label>subsystem</label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className={styles.CardsContainer}>{test}</div>
       </div>
     </div>
   );
