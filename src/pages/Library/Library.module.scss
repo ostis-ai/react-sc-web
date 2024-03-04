@@ -12,7 +12,7 @@
 }
 
 .scrollableContent::-webkit-scrollbar {
-    width: 16px; /* Adjust the width as needed */
+    width: 16px; 
 }
 
 .scrollableContent::-webkit-scrollbar-track {
@@ -25,13 +25,13 @@
     border-radius: 16;
 }
 
-.Header {
+.header {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.Search input[type=text] {
+.search input[type=text] {
     border: 1px solid #E8E8E8;
     border-radius: 10px;
     padding: 8px 0px 8px 8px;
@@ -39,16 +39,16 @@
     color: #737373;
 }
 
-.Search input[type=text]::placeholder {
+.search input[type=text]::placeholder {
     color: #737373;
 }
 
-.Search input[type=text]:focus {
+.search input[type=text]:focus {
     border-color:  #cfcfcf;
     outline: none;
 }
 .Filter {
-    position: relative; /* Ensure relative positioning for absolute positioning of the form */
+    position: relative;
 }
 
 .Filter button {

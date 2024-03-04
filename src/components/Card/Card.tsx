@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import styles from './ComponentCard.module.scss';
+import styles from './Card.module.scss';
 import { CardComponentType, CardComponentImageType } from './types';
 
 import Interface from '@assets/images/DefaultPluginImages/Interface.svg';
@@ -12,51 +12,38 @@ import GithubIcon from '@assets/images/GithubIcon.svg';
 interface ComponentCardProps {
   subtitle: CardComponentType;
   description: string;
-  content: CardComponentImageType;
+  logo: CardComponentImageType;
 }
 
-export const ComponentCard: React.FC<ComponentCardProps> = ({ subtitle, description, content }) => {
-  let contentComponent: React.ReactNode;
+export const Card: React.FC<ComponentCardProps> = ({ subtitle, description, logo }) => {
+  let logoComponent: React.ReactNode;
   let subtitleClassName = classNames(styles.subtitle, styles.defaultSubtitle);
 
-  switch (content) {
+  switch (logo) {
     case CardComponentImageType.interfaceImg:
-      contentComponent = <Interface />;
-      break;
-    case CardComponentImageType.knowledgeBaseImg:
-      contentComponent = <KnowledgeBase />;
-      break;
-    case CardComponentImageType.problemSolverImg:
-      contentComponent = <ProblemSolver />;
-      break;
-    case CardComponentImageType.subSystemImg:
-      contentComponent = <Subsystem />;
-      break;
-    default:
-      contentComponent = null;
-  }
-
-  switch (subtitle) {
-    case CardComponentType.knowledgeBase:
-      subtitleClassName = classNames(styles.subtitle, styles.subtitleKnowledgeBase);
-      break;
-    case CardComponentType.subSystem:
-      subtitleClassName = classNames(styles.subtitle, styles.subtitleSubSystem);
-      break;
-    case CardComponentType.problemSolver:
-      subtitleClassName = classNames(styles.subtitle, styles.subtitleProblemSolver);
-      break;
-    case CardComponentType.interface:
+      logoComponent = <Interface />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleInterface);
       break;
-    default:
+    case CardComponentImageType.knowledgeBaseImg:
+      logoComponent = <KnowledgeBase />;
+      subtitleClassName = classNames(styles.subtitle, styles.subtitleKnowledgeBase);
       break;
+    case CardComponentImageType.problemSolverImg:
+      logoComponent = <ProblemSolver />;
+      subtitleClassName = classNames(styles.subtitle, styles.subtitleProblemSolver);
+      break;
+    case CardComponentImageType.subSystemImg:
+      logoComponent = <Subsystem />;
+      subtitleClassName = classNames(styles.subtitle, styles.subtitleSubSystem);
+      break;
+    default:
+      logoComponent = null;
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.info}>
-        <div className={styles.content}>{contentComponent}</div>
+        <div className={styles.content}>{logoComponent}</div>
 
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>

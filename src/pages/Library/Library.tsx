@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMatch } from 'react-router';
 import { routes } from '@constants';
-import { ComponentCard } from '@components/ComponentCard/ComponentCard';
+import { Card } from '@components/Card/Card';
 import styles from './Library.module.scss';
-import { CardComponentImageType, CardComponentType } from '@components/ComponentCard/types';
+import { CardComponentImageType, CardComponentType } from '@components/Card/types';
 
 const Library = () => {
   const match = useMatch(routes.LIBRARY);
@@ -15,28 +15,25 @@ const Library = () => {
 
   const test = Array.from({ length: 50 }, (_, index) => (
     <div key={index}>
-      <ComponentCard
+      <Card
         subtitle={CardComponentType.knowledgeBase}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-        content={CardComponentImageType.knowledgeBaseImg}
+        logo={CardComponentImageType.knowledgeBaseImg}
       />
-
-      <ComponentCard
+      <Card
         subtitle={CardComponentType.interface}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-        content={CardComponentImageType.interfaceImg}
+        logo={CardComponentImageType.interfaceImg}
       />
-
-      <ComponentCard
+      <Card
         subtitle={CardComponentType.problemSolver}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-        content={CardComponentImageType.problemSolverImg}
+        logo={CardComponentImageType.problemSolverImg}
       />
-
-      <ComponentCard
+      <Card
         subtitle={CardComponentType.subSystem}
         description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-        content={CardComponentImageType.subSystemImg}
+        logo={CardComponentImageType.subSystemImg}
       />
     </div>
   ));
@@ -44,9 +41,9 @@ const Library = () => {
   return (
     <div className={styles.libraryContainer}>
       <div className={styles.scrollableContent}>
-        <div className={styles.Header}>
-          <div className={styles.Search}>
-            <input type="text" placeholder="Search for components"/>
+        <div className={styles.header}>
+          <div className={styles.search}>
+            <input type="text" placeholder="Search for components" />
           </div>
           <div className={styles.Filter}>
             <button onClick={toggleFilterVisibility}> Filter </button>
