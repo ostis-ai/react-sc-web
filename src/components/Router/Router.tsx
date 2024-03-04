@@ -5,7 +5,7 @@ import { routes, DEFAULT_COMMAND_PATH } from '@constants';
 import { Action } from '@pages/Action';
 import { Command } from '@pages/Command';
 import { Main } from '@pages/Main';
-import { Liberary } from '@pages/Liberary'
+import { Library } from '@pages/Library'
 
 export const Router = () => {
   return (
@@ -22,7 +22,7 @@ export const Router = () => {
           <Route index element={<Navigate to={DEFAULT_COMMAND_PATH} replace />} />
           <Route path={routes.COMMAND} element={<Command />} />
           <Route path={routes.ACTION} element={<Action />} />
-          <Route path={routes.LIBERARY} element={<Liberary />} />
+          <Route path={routes.LIBRARY} element={<Library />} />
         </Route>
       </Routes>
     </Suspense>

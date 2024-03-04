@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react';
 import { useMatch } from 'react-router';
 import { routes } from '@constants';
 import { ComponentCard } from '@components/ComponentCard/ComponentCard';
-import styles from './Liberary.module.scss';
+import styles from './Library.module.scss';
 import { CardComponentImageType, CardComponentType } from '@components/ComponentCard/types';
 
-const Liberary = () => {
-  const match = useMatch(routes.LIBERARY);
+const Library = () => {
+  const match = useMatch(routes.LIBRARY);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   const toggleFilterVisibility = () => {
-    setIsFilterVisible(!isFilterVisible); // Toggle the visibility state
+    setIsFilterVisible(!isFilterVisible); 
   };
 
   const test = Array.from({ length: 50 }, (_, index) => (
@@ -79,4 +79,4 @@ const Liberary = () => {
   );
 };
 
-export default Liberary;
+export default Library;
