@@ -85,7 +85,7 @@ const Library = () => {
           <div className={styles.Filter}>
             <button className={styles.FilterButton} onClick={toggleFilterVisibility}>
               <FilterIcon />
-              <label>Filter</label>
+              <label>{translate({ ru: 'Фильтр', en: 'Filter' })}</label>
             </button>
             <form className={isFilterVisible ? styles.visible : ''}>
               <div className={styles.Option}>
