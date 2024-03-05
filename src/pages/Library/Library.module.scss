@@ -1,3 +1,5 @@
+@import '~@assets/styles/variables/colors.scss';
+
 .libraryContainer {
     position: relative;
     width: 100%;
@@ -16,12 +18,12 @@
 }
 
 .scrollableContent::-webkit-scrollbar-track {
-    background-color: #fff; 
+    background-color: $white; 
 }
 
 .scrollableContent::-webkit-scrollbar-thumb {
     background-color: #C8C8C8;
-    border: 6px white solid;
+    border: 6px $white solid;
     border-radius: 16;
 }
 
@@ -29,44 +31,49 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    margin: 0px 10px 0px 10px
 }
 
-.search input[type=text] {
-    border: 1px solid #E8E8E8;
-    border-radius: 10px;
-    padding: 8px 0px 8px 8px;
-    margin: 20px 10px 20px 10px;
-    color: #737373;
+.searchField {
+   width: min-content;
+   min-width: 450px;
+   border: 1px solid #E8E8E8;
 }
 
-.search input[type=text]::placeholder {
-    color: #737373;
-}
-
-.search input[type=text]:focus {
-    border-color:  #cfcfcf;
-    outline: none;
-}
 .Filter {
     position: relative;
+    margin-left: 10px;
 }
 
-.Filter button {
+
+.FilterButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid #E8E8E8;
     border-radius: 10px;
     padding: 8px 16px 8px 16px;
     color: #737373;
-    background-color: #fff;
+    background-color: $white;
+}
+.FilterButton:hover {
+    border-color: $dark-blue;
+}
+
+.FilterButton label {
+    margin-left: 5px;
 }
 
 .Filter form {
     display: none;
     position: absolute;
+    width: 180px;
     top: 100%; 
     left: 0; 
     z-index: 100; 
-    background-color: #fff; 
-    padding: 16px; 
+    background-color: $white; 
+    padding: 16px;
+    margin-top: 5px; 
     border-radius: 10px; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14); 
 }
@@ -79,7 +86,16 @@
 .Option {
     color: #737373;
     display: flex;
-    width: 200px;
+    margin: 5px 0px 5px 0px;
+}
+.Option input[type="checkbox"] {
+    margin-right: 10px; 
+}
+.Option input:checked + label:after{
+    width: 500px;
+    background-color: #737373;
+    border: 1px solid red;
+    padding: 5px;
 }
 
 .CardsContainer {
