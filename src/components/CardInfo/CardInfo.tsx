@@ -1,5 +1,6 @@
 import styles from './CardInfo.module.scss'
 
+import CloseIcon from '@assets/images/CloseIcon.svg'
 import ComponentImg from '@assets/images/ComponentImg.svg'
 import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg'
 
@@ -11,13 +12,15 @@ export const CardInfo = () => {
           <ProblemSolver />
         </div>
 
-        <div className={styles.cardInfo}>
+        <div className={styles.info}>
           <div className={styles.infoItem}>
             <div className={styles.title}>Агент поиска кратчайшего пути в графе</div>
 
             <div className={styles.cardType}>problem solver</div>
 
-            <div className={styles.closeModal}></div>
+            <button className={styles.closeButton}>
+              <CloseIcon className={styles.closeIcon} />
+            </button>
           </div>
 
           <div className={styles.subtitle}>
@@ -50,16 +53,14 @@ export const CardInfo = () => {
       <div className={styles.installationMethod}>
         <div className={styles.blockName}>Метод установки</div>
         <div className={styles.componentImg}>
-            <ComponentImg />
+          <ComponentImg />
         </div>
       </div>
 
-    <div className={styles.autorship}>
-        <div className={styles.blockName}>
-            Автор
-        </div>
-        <div className={styles.author}>Иванов И. И.</div>
-    </div>
+      <div className={styles.autorship}>
+        <div className={styles.blockName}>Автор</div>
+        <div className={styles.subtitle}>Иванов И. И.</div>
+      </div>
     </div>
   );
 };
