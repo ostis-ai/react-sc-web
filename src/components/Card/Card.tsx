@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import styles from './Card.module.scss';
 import { CardComponentType, CardComponentImageType } from './types';
+import { CardInfo } from '@components/CardInfo/CardInfo';
 
 import Interface from '@assets/images/DefaultPluginImages/Interface.svg';
 import KnowledgeBase from '@assets/images/DefaultPluginImages/KnowledgeBase.svg';
@@ -10,13 +11,14 @@ import Subsystem from '@assets/images/DefaultPluginImages/Subsystem.svg';
 import GithubIcon from '@assets/images/GithubIcon.svg';
 
 interface ComponentCardProps {
-  title: string
+  title: string;
   subtitle: CardComponentType;
   description: string;
   logo: CardComponentImageType;
 }
 
 export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, description, logo }) => {
+  const [showCardInfo, setShowCardInfo] = useState(false);
   let logoComponent: React.ReactNode;
   let subtitleClassName = classNames(styles.subtitle, styles.defaultSubtitle);
 
@@ -41,10 +43,19 @@ export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, descriptio
       logoComponent = null;
   }
 
+  const handleContainerClick = () => {
+    setShowCardInfo(!showCardInfo);
+  };
+
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={handleContainerClick}>
+      {showCardInfo && (
+        <div className={styles.overlay}>
+          <CardInfo />
+        </div>
+      )}
       <div className={styles.info}>
-        <div className={styles.content}>{logoComponent}</div>
+        <div className={styles.logo}>{logoComponent}</div>
 
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>
