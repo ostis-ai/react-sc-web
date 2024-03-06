@@ -5,6 +5,7 @@ import { SidePanelWrapper } from '@components/SidePanelWrapper';
 
 import styles from './Layout.module.scss';
 import { Language } from '@components/Language';
+import { DevModeSwitch } from '@components/DevModeSwitch';
 import { Link } from 'react-router-dom';
 import Logo from '@assets/images/Logo.svg';
 import { routes } from '@constants';
@@ -30,8 +31,16 @@ export const Layout: FC<IProps> = ({ children }) => {
         </Link>
       </div>
       <header className={styles.header}>
-        <div className={styles.languageWrapper}>
-          <Language />
+        <div className={styles.headerButtonWrapper}>
+          <div>
+            <DevModeSwitch />
+          </div>
+          <div className={styles.languageWrapper}>
+            <Language />
+          </div>
+          <div>
+            <button className={styles.logInButton}>Войти</button>
+          </div>
         </div>
       </header>
       <SidePanelWrapper>

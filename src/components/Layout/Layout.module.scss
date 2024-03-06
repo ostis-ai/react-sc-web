@@ -8,7 +8,7 @@
   grid-template-rows: 80px 1fr;
   grid-template-areas:
     'logo  header'
-    'sidebar  scn';  
+    'sidebar  scn';
 
   min-height: 100%;
 
@@ -21,7 +21,7 @@
   justify-content: end;
   grid-area: header;
   width: 100%;
-  padding:  0px 24px 0 0;
+  padding: 0px 24px 0 0;
 }
 
 .sideBar {
@@ -50,8 +50,7 @@
 
 .languageWrapper {
   width: 100%;
-  display: flex;
-  justify-content: flex-end;
+  display: inline-block;
 }
 
 .sideBarContent {
@@ -70,3 +69,31 @@
     grid-template-columns: minmax(0px, 25%) 1fr;
   }
 }
+
+.headerButtonWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 328px;
+  height: 42px;
+  gap: 32px;
+}
+
+.logInButton {
+  width: 108px;
+  height: 42px;
+  color: $navy-blue;
+  background: none;
+  border: none;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 26px;
+} 
+
+.logInButton:hover {
+  background: $white;
+  border: 2px solid #DBDBDB;
+  border-radius: 10px;
+} 
