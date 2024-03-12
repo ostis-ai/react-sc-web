@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
@@ -12,8 +12,6 @@ import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
 import { useDispatch } from 'react-redux';
 import { Tooltip, useTranslate } from 'ostis-ui-lib';
-import { useSelector } from 'react-redux';
-import { selectDevMode } from '@store/devModeSlice';
 
 export interface IProps {
   children?: ReactNode;
@@ -21,9 +19,11 @@ export interface IProps {
 
 export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
-  const enabled = useSelector(selectDevMode);
   const translate = useTranslate();
-  const tooltipTitle = enabled ? 'Enabled' : 'Disabled';
+
+  const storedValue = localStorage.getItem('devMode');
+  const isEnabled = storedValue ? JSON.parse(storedValue) : false;
+  const tooltipTitle = isEnabled ? 'Enabled' : 'Disabled';
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
