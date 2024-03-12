@@ -10,6 +10,15 @@ import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentImageType, CardComponentType } from '@components/Card/types';
 
+
+interface CardIntervace {
+  title: string;
+  subtitle: CardComponentType;
+  description: string;
+  logo: CardComponentImageType;
+}
+
+
 // For test
 
 function getRandomInt(min: number, max: number): number {
@@ -18,60 +27,85 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
-const Library = () => {
-  const match = useMatch(routes.LIBRARY);
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
-
-  const translate = useTranslate();
-
-  const toggleFilterVisibility = () => {
-    setIsFilterVisible(!isFilterVisible);
-  };
-
-  const test_arr: JSX.Element[] = [];
-  for (let i = 0; i < 50; i++) {
+function mock_fetch(num: number): CardIntervace[] {
+  const test_arr: CardIntervace[] = [];
+  for (let i = 0; i < num; i++) {
     const type = getRandomInt(0, 3);
-    let element: JSX.Element;
+    let element: CardIntervace;
     switch (type) {
       case 0:
-        element = <Card
-          title="Name"
-          subtitle={CardComponentType.knowledgeBase}
-          description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-          logo={CardComponentImageType.knowledgeBaseImg}
-        />
+        element = {
+          title: "Name",
+          subtitle: CardComponentType.knowledgeBase,
+          description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
+          logo: CardComponentImageType.knowledgeBaseImg,
+        }
         break;
       case 1:
-        element = <Card
-          title="Name"
-          subtitle={CardComponentType.interface}
-          description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-          logo={CardComponentImageType.interfaceImg}
-        />
+        element = {
+          title: "Name",
+          subtitle: CardComponentType.interface,
+          description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
+          logo: CardComponentImageType.interfaceImg,
+        }
         break;
       case 2:
-        element = <Card
-          title="Name"
-          subtitle={CardComponentType.problemSolver}
-          description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-          logo={CardComponentImageType.problemSolverImg}
-        />
+        element = {
+          title: "Name",
+          subtitle: CardComponentType.problemSolver,
+          description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
+          logo: CardComponentImageType.problemSolverImg,
+        }
         break;
       case 3:
-        element = <Card
-          title="Name"
-          subtitle={CardComponentType.subSystem}
-          description="Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis."
-          logo={CardComponentImageType.subSystemImg}
-        />
+        element = {
+          title: "Name",
+          subtitle: CardComponentType.subSystem,
+          description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
+          logo: CardComponentImageType.subSystemImg,
+        }
         break;
       default:
-        element = <></>;
+        element = {
+          title: "Unknown",
+          subtitle: CardComponentType.unknown,
+          description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
+          logo: CardComponentImageType.unknown,
+        };
         break;
     }
     test_arr.push(element);
   }
+  return test_arr;
+}
+
+const Library = () => {
+  const match = useMatch(routes.LIBRARY);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [cards, setCards] = useState<CardIntervace[] | undefined>();
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  useEffect(() => {
+    setCards(mock_fetch(10));
+  }, []);
+
+  const translate = useTranslate();
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (selectedFilters.includes(value)) {
+      setSelectedFilters(selectedFilters.filter(filter => filter !== value));
+    } else {
+      setSelectedFilters([...selectedFilters, value]);
+    }
+  };
+  const filteredCards = selectedFilters.length > 0
+    ? cards?.filter(card => selectedFilters.includes(card.subtitle))
+    : cards;
+
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible(!isFilterVisible);
+  };
 
   return (
     <div className={styles.libraryContainer}>
@@ -89,28 +123,35 @@ const Library = () => {
             </button>
             <form className={isFilterVisible ? styles.visible : ''}>
               <div className={styles.Option}>
-                <input type="checkbox" id="knowledge-base" name="options[]" value="knowledge-base"/>
+                <input type="checkbox" id="knowledge-base" name="options[]" value="knowledge-base" onChange={handleFilterChange}/>
                 <label htmlFor="knowledge-base">knowledge base</label>
               </div>
 
               <div className={styles.Option}>
-                <input type="checkbox" id="problem-solver" name="options[]" value="problem-solver"/>
+                <input type="checkbox" id="problem-solver" name="options[]" value="problem-solver" onChange={handleFilterChange}/>
                 <label htmlFor="problem-solver">problem solver</label>
               </div>
 
               <div className={styles.Option}>
-                <input type="checkbox" id="interface" name="options[]" value="interface" />
+                <input type="checkbox" id="interface" name="options[]" value="interface" onChange={handleFilterChange} />
                 <label htmlFor="interface">interface</label>
               </div>
 
               <div className={styles.Option}>
-                <input type="checkbox" id="subsystem" name="options[]" value="subsystem" />
+                <input type="checkbox" id="subsystem" name="options[]" value="subsystem" onChange={handleFilterChange} />
                 <label htmlFor="subsystem">subsystem</label>
               </div>
             </form>
           </div>
         </div>
-        <div className={styles.CardsContainer}>{test_arr}</div>
+        <div className={styles.CardsContainer}>
+          {
+          filteredCards?.map(
+            (item) => 
+            <Card title={item.title} subtitle={item.subtitle} description={item.description} logo={item.logo} />
+          )
+          }
+        </div>
       </div>
     </div>
   );
