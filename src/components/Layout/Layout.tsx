@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useState, useEffect } from 'react';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
@@ -20,14 +20,22 @@ export interface IProps {
 export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
   const translate = useTranslate();
-
-  const storedValue = localStorage.getItem('devMode');
-  const isEnabled = storedValue ? JSON.parse(storedValue) : false;
+  const [isEnabled, setIsEnabled] = useState(false);
   const tooltipTitle = isEnabled ? 'Enabled' : 'Disabled';
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
   };
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem('devMode');
+    const value = storedValue ? JSON.parse(storedValue) : false;
+    setIsEnabled(value);
+  });
+
+  const handleChangeIsEnable = () => {
+    setIsEnabled(!isEnabled)
+  }
 
   return (
     <div className={styles.root}>
@@ -40,7 +48,7 @@ export const Layout: FC<IProps> = ({ children }) => {
         <div className={styles.headerButtonWrapper}>
           <div>
             <Tooltip title={tooltipTitle}>
-              <DevModeSwitch />
+              <DevModeSwitch onClick={handleChangeIsEnable}/>
             </Tooltip>
           </div>
           <div className={styles.languageWrapper}>
