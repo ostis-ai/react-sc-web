@@ -11,6 +11,9 @@ import Logo from '@assets/images/Logo.svg';
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
 import { useDispatch } from 'react-redux';
+import { Tooltip, useTranslate } from 'ostis-ui-lib';
+import { useSelector } from 'react-redux';
+import { selectDevMode } from '@store/devModeSlice';
 
 export interface IProps {
   children?: ReactNode;
@@ -18,6 +21,9 @@ export interface IProps {
 
 export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
+  const enabled = useSelector(selectDevMode);
+  const translate = useTranslate();
+  const tooltipTitle = enabled ? 'Enabled' : 'Disabled';
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
@@ -33,13 +39,17 @@ export const Layout: FC<IProps> = ({ children }) => {
       <header className={styles.header}>
         <div className={styles.headerButtonWrapper}>
           <div>
-            <DevModeSwitch />
+            <Tooltip title={tooltipTitle}>
+              <DevModeSwitch />
+            </Tooltip>
           </div>
           <div className={styles.languageWrapper}>
             <Language />
           </div>
           <div>
-            <button className={styles.logInButton}>Войти</button>
+            <button className={styles.logInButton}>
+              {translate({ ru: 'Войти', en: 'Login' })}
+            </button>
           </div>
         </div>
       </header>
