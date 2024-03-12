@@ -14,28 +14,27 @@ interface ComponentCardProps {
   title: string;
   subtitle: CardComponentType;
   description: string;
-  logo: CardComponentImageType;
 }
 
-export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, description, logo }) => {
+export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, description }) => {
   const [showCardInfo, setShowCardInfo] = useState(false);
   let logoComponent: React.ReactNode;
   let subtitleClassName = classNames(styles.subtitle, styles.defaultSubtitle);
 
-  switch (logo) {
-    case CardComponentImageType.interfaceImg:
+  switch (subtitle) {
+    case CardComponentType.interface:
       logoComponent = <Interface />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleInterface);
       break;
-    case CardComponentImageType.knowledgeBaseImg:
+    case CardComponentType.knowledgeBase:
       logoComponent = <KnowledgeBase />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleKnowledgeBase);
       break;
-    case CardComponentImageType.problemSolverImg:
+    case CardComponentType.problemSolver:
       logoComponent = <ProblemSolver />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleProblemSolver);
       break;
-    case CardComponentImageType.subSystemImg:
+    case CardComponentType.subSystem:
       logoComponent = <Subsystem />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleSubSystem);
       break;

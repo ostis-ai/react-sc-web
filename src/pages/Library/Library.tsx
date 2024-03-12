@@ -15,11 +15,8 @@ interface CardIntervace {
   title: string;
   subtitle: CardComponentType;
   description: string;
-  logo: CardComponentImageType;
 }
 
-
-// For test
 
 function getRandomInt(min: number, max: number): number {
   min = Math.ceil(min);
@@ -38,7 +35,6 @@ function mock_fetch(num: number): CardIntervace[] {
           title: "Name",
           subtitle: CardComponentType.knowledgeBase,
           description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
-          logo: CardComponentImageType.knowledgeBaseImg,
         }
         break;
       case 1:
@@ -46,7 +42,6 @@ function mock_fetch(num: number): CardIntervace[] {
           title: "Name",
           subtitle: CardComponentType.interface,
           description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
-          logo: CardComponentImageType.interfaceImg,
         }
         break;
       case 2:
@@ -54,7 +49,6 @@ function mock_fetch(num: number): CardIntervace[] {
           title: "Name",
           subtitle: CardComponentType.problemSolver,
           description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
-          logo: CardComponentImageType.problemSolverImg,
         }
         break;
       case 3:
@@ -62,7 +56,6 @@ function mock_fetch(num: number): CardIntervace[] {
           title: "Name",
           subtitle: CardComponentType.subSystem,
           description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
-          logo: CardComponentImageType.subSystemImg,
         }
         break;
       default:
@@ -70,7 +63,6 @@ function mock_fetch(num: number): CardIntervace[] {
           title: "Unknown",
           subtitle: CardComponentType.unknown,
           description: "Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.",
-          logo: CardComponentImageType.unknown,
         };
         break;
     }
@@ -86,7 +78,7 @@ const Library = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
   useEffect(() => {
-    setCards(mock_fetch(10));
+    setCards(mock_fetch(15));
   }, []);
 
   const translate = useTranslate();
@@ -148,7 +140,7 @@ const Library = () => {
           {
           filteredCards?.map(
             (item) => 
-            <Card title={item.title} subtitle={item.subtitle} description={item.description} logo={item.logo} />
+            <Card title={item.title} subtitle={item.subtitle} description={item.description} />
           )
           }
         </div>
