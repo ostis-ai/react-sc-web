@@ -1,25 +1,35 @@
-import { FormEvent } from 'react';
+import { FormEvent, useRef } from 'react';
 
 import Cookies from 'js-cookie';
 
 import { useTranslate } from 'ostis-ui-lib';
-import { Input } from 'ostis-ui-lib';
+
+import { authenticateUser } from '@api/requests/authenticate';
 
 import styles from './Auth.module.scss';
 
 import AuthPageImage from '@assets/images/authPage.svg';
-import { authenticateUser } from '@api/requests/authenticate';
-import { InputField } from '@components/fields/InputField';
 
 const Auth = () => {
   const translate = useTranslate();
 
+  const loginRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
   const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    //resp = authenticateUser()
+    const login = loginRef.current?.value;
+    const password = passwordRef.current?.value;
 
-    Cookies.set('token', 'example');
+    if (login && password) {
+      const resp = await authenticateUser({
+        login,
+        password,
+      });
+
+      Cookies.set('token', resp.toString());
+    }
   };
 
   // TODO: use Input from ostis-ui-lib
@@ -33,14 +43,14 @@ const Auth = () => {
         <form className={styles.loginForm} onSubmit={onLoginSubmit}>
           <input
             className={styles.loginFormInput}
+            ref={loginRef}
             type="text"
             placeholder={translate({ ru: 'Логин', en: 'Login' })}
           />
 
-          <br />
-
           <input
             className={styles.loginFormInput}
+            ref={passwordRef}
             type="password"
             placeholder={translate({ ru: 'Пароль', en: 'Password' })}
           />
@@ -48,9 +58,6 @@ const Auth = () => {
           <div className={styles.forgetPassword}>
             <a href="#forget">{translate({ ru: 'Забыли пароль?', en: 'Forgot your password?' })}</a>
           </div>
-
-          <br />
-          <br />
 
           <button type="submit" className={styles.loginFormSubmit}>
             {translate({ ru: 'Войти', en: 'Sign in' })}

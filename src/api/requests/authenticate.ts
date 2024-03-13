@@ -3,17 +3,20 @@ import { client, isAxiosError, scUtils } from '@api';
 
 import { doCommand } from './command';
 
+/*
 interface IRequest {
   username: string;
   password: string;
 }
+*/
 
 // TODO: change authenticate agent
 //
 // QUESTIONS:
-// * Where to pass request? 
+// * Where to pass request?
 //
-export const authenticateUser = async (req: IRequest) => {
+export const authenticateUser = async (req: any) => {
+  console.log(req);
   const { uiMenuViewAuthenticateUser } = await scUtils.findKeynodes(
     'ui_menu_view_authenticate_user',
   );
