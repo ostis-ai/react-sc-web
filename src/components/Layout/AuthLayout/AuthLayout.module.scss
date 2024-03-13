@@ -1,0 +1,55 @@
+@import '~@assets/styles/variables/colors.scss';
+
+.root {
+  position: relative;
+
+  background: #{$beige};
+
+  display: grid;
+  grid-template-columns: minmax(0px, 463px) 1fr;
+  grid-template-rows: 80px 1fr;
+  grid-template-areas:
+    'logo  header'
+    'main  main';
+
+  min-height: 100%;
+  min-width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  grid-area: header;
+  width: 100%;
+  padding:  0px 24px 0 0;
+}
+
+.logoWrapper {
+  height: 100px;
+  width: 100%;
+
+  grid-area: logo;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  background: #{$beige};
+
+  padding: 0 0 0 24px;
+}
+
+.languageWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.main {
+  display: flex;
+  height: 100%;
+  padding-top: 36px;
+  padding-left: 24px;
+  grid-area: main;
+}

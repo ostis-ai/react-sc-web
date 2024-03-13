@@ -5,6 +5,8 @@ import { routes, DEFAULT_COMMAND_PATH } from '@constants';
 import { Command } from '@pages/Command';
 import { Main } from '@pages/Main';
 import { Question } from '@pages/Question';
+import { Auth } from '@pages/Auth';
+import { AuthLayout } from '@components/Layout/AuthLayout';
 
 export const Router = () => {
   return (
@@ -22,6 +24,14 @@ export const Router = () => {
           <Route path={routes.COMMAND} element={<Command />} />
           <Route path={routes.QUESTION} element={<Question />} />
         </Route>
+        <Route
+          path={routes.AUTH}
+          element={
+            <AuthLayout>
+              <Auth />
+            </AuthLayout>
+          }
+        />
       </Routes>
     </Suspense>
   );

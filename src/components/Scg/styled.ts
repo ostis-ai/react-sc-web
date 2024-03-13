@@ -1,5 +1,5 @@
 import { Spinner } from 'ostis-ui-lib';
-import styled from 'styled-components';
+import { styled, } from 'styled-components';
 
 export const Wrap = styled.div<{ show?: boolean }>`
   position: absolute;

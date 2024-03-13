@@ -1,4 +1,4 @@
-import { ScClient } from 'ts-sc-client';
+import { ScClient, } from 'ts-sc-client';
 import { SC_URL } from '@constants';
 
 const TIMEOUT = 2000;
