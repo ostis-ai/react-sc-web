@@ -27,8 +27,9 @@ const Auth = () => {
         login,
         password,
       });
-
-      Cookies.set('token', resp.toString());
+      if (resp) {
+        Cookies.set('is_authorized', 'true');
+      }
     }
   };
 

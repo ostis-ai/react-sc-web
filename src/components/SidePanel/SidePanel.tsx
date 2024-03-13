@@ -46,6 +46,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     })();
   }, [dispatch, user]);
 
+  // TODO: pass authorizable prop in DecompositionPanel
   return (
     <div className={className}>
       <div className={styles.sideBarContent}>

@@ -1,45 +1,44 @@
-import { ScAddr, ScTemplate, ScType } from 'ts-sc-client';
-import { client, isAxiosError, scUtils } from '@api';
+import { ScTemplate, ScType } from 'ts-sc-client';
 
-import { doCommand } from './command';
+import { client, scUtils } from '@api';
+import { Action } from '@api/sc/actions/Action';
 
-/*
 interface IRequest {
-  username: string;
+  login: string;
   password: string;
 }
-*/
 
-// TODO: change authenticate agent
-//
-// QUESTIONS:
-// * Where to pass request?
-//
-export const authenticateUser = async (req: any) => {
+export const authenticateUser = async (req: IRequest): Promise<boolean> => {
   console.log(req);
-  const { uiMenuViewAuthenticateUser } = await scUtils.findKeynodes(
-    'ui_menu_view_authenticate_user',
-  );
 
-  const res = await doCommand(uiMenuViewAuthenticateUser.value);
+  const action = new Action('action_authenticate_user');
 
-  if (isAxiosError(res)) return null;
+  const loginLink = await scUtils.createLink(req.login);
+  const passwordLink = await scUtils.createLink(req.password);
 
-  const actionNode = new ScAddr(res.data.question);
+  if (loginLink && passwordLink) {
+    action.addArgs(loginLink, passwordLink);
+  }
+
+  const actionNode = await action.initiate();
+
+  if (!actionNode) return false;
+
   const answer = await scUtils.getAnswer(actionNode);
 
-  if (!answer) return null;
+  if (!answer) return false;
 
-  const targetLinkAlias = '_targetLink';
-  const linkTemplate = new ScTemplate();
-  linkTemplate.triple(answer, ScType.EdgeAccessVarPosPerm, [ScType.LinkVar, targetLinkAlias]);
-  const linkRes = await client.templateSearch(linkTemplate);
+  const { conceptAuthorisedUser } = await scUtils.findKeynodes('concept_authorised_user');
 
-  if (!linkRes.length) return null;
+  const userAlias = '_user_alias';
 
-  const targetLinkAddr = linkRes[0].get(targetLinkAlias);
-  const contents = await client.getLinkContents([targetLinkAddr]);
-  const content = contents[0].data;
+  const userTemplate = new ScTemplate();
+  userTemplate.triple(answer, ScType.EdgeAccessVarPosPerm, [ScType.NodeConst, userAlias]);
+  userTemplate.triple(conceptAuthorisedUser, ScType.EdgeAccessVarPosPerm, userAlias);
 
-  return JSON.parse(String(content));
+  const linkRes = await client.templateSearch(userTemplate);
+
+  if (!linkRes.length) return false;
+
+  return true;
 };
