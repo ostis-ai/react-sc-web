@@ -2,54 +2,51 @@
 
 .root {
   position: relative;
-
-  background: #{$beige};
-
+  background: $beige;
   display: grid;
-  grid-template-columns: minmax(0px, 463px) 1fr;
+  grid-template-columns: minmax(0, 463px) 1fr;
   grid-template-rows: 80px 1fr;
   grid-template-areas:
-    'logo  header'
-    'main  main';
+    'logo header'
+    'main main';
+  min-height: 100vh;
+  min-width: 100vw;
 
-  min-height: 100%;
-  min-width: 100%;
-}
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    grid-area: header;
+    width: 100%;
+    padding-right: 24px;
+  }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  grid-area: header;
-  width: 100%;
-  padding:  0px 24px 0 0;
-}
+  .logoWrapper {
+    height: 100px;
+    width: 100%;
+    grid-area: logo;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: $beige;
+    padding-left: 24px;
+  }
 
-.logoWrapper {
-  height: 100px;
-  width: 100%;
+  .main {
+    display: flex;
+    height: 100%;
+    padding-top: 36px;
+    padding-left: 24px;
+    grid-area: main;
 
-  grid-area: logo;
-
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  background: #{$beige};
-
-  padding: 0 0 0 24px;
+    @media (max-width: 600px) {
+      padding: 0;
+    }
+  }
 }
 
 .languageWrapper {
   width: 100%;
   display: flex;
   justify-content: flex-end;
-}
-
-.main {
-  display: flex;
-  height: 100%;
-  padding-top: 36px;
-  padding-left: 24px;
-  grid-area: main;
 }

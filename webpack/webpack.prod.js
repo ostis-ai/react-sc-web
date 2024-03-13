@@ -1,8 +1,8 @@
-const { resolve } = require('path')
-const { merge } = require('webpack-merge')
-const CompressionPlugin = require('compression-webpack-plugin')
-const { EsbuildPlugin } = require('esbuild-loader')
-const config = require('./webpack.config')
+const { resolve } = require('path');
+const { merge } = require('webpack-merge');
+const CompressionPlugin = require('compression-webpack-plugin');
+const { EsbuildPlugin } = require('esbuild-loader');
+const config = require('./webpack.config');
 
 module.exports = merge(config, {
   mode: 'production',
@@ -28,4 +28,4 @@ module.exports = merge(config, {
     publicPath: '/',
     clean: true,
   },
-})
+});

@@ -2,7 +2,7 @@
 
 ### Environment
 
-The following .env example file is required for the correct work of the application. 
+The following .env example file is required for the correct work of the application.
 
 You can copy the file _.env.example_ and rename it to the _.env_
 
@@ -22,14 +22,17 @@ To start the project you need to do four steps:
 4. Run ostis-web-platform and react-sc-web
 
 #### Install ostis-web-platform with correct branches
-Installation instructions you can find in the repository [**ostis-web-platform**](https://github.com/ostis-ai/ostis-web-platform). 
+
+Installation instructions you can find in the repository [**ostis-web-platform**](https://github.com/ostis-ai/ostis-web-platform).
 
 But you should use the following branches
+
 - sc-machine - _main_
 - sc-web - _feature/add-scg-iframe_
 - ims.ostis.kb - _main_
 
 To checkout these, use the following commands:
+
 ```sh
 git clone https://github.com/ostis-ai/ostis-web-platform
 cd ostis-web-platform
@@ -38,8 +41,10 @@ git clone https://github.com/ostis-ai/sc-web
 cd sc-web && git fetch origin feature/add-scg-iframe && git checkout feature/add-scg-iframe && cd ..
 ```
 
-#### Build and run ostis-web-platform 
+#### Build and run ostis-web-platform
+
 - ##### Natively (Debian-based distros only)
+
 ```sh
 cd ostis-web-platform
 ./scripts/install_platform.sh
@@ -52,6 +57,7 @@ python3 sc-web/server/app.py --allowed_origins=http://localhost:3000
 ```
 
 - ##### Or with **Docker**
+
 ```sh
 cd ostis-web-platform
 ./scripts/install_submodules.sh
@@ -60,26 +66,30 @@ docker compose build web
 ```
 
 Change the docker-compose.yml using any editor to allow the origin of react-sc-web:
+
 ```yaml
 services:
   web:
-     image: ostis/sc-web:0.8.1-Unlock
-     build:
-       context: ./sc-web
-     restart: unless-stopped
-     command:
-       - "--server-host=machine"
-       - "--allowed_origins=http://localhost:3000" # <- add this line
-     ports:
-       - "8000:8000"
+    image: ostis/sc-web:0.8.1-Unlock
+    build:
+      context: ./sc-web
+    restart: unless-stopped
+    command:
+      - '--server-host=machine'
+      - '--allowed_origins=http://localhost:3000' # <- add this line
+    ports:
+      - '8000:8000'
 ```
+
 Then proceed in the terminal:
+
 ```sh
 docker compose run machine build # build kb
 docker compose up # or run just the machine / web service, e.g. docker compose up machine
 ```
 
 #### Install react-sc-web
+
 ```sh
 cd ostis-web-platform
 git clone git@github.com:ostis-ai/react-sc-web.git
@@ -88,6 +98,7 @@ npm install
 ```
 
 #### Run react-sc-web alongside ostis-web-platform
+
 ```sh
 cd ostis-web-platform/react-sc-web
 npm start

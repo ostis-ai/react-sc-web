@@ -8,7 +8,7 @@
   grid-template-rows: 80px 1fr;
   grid-template-areas:
     'logo  header'
-    'sidebar  scn';  
+    'sidebar  scn';
 
   min-height: 100%;
 
@@ -21,7 +21,7 @@
   justify-content: end;
   grid-area: header;
   width: 100%;
-  padding:  0px 24px 0 0;
+  padding: 0px 24px 0 0;
 }
 
 .sideBar {
