@@ -1,63 +1,10 @@
 # React sc-web
 
-### Environment
-
-The following .env example file is required for the correct work of the application. 
-
-You can copy the file _.env.example_ and rename it to the _.env_
-
-```
-PORT=3000
-SC_URL="ws://localhost:8090/ws_json"
-API_URL="http://localhost:8000"
-```
-
 ### Quick start
 
-To start the project you need to do four steps:
+Go to the [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem) and follow installation and run instructions.
 
-1. Install ostis-web-platform with correct branches
-2. Build ostis-web-platform
-3. Install react-sc-web
-4. Run ostis-web-platform and react-sc-web
-
-#### Install ostis-web-platform with correct branches
-Installation instructions you can find in the repository [**ostis-web-platform**](https://github.com/ostis-ai/ostis-web-platform). 
-
-But you should use the following branches
-- sc-machine - _main_
-- sc-web - _feature/add-scg-iframe_
-- ims.ostis.kb - _main_
-
-To checkout these, use the following commands:
-```sh
-git clone https://github.com/ostis-ai/ostis-web-platform
-cd ostis-web-platform
-git checkout 0.9.0-Unlock
-git clone https://github.com/ostis-ai/sc-web
-cd sc-web && git fetch origin feature/add-scg-iframe && git checkout feature/add-scg-iframe && cd ..
-```
-
-#### Build and run ostis-web-platform 
-- ##### Natively (Debian-based distros only)
-```sh
-cd ostis-web-platform
-./scripts/install_platform.sh
-
-./scripts/run_sc_server.sh
-
-# *in another terminal*
-cd ostis-web-platform
-python3 sc-web/server/app.py --allowed_origins=http://localhost:3000
-```
-
-- ##### Or with **Docker**
-```sh
-cd ostis-web-platform
-./scripts/install_submodules.sh
-docker compose pull
-docker compose build web
-```
+- ##### Build and run with **Docker**
 
 Change the docker-compose.yml using any editor to allow the origin of react-sc-web:
 ```yaml
@@ -81,16 +28,15 @@ docker compose up # or run just the machine / web service, e.g. docker compose u
 
 #### Install react-sc-web
 ```sh
-cd ostis-web-platform
 git clone git@github.com:ostis-ai/react-sc-web.git
-cd react-sc-web
-npm install
+cd react-sc-web/scripts
+./install_react_sc_web.sh
 ```
 
 #### Run react-sc-web alongside ostis-web-platform
 ```sh
-cd ostis-web-platform/react-sc-web
-npm start
+cd react-sc-web/scripts
+./run_react_sc_web.sh
 ```
 
 Application starts on port 3000.
@@ -128,7 +74,7 @@ To analyze the code and find problems according to the given rules, described in
 │   ├── webpack.config.js
 │   ├── webpack.dev.js
 │   └── webpack.prod.js
-├── .env.example
+├── .env
 ├── .eslintrc.js
 ├── .gitignore
 ├── .prettierrc
