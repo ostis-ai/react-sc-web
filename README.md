@@ -30,7 +30,7 @@ docker compose up # or run just the machine / web service, e.g. docker compose u
 ```sh
 git clone git@github.com:ostis-ai/react-sc-web.git
 cd react-sc-web/scripts
-./install_react_sc_web.sh
+./scripts/install_react_sc_web.sh
 ```
 
 #### Run react-sc-web alongside ostis-web-platform
