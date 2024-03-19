@@ -1,10 +1,12 @@
 # React sc-web
 
-### Quick start
+### Quick start (recommended)
 
-Go to the [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem) and follow installation and run instructions.
+Go to the [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem), checkout to the `demo` branch and follow installation and run instructions.
 
-- ##### Build and run with **Docker**
+### Run in another system
+
+#### Build and run with **Docker** (if you use docker)
 
 Change the docker-compose.yml using any editor to allow the origin of react-sc-web:
 ```yaml
@@ -33,7 +35,13 @@ cd react-sc-web/scripts
 ./scripts/install_react_sc_web.sh
 ```
 
-#### Run react-sc-web alongside ostis-web-platform
+#### Run sc-web with allowed_origins
+```sh
+cd sc-web
+python3 server/app.py" --allowed_origins=http://localhost:3000
+```
+
+#### Run react-sc-web
 ```sh
 cd react-sc-web
 ./scripts/run_react_sc_web.sh
