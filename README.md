@@ -35,8 +35,8 @@ cd react-sc-web/scripts
 
 #### Run react-sc-web alongside ostis-web-platform
 ```sh
-cd react-sc-web/scripts
-./run_react_sc_web.sh
+cd react-sc-web
+./scripts/run_react_sc_web.sh
 ```
 
 Application starts on port 3000.
