@@ -6,7 +6,7 @@ Go to the [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem), chec
 
 ### Run in another system
 
-#### Build and run with **Docker** (if you use docker)
+#### Build and run with **Docker** (using [ostis-web-platform](https://github.com/ostis-ai/ostis-web-platform))
 
 Change the docker-compose.yml using any editor to allow the origin of react-sc-web:
 ```yaml
@@ -31,8 +31,8 @@ docker compose up # or run just the machine / web service, e.g. docker compose u
 #### Install react-sc-web
 ```sh
 git clone git@github.com:ostis-ai/react-sc-web.git
-cd react-sc-web/scripts
-./scripts/install_react_sc_web.sh
+cd react-sc-web
+./scripts/install_react_sc_web_dependencies.sh
 ```
 
 #### Run sc-web with allowed_origins
