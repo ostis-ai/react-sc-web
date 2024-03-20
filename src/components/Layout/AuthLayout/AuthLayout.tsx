@@ -9,6 +9,8 @@ import { Language } from '@components/Language';
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
 
+import AuthPageImage from '@assets/images/authPage.png';
+
 import styles from './AuthLayout.module.scss';
 
 export interface IProps {
@@ -34,6 +36,9 @@ export const AuthLayout: FC<IProps> = ({ children }) => {
         </div>
       </div>
       <main className={styles.main}>{children}</main>
+      <div className={styles.authPageImage}>
+        <img src={AuthPageImage} className={styles.innerAuthPageImage} />
+      </div>
     </div>
   );
 };

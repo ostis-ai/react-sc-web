@@ -15,6 +15,7 @@ import { useSelector } from '@hooks';
 import { selectUser, setFormat } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
+import { selectIsAuthorised } from '@store/authSlice';
 
 interface IProps {
   className?: string;
@@ -25,6 +26,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
+  const isAuthorise = useSelector(selectIsAuthorised);
 
   const { onAddClick } = useDecompositionContext();
 
@@ -46,7 +48,6 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     })();
   }, [dispatch, user]);
 
-  // TODO: pass authorizable prop in DecompositionPanel
   return (
     <div className={className}>
       <div className={styles.sideBarContent}>
@@ -75,7 +76,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                 className={styles.errorBoundary}
               >
-                {<DecompositionPanel />}
+                {<DecompositionPanel editable={isAuthorise} deleteable={isAuthorise} />}
               </ErrorBoundary>
             </Accordion>
           </div>

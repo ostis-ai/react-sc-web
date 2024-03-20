@@ -1,6 +1,6 @@
-import { ScTemplate, ScType } from 'ts-sc-client';
+import { type ScAddr } from 'ts-sc-client';
 
-import { client, scUtils } from '@api';
+import { scUtils } from '@api';
 import { Action } from '@api/sc/actions/Action';
 
 interface IRequest {
@@ -8,10 +8,8 @@ interface IRequest {
   password: string;
 }
 
-export const authenticateUser = async (req: IRequest): Promise<boolean> => {
-  console.log(req);
-
-  const action = new Action('action_authenticate_user');
+export const authenticateUser = async (req: IRequest): Promise<ScAddr> => {
+  const action = new Action('action_authorise_user');
 
   const loginLink = await scUtils.createLink(req.login);
   const passwordLink = await scUtils.createLink(req.password);
@@ -20,9 +18,13 @@ export const authenticateUser = async (req: IRequest): Promise<boolean> => {
     action.addArgs(loginLink, passwordLink);
   }
 
-  const actionNode = await action.initiate();
+  const resp = await action.initiate();
 
-  if (!actionNode) return false;
+  if (!resp) throw new Error('unauthenticated');
+
+  return resp;
+
+  /*
 
   const answer = await scUtils.getAnswer(actionNode);
 
@@ -41,4 +43,6 @@ export const authenticateUser = async (req: IRequest): Promise<boolean> => {
   if (!linkRes.length) return false;
 
   return true;
+
+  */
 };

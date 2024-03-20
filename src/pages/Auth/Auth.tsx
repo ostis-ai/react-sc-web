@@ -1,35 +1,49 @@
 import { FormEvent, useRef } from 'react';
 
-import Cookies from 'js-cookie';
-
 import { useTranslate } from 'ostis-ui-lib';
 
 import { authenticateUser } from '@api/requests/authenticate';
 
 import styles from './Auth.module.scss';
 
-import AuthPageImage from '@assets/images/authPage.svg';
+import { useDispatch } from '@hooks/redux';
+import { setIsAuthorised } from '@store/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { routes } from '@constants';
+import { useErrorToast } from '@hooks/useErrorToast';
 
 const Auth = () => {
   const translate = useTranslate();
 
+  const addError = useErrorToast();
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
   const loginRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onLoginSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const login = loginRef.current?.value;
     const password = passwordRef.current?.value;
 
     if (login && password) {
-      const resp = await authenticateUser({
-        login,
-        password,
-      });
-      if (resp) {
-        Cookies.set('is_authorized', 'true');
-      }
+      authenticateUser({ login, password })
+        .then((_resp) => {
+          dispatch(setIsAuthorised({ isAuthorised: true }));
+          navigate(routes.MAIN);
+        })
+        .catch((error) => {
+          console.error(error);
+          addError(
+            translate({
+              ru: `Не удалось войти в метасистему`,
+              en: `It's failed to login in metasystem`,
+            }),
+          );
+        });
     }
   };
 
@@ -64,9 +78,6 @@ const Auth = () => {
             {translate({ ru: 'Войти', en: 'Sign in' })}
           </button>
         </form>
-      </div>
-      <div className={styles.right}>
-        <AuthPageImage />
       </div>
     </div>
   );
