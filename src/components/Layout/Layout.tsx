@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState, useEffect } from 'react';
+import { FC, ReactNode } from 'react';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
@@ -11,7 +11,8 @@ import Logo from '@assets/images/Logo.svg';
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
 import { useDispatch } from 'react-redux';
-import { Tooltip, useTranslate } from 'ostis-ui-lib';
+import { useTranslate } from 'ostis-ui-lib';
+import { Tooltip } from '@components/ToolTip/ToolTip';
 
 export interface IProps {
   children?: ReactNode;
@@ -20,22 +21,10 @@ export interface IProps {
 export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
   const translate = useTranslate();
-  const [isEnabled, setIsEnabled] = useState(false);
-  const tooltipTitle = isEnabled ? 'Enabled' : 'Disabled';
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
   };
-
-  useEffect(() => {
-    const storedValue = localStorage.getItem('devMode');
-    const value = storedValue ? JSON.parse(storedValue) : false;
-    setIsEnabled(value);
-  });
-
-  const handleChangeIsEnable = () => {
-    setIsEnabled(!isEnabled)
-  }
 
   return (
     <div className={styles.root}>
@@ -47,9 +36,7 @@ export const Layout: FC<IProps> = ({ children }) => {
       <header className={styles.header}>
         <div className={styles.headerButtonWrapper}>
           <div>
-            <Tooltip title={tooltipTitle}>
-              <DevModeSwitch onClick={handleChangeIsEnable}/>
-            </Tooltip>
+            <Tooltip commandAddr={'ui_dev_mode'} children={<DevModeSwitch />}></Tooltip>
           </div>
           <div className={styles.languageWrapper}>
             <Language />

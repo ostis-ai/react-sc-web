@@ -1,14 +1,9 @@
-import { FC } from 'react';
 import { useState } from 'react';
 import styles from './DevModeSwitch.module.scss';
 import DevModeON from '@assets/images/DevModeON.svg';
 import DevModeOFF from '@assets/images/DevModeOFF.svg';
 
-type DevModeSwitchProps = {
-  onClick: () => void;
-};
-
-export const DevModeSwitch: FC<DevModeSwitchProps> = ({ onClick }) => {
+export const DevModeSwitch = () => {
   const [checked, setChecked] = useState(() => {
     const storedValue = localStorage.getItem('devMode');
     return storedValue ? JSON.parse(storedValue) : false;
@@ -17,7 +12,6 @@ export const DevModeSwitch: FC<DevModeSwitchProps> = ({ onClick }) => {
   const handleChange = () => {
     setChecked(!checked);
     localStorage.setItem('devMode', JSON.stringify(!checked));
-    onClick();
   };
 
   return (
