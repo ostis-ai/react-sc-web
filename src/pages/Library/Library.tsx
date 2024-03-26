@@ -8,6 +8,7 @@ import SearchIcon from '@assets/images/Search.svg';
 import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
+import { searchAddrById } from '@api/sc/search/search';
 
 import { searchAddrById } from "../../api/sc/search/search"
 import { useScNavigation } from '@hooks/useScNavigation';
@@ -125,7 +126,7 @@ const Library = () => {
     setCards(mock_fetch(15));
     testFindGit();
   }, []);
-
+  
   useEffect(() => {
     const filtered = selectedFilters.length > 0 ? cards?.filter((card) => selectedFilters.includes(card.subtitle)) : cards;
     setFilteredCards(filtered);
