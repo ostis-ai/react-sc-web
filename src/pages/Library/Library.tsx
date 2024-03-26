@@ -9,8 +9,6 @@ import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
 import { searchAddrById } from '@api/sc/search/search';
-
-import { searchAddrById } from "../../api/sc/search/search"
 import { useScNavigation } from '@hooks/useScNavigation';
 import {
   ScAddr,
@@ -89,14 +87,8 @@ const Library = () => {
   const [filteredCards, setFilteredCards] = useState<CardIntervace[] | undefined>([]); 
 
   const translate = useTranslate();
-  const { goToActiveFormatCommand } = useScNavigation();
-  // template.triple(
-  //   ScType.NodeVar,
-  //   ScType.EdgeAccessVarPosPerm,
-  //   actionNode,
-  // );
 
-  const findComponentGit = async (componentAddr: ScAddr): Promise<ScAddr | null> => {
+  const findComponentGit = async (componentAddr: ScAddr): Promise<string | number | undefined> => {
     const template = new ScTemplate();
     const { nrelComponentAddress } = await scUtils.findKeynodes('nrel_component_address');
     const gitAlias = '_git';
@@ -107,19 +99,22 @@ const Library = () => {
       ScType.EdgeAccessVarPosPerm,
       nrelComponentAddress,
     );
-    const git = await client.templateSearch(template);
-    return git.length ? git[0].get(gitAlias) : null;
+    const result = await client.templateSearch(template);
+    const gitScAddr = result.length ? result[0].get(gitAlias) : undefined;
+
+    if (!gitScAddr)
+      return undefined;
+
+    const linkContents = await client.getLinkContents([gitScAddr]);
+    return linkContents[0].data;
   };
 
   const testFindGit = async () => {
     const scAddr = await searchAddrById("concept_cat_specification");
-    if (!scAddr) {
+    if (!scAddr)
       return
-    }
-    const gitScAddr = await findComponentGit(scAddr);
-    console.log(gitScAddr);
-    if (gitScAddr)
-      goToActiveFormatCommand(gitScAddr.value);
+    const gitUrl = await findComponentGit(scAddr);
+    console.log(gitUrl);
   }
 
   useEffect(() => {
