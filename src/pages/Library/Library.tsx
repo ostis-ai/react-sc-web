@@ -4,11 +4,22 @@ import { useMatch } from 'react-router';
 import { routes } from '@constants';
 import { Card } from '@components/Card/Card';
 import { Input } from '@components/input/Input';
-import { IconButton } from '@components/IconButton/IconButton';
 import SearchIcon from '@assets/images/Search.svg';
 import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
+
+import { searchAddrById } from "../../api/sc/search/search"
+import { useScNavigation } from '@hooks/useScNavigation';
+import {
+  ScAddr,
+  ScConstruction,
+  ScEventParams,
+  ScEventType,
+  ScTemplate,
+  ScType,
+} from 'ts-sc-client';
+import { client, scUtils } from '@api/sc';
 
 interface CardIntervace {
   title: string;
@@ -77,9 +88,42 @@ const Library = () => {
   const [filteredCards, setFilteredCards] = useState<CardIntervace[] | undefined>([]); 
 
   const translate = useTranslate();
+  const { goToActiveFormatCommand } = useScNavigation();
+  // template.triple(
+  //   ScType.NodeVar,
+  //   ScType.EdgeAccessVarPosPerm,
+  //   actionNode,
+  // );
+
+  const findComponentGit = async (componentAddr: ScAddr): Promise<ScAddr | null> => {
+    const template = new ScTemplate();
+    const { nrelComponentAddress } = await scUtils.findKeynodes('nrel_component_address');
+    const gitAlias = '_git';
+    template.tripleWithRelation(
+      componentAddr,
+      ScType.EdgeDCommonVar,
+      [ScType.LinkVar, gitAlias],
+      ScType.EdgeAccessVarPosPerm,
+      nrelComponentAddress,
+    );
+    const git = await client.templateSearch(template);
+    return git.length ? git[0].get(gitAlias) : null;
+  };
+
+  const testFindGit = async () => {
+    const scAddr = await searchAddrById("concept_cat_specification");
+    if (!scAddr) {
+      return
+    }
+    const gitScAddr = await findComponentGit(scAddr);
+    console.log(gitScAddr);
+    if (gitScAddr)
+      goToActiveFormatCommand(gitScAddr.value);
+  }
 
   useEffect(() => {
     setCards(mock_fetch(15));
+    testFindGit();
   }, []);
 
   useEffect(() => {
