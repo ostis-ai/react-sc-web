@@ -15,6 +15,7 @@ import { useSelector } from '@hooks';
 import { selectUser, setFormat } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
+import { Tooltip } from '@components/ToolTip/ToolTip';
 
 interface IProps {
   className?: string;
@@ -50,7 +51,9 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     <div className={className}>
       <div className={styles.sideBarContent}>
         <div className={styles.searchFieldWrap}>
-          <SearchField className={styles.searchField} />
+          <Tooltip systemId="ui_search_panel">
+            <SearchField className={styles.searchField} />
+          </Tooltip>
         </div>
         <div
           className={classNames(styles.accordionContent, {

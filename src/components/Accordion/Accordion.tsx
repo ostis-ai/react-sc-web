@@ -2,6 +2,7 @@ import { Expandable, useBooleanState } from 'ostis-ui-lib';
 import { FC, ReactNode } from 'react';
 import ChevronDown from '@assets/images/chevronDown.svg';
 import { IconButton } from '@components/IconButton';
+import { Tooltip } from '@components/ToolTip/ToolTip';
 
 import { ChevronDownWrapper, ContentWrapper, HeaderWrapper, Icon, LeftContent } from './styled';
 
@@ -47,16 +48,21 @@ export const Accordion: FC<IProps> = ({
     onRightClick?.();
   };
 
+  const systemId =
+    header === 'История' || header === 'History' ? 'ui_history_panel' : 'ui_section_panel';
+
   return (
     <div className={className}>
       <HeaderWrapper>
-        <LeftContent onClick={onHeaderClick}>
-          {leftIcon && <Icon>{leftIcon}</Icon>}
-          {header}
-          <ChevronDownWrapper expanded={expanded}>
-            <ChevronDown width="24" height="24" />
-          </ChevronDownWrapper>
-        </LeftContent>
+        <Tooltip systemId={systemId}>
+          <LeftContent onClick={onHeaderClick}>
+            {leftIcon && <Icon>{leftIcon}</Icon>}
+            {header}
+            <ChevronDownWrapper expanded={expanded}>
+              <ChevronDown width="24" height="24" />
+            </ChevronDownWrapper>
+          </LeftContent>
+        </Tooltip>
         {rightIcon && (
           <IconButton squared={true} onClick={onIconBtnClick}>
             {rightIcon}

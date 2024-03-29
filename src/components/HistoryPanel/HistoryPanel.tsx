@@ -9,6 +9,8 @@ import styles from './HistoryPanel.module.scss';
 
 import { Skeleton } from './Skeleton';
 
+import { Tooltip } from '@components/ToolTip/ToolTip';
+
 interface IProps {
   isLoading: boolean;
   requests: IRequest[];
@@ -37,7 +39,9 @@ export const HistoryPanel = (props: IProps) => {
               addr={question}
               onClick={onBtnClick(String(question))}
             >
-              <ScLangText addrOrSystemId={question} defaultText={String(question)} />
+              <Tooltip commandAddr={question}>
+                <ScLangText addrOrSystemId={question} defaultText={String(question)} />
+              </Tooltip>
             </ScTag>
           ))}
         </div>

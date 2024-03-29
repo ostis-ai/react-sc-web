@@ -30,21 +30,27 @@ export const Layout: FC<IProps> = ({ children }) => {
     <div className={styles.root}>
       <div className={styles.logoWrapper}>
         <Link to={routes.MAIN} onClick={handleLogoOnClick}>
-          <Logo />
+          <Tooltip systemId="ui_logo">
+            <Logo />
+          </Tooltip>
         </Link>
       </div>
       <header className={styles.header}>
         <div className={styles.headerButtonWrapper}>
           <div>
-            <Tooltip commandAddr={'ui_dev_mode'} children={<DevModeSwitch />}></Tooltip>
+            <Tooltip systemId="ui_dev_mode">
+              <DevModeSwitch />
+            </Tooltip>
           </div>
           <div className={styles.languageWrapper}>
             <Language />
           </div>
           <div>
-            <button className={styles.logInButton}>
-              {translate({ ru: 'Войти', en: 'Login' })}
-            </button>
+            <Tooltip systemId="ui_log_in_button">
+              <button className={styles.logInButton}>
+                {translate({ ru: 'Войти', en: 'Login' })}
+              </button>
+            </Tooltip>
           </div>
         </div>
       </header>
