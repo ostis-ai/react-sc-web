@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tooltip as BaseTooltip } from 'ostis-ui-lib';
 import { ReactNode, useEffect, useState, useRef } from 'react';
 import { ScLangText } from 'ostis-ui-lib';
@@ -23,7 +22,6 @@ export const Tooltip = ({ commandAddr, systemId, children }: IProps) => {
       if (systemId !== undefined) {
         const addr = await searchAddrById(systemId);
         setScAddr(addr?.value || undefined);
-        console.log(scAddr);
       }
     };
 
