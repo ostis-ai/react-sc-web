@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import { useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import { DecompositionPanel } from '@components/DecompositionPanel';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -12,7 +13,7 @@ import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { HistoryPanel } from '@components/HistoryPanel';
 import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
-import { selectUser, setFormat } from '@store/commonSlice';
+import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
 import { Tooltip } from '@components/ToolTip/ToolTip';
