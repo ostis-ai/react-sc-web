@@ -1,6 +1,6 @@
 import { Scg } from 'ostis-ui-lib';
 import { Spinner } from 'ostis-ui-lib';
-import { SwitchScgScn } from 'ostis-ui-lib';
+import { SwitchScgScn } from '@components/SwitchScgScn';
 import styled, { css } from 'styled-components';
 
 export const Struct = styled.div<{ isScg?: boolean }>`
