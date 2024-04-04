@@ -2,8 +2,18 @@ import classNames from 'classnames';
 import { TLanguage, useLanguageContext } from 'ostis-ui-lib';
 
 import styles from './language.module.scss';
+import { FC } from 'react';
 
-export const Language = () => {
+type HEXColor = `#${string}`;
+
+interface ILanguageProps {
+  primaryLanguageColor?: HEXColor;
+  secondaryLanguageColor?: HEXColor;
+}
+
+// TODO: colors 
+
+export const Language: FC<ILanguageProps> = ({ primaryLanguageColor, secondaryLanguageColor }) => {
   const { lang, setLang } = useLanguageContext();
 
   const setLanguage = (lang: TLanguage) => () => {
@@ -11,10 +21,14 @@ export const Language = () => {
     setLang(lang);
   };
 
+  const primaryLanguageStyle = primaryLanguageColor ? { color: primaryLanguageColor } : {};
+  const secondaryLanguageStyle = secondaryLanguageColor ? { color: secondaryLanguageColor } : {};
+
   return (
     <div className={styles.languageWrap}>
       <div className={styles.languages}>
         <span
+          style={lang == 'en' ? primaryLanguageStyle : secondaryLanguageStyle}
           className={classNames(styles.language, styles.engLanguage, {
             [styles.activeLanguage]: lang === 'en',
           })}
@@ -24,6 +38,7 @@ export const Language = () => {
         </span>
         <span className={styles.divider} />
         <span
+          style={lang == 'ru' ? primaryLanguageStyle : secondaryLanguageStyle}
           className={classNames(styles.language, styles.rusLanguage, {
             [styles.activeLanguage]: lang === 'ru',
           })}

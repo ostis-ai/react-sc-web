@@ -26,6 +26,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
+
   const isAuthorise = useSelector(selectIsAuthorised);
 
   const { onAddClick } = useDecompositionContext();
@@ -56,15 +57,15 @@ export const SidePanel: FC<IProps> = ({ className }) => {
         </div>
         <div
           className={classNames(styles.accordionContent, {
-            [styles.accordionContent_userCanEdit]: !!user?.can_edit,
-            [styles.accordionContent_admin]: !!user?.is_admin,
+            [styles.accordionContent_userCanEdit]: isAuthorise,
+            [styles.accordionContent_admin]: isAuthorise,
           })}
         >
           <div>
             <Accordion
               header={translate({ ru: 'Разделы', en: 'Sections' })}
               leftIcon={<Sections />}
-              rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
+              rightIcon={isAuthorise ? <Plus /> : null}
               onRightClick={onAddClick}
               expanded
             >

@@ -11,6 +11,8 @@ import { setIsAuthorised } from '@store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
 import { useErrorToast } from '@hooks/useErrorToast';
+import { Input } from '@components/input/Input';
+import { Button } from '@components/Button';
 
 const Auth = () => {
   const translate = useTranslate();
@@ -47,8 +49,6 @@ const Auth = () => {
     }
   };
 
-  // TODO: use Input from ostis-ui-lib
-
   return (
     <div className={styles.authPageWrapper}>
       <div className={styles.left}>
@@ -56,27 +56,23 @@ const Auth = () => {
           {translate({ ru: 'Авторизация', en: 'Authorization' })}
         </h5>
         <form className={styles.loginForm} onSubmit={onLoginSubmit}>
-          <input
+          <Input
             className={styles.loginFormInput}
             ref={loginRef}
             type="text"
             placeholder={translate({ ru: 'Логин', en: 'Login' })}
           />
-
-          <input
+          <Input
             className={styles.loginFormInput}
             ref={passwordRef}
             type="password"
             placeholder={translate({ ru: 'Пароль', en: 'Password' })}
           />
-
           <div className={styles.forgetPassword}>
+            <div></div>
             <a href="#forget">{translate({ ru: 'Забыли пароль?', en: 'Forgot your password?' })}</a>
           </div>
-
-          <button type="submit" className={styles.loginFormSubmit}>
-            {translate({ ru: 'Войти', en: 'Sign in' })}
-          </button>
+          <Button className={styles.loginFormSubmit}>Submit</Button>
         </form>
       </div>
     </div>
