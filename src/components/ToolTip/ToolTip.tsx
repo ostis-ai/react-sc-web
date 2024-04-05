@@ -6,6 +6,8 @@ import { selectDevMode } from '@store/devModeSlice';
 import styles from './Tooltip.module.scss';
 import { ScTag } from 'ostis-ui-lib';
 import { searchAddrById } from '@api/sc/search/search';
+import { ScAddr, ScTemplate, ScType } from 'ts-sc-client';
+import { client, scUtils } from '@api/sc';
 
 interface IProps {
   children: ReactNode;
@@ -18,17 +20,41 @@ export const Tooltip = ({ commandAddr, systemId, children }: IProps) => {
   const [scAddr, setScAddr] = useState<undefined | number>(undefined);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAddr = async () => {
       if (systemId !== undefined) {
         const addr = await searchAddrById(systemId);
-        setScAddr(addr?.value || undefined);
+        if (devMode && addr) {
+          const description = await findComponentDescription(addr);
+          setScAddr(description?.value || undefined);
+        } else {
+          setScAddr(addr?.value || undefined);
+        }
       }
     };
 
-    fetchData();
-  }, [systemId]);
+    fetchAddr();
+  }, [systemId, devMode]);
 
-  // если не надо рендерить компоненты без адреса if (systemId !== undefined && scAddr !== null)
+  const findComponentDescription = async (componentAddr: ScAddr): Promise<ScAddr | undefined> => {
+    const template = new ScTemplate();
+    const { nrelDescriptionForDeveloperMode } = await scUtils.findKeynodes(
+      'nrel_description_for_developer_mode',
+    );
+    const descriptionAlias = '_description';
+    template.tripleWithRelation(
+      componentAddr,
+      ScType.EdgeDCommonVar,
+      [ScType.NodeVar, descriptionAlias],
+      ScType.EdgeAccessVarPosPerm,
+      nrelDescriptionForDeveloperMode,
+    );
+    const result = await client.templateSearch(template);
+    const descriptionScAddr = result.length ? result[0].get(descriptionAlias) : undefined;
+
+    if (!descriptionScAddr) return undefined;
+    return descriptionScAddr;
+  };
+
   if (systemId !== undefined) {
     const title = <ScLangText addrOrSystemId={Number(scAddr)} />;
     return (
