@@ -11,10 +11,12 @@ import { CardComponentType } from '@components/Card/types';
 import { findComponentsSpecifications } from "./utils";
 
 
-interface CardIntervace {
-  title: string;
-  subtitle: CardComponentType;
+interface CardInterface {
+  name: string;
+  type: CardComponentType;
   description: string;
+  github: string;
+  //scAddr: ScAddr;
 }
 
 function getRandomInt(min: number, max: number): number {
@@ -23,46 +25,51 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function mock_fetch(num: number): CardIntervace[] {
-  const test_arr: CardIntervace[] = [];
+function mock_fetch(num: number): CardInterface[] {
+  const test_arr: CardInterface[] = [];
   for (let i = 0; i < num; i++) {
     const type = getRandomInt(0, 3);
-    let element: CardIntervace;
-    
+    let element: CardInterface;
+
     switch (type) {
       case 0:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.knowledgeBase,
+          name: 'Name',
+          type: CardComponentType.knowledgeBase,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       case 1:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.interface,
+          name: 'Name',
+          type: CardComponentType.interface,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       case 2:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.problemSolver,
+          name: 'Name',
+          type: CardComponentType.problemSolver,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       case 3:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.subSystem,
+          name: 'Name',
+          type: CardComponentType.subSystem,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       default:
         element = {
-          title: 'Unknown',
-          subtitle: CardComponentType.unknown,
+          name: 'Unknown',
+          type: CardComponentType.unknown,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
     }
@@ -74,9 +81,9 @@ function mock_fetch(num: number): CardIntervace[] {
 const Library = () => {
   const match = useMatch(routes.LIBRARY);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const [cards, setCards] = useState<CardIntervace[] | undefined>([]);
+  const [cards, setCards] = useState<CardInterface[] | undefined>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [filteredCards, setFilteredCards] = useState<CardIntervace[] | undefined>([]); 
+  const [filteredCards, setFilteredCards] = useState<CardInterface[] | undefined>([]);
 
   const translate = useTranslate();
 
@@ -84,7 +91,6 @@ const Library = () => {
   //   const specification = await getSpecification(component);
   //   if (!specification)
   //       return
-
   //   const systemIdentifier = await findComponentSystemIdentifier(specification);
   //   const explanation = await findComponentExplanation(specification);
   //   const gitUrl = await findComponentGit(specification);
@@ -108,9 +114,12 @@ const Library = () => {
     setCards(mock_fetch(15));
     findComponentsSpecifications();
   }, []);
-  
+
   useEffect(() => {
-    const filtered = selectedFilters.length > 0 ? cards?.filter((card) => selectedFilters.includes(card.subtitle)) : cards;
+    const filtered =
+      selectedFilters.length > 0
+        ? cards?.filter((card) => selectedFilters.includes(card.type))
+        : cards;
     setFilteredCards(filtered);
   }, [cards, selectedFilters]);
 
@@ -125,8 +134,8 @@ const Library = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    const filtered = cards?.filter((card) => card.title.includes(value)); 
-    setFilteredCards(filtered); 
+    const filtered = cards?.filter((card) => card.name.includes(value));
+    setFilteredCards(filtered);
   };
 
   const toggleFilterVisibility = () => {
@@ -197,7 +206,13 @@ const Library = () => {
         </div>
         <div className={styles.CardsContainer}>
           {filteredCards?.map((item) => (
-            <Card title={item.title} subtitle={item.subtitle} description={item.description} />
+            <Card
+              name={item.name}
+              type={item.type}
+              description={item.description}
+              github={item.github}
+              scAddr={testScAddr}
+            />
           ))}
         </div>
       </div>

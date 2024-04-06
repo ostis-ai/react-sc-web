@@ -1,6 +1,5 @@
 .container {
   width: 1045px;
-  height: 90%;
   border-radius: 24px;
   background-color: #ffffff;
   padding: 20px;
@@ -43,19 +42,22 @@
   margin-right: 100px;
 }
 
+.tool {
+  order: 2;
+  background-color: #5f95e5;
+}
+
 .cardType {
   padding: 4px 8px 4px 8px;
   height: 5%;
   border-radius: 8px;
   font-size: 15px;
   color: #ffffff;
-  order: 2;
   background-color: #5f95e5;
   width: 122px;
 }
 
 .closeButton {
-  order: 3;
   background-color: #ffffff;
   border: none;
 }
