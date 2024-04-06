@@ -8,9 +8,17 @@ import SearchIcon from '@assets/images/Search.svg';
 import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
-import { findComponentsSpecifications, findComponentGit, getSpecification, findComponentSystemIdentifier, findComponentExplanation } from "./utils";
+import {
+  findComponentsSpecifications,
+  findComponentGit,
+  getSpecification,
+  findComponentSystemIdentifier,
+  findComponentExplanation,
+  findComponentType
+} from './utils';
 import { ScAddr } from 'ts-sc-client';
 
+import { searchAddrById } from '@api/sc/search/search';
 
 interface CardInterface {
   name: string;
@@ -34,9 +42,13 @@ async function mock_fetch(components: ScAddr[]) {
       let element: CardInterface;
 
       const specification = await getSpecification(component);
-      const git = specification ? await findComponentGit(specification) as string : "#";
-      const systemIdentifier = specification ? await findComponentSystemIdentifier(specification) as string : "...";
-      const explanation = specification ? await findComponentExplanation(specification) as string: "...";
+      const git = specification ? ((await findComponentGit(specification)) as string) : '#';
+      const systemIdentifier = specification
+        ? ((await findComponentSystemIdentifier(specification)) as string)
+        : '...';
+      const explanation = specification
+        ? ((await findComponentExplanation(specification)) as string)
+        : '...';
       console.log(git);
 
       switch (type) {
@@ -87,9 +99,9 @@ async function mock_fetch(components: ScAddr[]) {
           break;
       }
       test_arr.push(element);
-    })
-  )
-  console.log(test_arr)
+    }),
+  );
+  console.log(test_arr);
   return test_arr;
 }
 
@@ -102,6 +114,34 @@ const Library = () => {
   const [components, setComponents] = useState<ScAddr[] | undefined>([]);
 
   const translate = useTranslate();
+
+  const testFindScAddr = async () => {
+    const components: ScAddr[] = [];
+    const testScAddr = await searchAddrById('concept_cat_specification');
+    console.log(testScAddr);
+    if (testScAddr) components.push(testScAddr);
+
+    const test_arr: CardInterface[] = [];
+    await Promise.all(
+      components.map(async (component) => {
+        
+        const git = await findComponentGit(component) as string;
+        const systemIdentifier = await findComponentSystemIdentifier(component) as string
+        const explanation = await findComponentExplanation(component) as string
+        const type = await findComponentType(component);
+
+        const element: CardInterface = {
+          name: systemIdentifier,
+          type: type,
+          description: explanation,
+          github: git,
+          scAddr: component,
+        };
+        test_arr.push(element);
+      }),
+    );
+    setCards(test_arr);
+  };
 
   // await Promise.all(components.map(async (component) => {
   //   const specification = await getSpecification(component);
@@ -131,16 +171,16 @@ const Library = () => {
       const components = await findComponentsSpecifications();
       setComponents(components);
     };
-    fetchData()
+    fetchData();
   }, []);
 
   useEffect(() => {
+    testFindScAddr();
     const setData = async (components: ScAddr[]) => {
       const tmp = await mock_fetch(components);
       setCards(tmp);
     };
-    if (components)
-      setData(components)
+    if (components) setData(components);
   }, [components]);
 
   useEffect(() => {

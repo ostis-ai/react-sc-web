@@ -7,10 +7,3 @@ export const enum CardComponentType {
   unknown = "unknown"
 }
 
-export const enum CardComponentImageType {
-    knowledgeBaseImg = 'knowledgeBaseImg',
-    problemSolverImg = 'problemSolverImg',
-    interfaceImg = 'interfaceImg',
-    subSystemImg = 'subSystemImg',
-    unknown = "unknown",
-}
