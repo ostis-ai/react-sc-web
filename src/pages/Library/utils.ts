@@ -8,7 +8,7 @@ import {
 import { client, scUtils } from '@api/sc';
 
 
-const findComponentGit = async (componentAddr: ScAddr): Promise<string | number | undefined> => {
+export const findComponentGit = async (componentAddr: ScAddr): Promise<string | number | undefined> => {
     const template = new ScTemplate();
     const { nrelComponentAddress } = await scUtils.findKeynodes('nrel_component_address');
     const gitAlias = '_git';
@@ -46,7 +46,7 @@ const findComponentInstallationMethod = async (componentAddr: ScAddr) => {
     return methodScAddr;
 };
 
-const findComponentSystemIdentifier = async (componentAddr: ScAddr) => {
+export const findComponentSystemIdentifier = async (componentAddr: ScAddr) => {
     const template = new ScTemplate();
     const { nrelSystemIdentifier } = await scUtils.findKeynodes('nrel_system_identifier');
     const systemIdentifierAlias = '_systemIdentifier';
@@ -66,7 +66,7 @@ const findComponentSystemIdentifier = async (componentAddr: ScAddr) => {
 };
 
 
-const findComponentExplanation = async (componentAddr: ScAddr) => {
+export const findComponentExplanation = async (componentAddr: ScAddr) => {
     const template = new ScTemplate();
     const { nrelExplanation } = await scUtils.findKeynodes('nrel_explanation');
     const explanationAlias = '_explanation';
@@ -207,7 +207,7 @@ const getComponents = async (agentResult: ScAddr) => {
     return components;
 }
 
-const getSpecification = async (component: ScAddr) => {
+export const getSpecification = async (component: ScAddr) => {
     const template = new ScTemplate();
     const specificationAlias = '_specification';
     const { conceptReusableComponent } = await scUtils.findKeynodes('concept_reusable_component');
