@@ -8,7 +8,8 @@ import SearchIcon from '@assets/images/Search.svg';
 import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
-import { findComponentsSpecifications } from "./utils";
+import { findComponentsSpecifications, findComponentGit, getSpecification, findComponentSystemIdentifier, findComponentExplanation } from "./utils";
+import { ScAddr } from 'ts-sc-client';
 
 
 interface CardInterface {
@@ -16,7 +17,7 @@ interface CardInterface {
   type: CardComponentType;
   description: string;
   github: string;
-  //scAddr: ScAddr;
+  scAddr: ScAddr;
 }
 
 function getRandomInt(min: number, max: number): number {
@@ -25,56 +26,70 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function mock_fetch(num: number): CardInterface[] {
+async function mock_fetch(components: ScAddr[]) {
   const test_arr: CardInterface[] = [];
-  for (let i = 0; i < num; i++) {
-    const type = getRandomInt(0, 3);
-    let element: CardInterface;
+  await Promise.all(
+    components.map(async (component) => {
+      const type = getRandomInt(0, 3);
+      let element: CardInterface;
 
-    switch (type) {
-      case 0:
-        element = {
-          name: 'Name',
-          type: CardComponentType.knowledgeBase,
-          description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
-          github: 'https://github.com',
-        };
-        break;
-      case 1:
-        element = {
-          name: 'Name',
-          type: CardComponentType.interface,
-          description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
-          github: 'https://github.com',
-        };
-        break;
-      case 2:
-        element = {
-          name: 'Name',
-          type: CardComponentType.problemSolver,
-          description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
-          github: 'https://github.com',
-        };
-        break;
-      case 3:
-        element = {
-          name: 'Name',
-          type: CardComponentType.subSystem,
-          description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
-          github: 'https://github.com',
-        };
-        break;
-      default:
-        element = {
-          name: 'Unknown',
-          type: CardComponentType.unknown,
-          description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
-          github: 'https://github.com',
-        };
-        break;
-    }
-    test_arr.push(element);
-  }
+      const specification = await getSpecification(component);
+      const git = specification ? await findComponentGit(specification) as string : "#";
+      const systemIdentifier = specification ? await findComponentSystemIdentifier(specification) as string : "...";
+      const explanation = specification ? await findComponentExplanation(specification) as string: "...";
+      console.log(git);
+
+      switch (type) {
+        case 0:
+          element = {
+            name: systemIdentifier,
+            type: CardComponentType.knowledgeBase,
+            description: explanation,
+            github: git,
+            scAddr: component,
+          };
+          break;
+        case 1:
+          element = {
+            name: systemIdentifier,
+            type: CardComponentType.interface,
+            description: explanation,
+            github: git,
+            scAddr: component,
+          };
+          break;
+        case 2:
+          element = {
+            name: systemIdentifier,
+            type: CardComponentType.problemSolver,
+            description: explanation,
+            github: git,
+            scAddr: component,
+          };
+          break;
+        case 3:
+          element = {
+            name: systemIdentifier,
+            type: CardComponentType.subSystem,
+            description: explanation,
+            github: git,
+            scAddr: component,
+          };
+          break;
+        default:
+          element = {
+            name: 'Unknown',
+            type: CardComponentType.unknown,
+            description: explanation,
+            github: git,
+            scAddr: component,
+          };
+          break;
+      }
+      test_arr.push(element);
+    })
+  )
+  console.log(test_arr)
   return test_arr;
 }
 
@@ -84,6 +99,7 @@ const Library = () => {
   const [cards, setCards] = useState<CardInterface[] | undefined>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [filteredCards, setFilteredCards] = useState<CardInterface[] | undefined>([]);
+  const [components, setComponents] = useState<ScAddr[] | undefined>([]);
 
   const translate = useTranslate();
 
@@ -111,9 +127,21 @@ const Library = () => {
   // }));
 
   useEffect(() => {
-    setCards(mock_fetch(15));
-    findComponentsSpecifications();
+    const fetchData = async () => {
+      const components = await findComponentsSpecifications();
+      setComponents(components);
+    };
+    fetchData()
   }, []);
+
+  useEffect(() => {
+    const setData = async (components: ScAddr[]) => {
+      const tmp = await mock_fetch(components);
+      setCards(tmp);
+    };
+    if (components)
+      setData(components)
+  }, [components]);
 
   useEffect(() => {
     const filtered =
@@ -211,7 +239,7 @@ const Library = () => {
               type={item.type}
               description={item.description}
               github={item.github}
-              scAddr={testScAddr}
+              scAddr={item.scAddr}
             />
           ))}
         </div>
