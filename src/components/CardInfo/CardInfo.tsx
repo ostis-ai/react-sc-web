@@ -1,10 +1,17 @@
-import styles from './CardInfo.module.scss'
+import styles from './CardInfo.module.scss';
+import { ComponentCardProps } from '@components/Card/Card';
 
-import CloseIcon from '@assets/images/CloseIcon.svg'
-import ComponentImg from '@assets/images/ComponentImg.svg'
-import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg'
+import CloseIcon from '@assets/images/CloseIcon.svg';
+import ComponentImg from '@assets/images/ComponentImg.svg';
+import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';
 
-export const CardInfo = () => {
+export const CardInfo: React.FC<ComponentCardProps> = ({
+  name,
+  type,
+  description,
+  github,
+  scAddr,
+}) => {
   return (
     <div className={styles.container}>
       <div className={styles.cardInfo}>
@@ -14,13 +21,14 @@ export const CardInfo = () => {
 
         <div className={styles.info}>
           <div className={styles.infoItem}>
-            <div className={styles.title}>Агент поиска кратчайшего пути в графе</div>
+            <div className={styles.title}>{name}</div>
+            <div className={styles.tool}>
+              <div className={styles.cardType}>{type}</div>
 
-            <div className={styles.cardType}>problem solver</div>
-
-            <button className={styles.closeButton}>
-              <CloseIcon className={styles.closeIcon} />
-            </button>
+              <button className={styles.closeButton}>
+                <CloseIcon className={styles.closeIcon} />
+              </button>
+            </div>
           </div>
 
           <div className={styles.subtitle}>
@@ -34,9 +42,7 @@ export const CardInfo = () => {
       <div className={styles.annotation}>
         <div className={styles.blockName}>Примечание</div>
 
-        <div className={styles.subtitle}>
-          Агент работает как с ориентированными графами, так и с неориентированными
-        </div>
+        <div className={styles.subtitle}>{description}</div>
       </div>
 
       <div className={styles.dependencies}>
@@ -47,7 +53,7 @@ export const CardInfo = () => {
 
       <div className={styles.address}>
         <div className={styles.blockName}>Адрес хранилища</div>
-        <div className={styles.storageAddress}>https://github.com/ostis-apps/....scp</div>
+        <div className={styles.storageAddress}>{github}</div>
       </div>
 
       <div className={styles.installationMethod}>

@@ -12,10 +12,12 @@ import { searchAddrById } from '@api/sc/search/search';
 import { findComponentsSpecifications } from "./utils";
 
 
-interface CardIntervace {
-  title: string;
-  subtitle: CardComponentType;
+interface CardInterface {
+  name: string;
+  type: CardComponentType;
   description: string;
+  github: string;
+  //scAddr: ScAddr;
 }
 
 function getRandomInt(min: number, max: number): number {
@@ -24,46 +26,51 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function mock_fetch(num: number): CardIntervace[] {
-  const test_arr: CardIntervace[] = [];
+function mock_fetch(num: number): CardInterface[] {
+  const test_arr: CardInterface[] = [];
   for (let i = 0; i < num; i++) {
     const type = getRandomInt(0, 3);
-    let element: CardIntervace;
-    
+    let element: CardInterface;
+
     switch (type) {
       case 0:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.knowledgeBase,
+          name: 'Name',
+          type: CardComponentType.knowledgeBase,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       case 1:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.interface,
+          name: 'Name',
+          type: CardComponentType.interface,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       case 2:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.problemSolver,
+          name: 'Name',
+          type: CardComponentType.problemSolver,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       case 3:
         element = {
-          title: 'Name',
-          subtitle: CardComponentType.subSystem,
+          name: 'Name',
+          type: CardComponentType.subSystem,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
       default:
         element = {
-          title: 'Unknown',
-          subtitle: CardComponentType.unknown,
+          name: 'Unknown',
+          type: CardComponentType.unknown,
           description: 'Minus qui necessitatibus ipsa et cupiditate velit consequatur blanditiis.',
+          github: 'https://github.com',
         };
         break;
     }
@@ -75,9 +82,9 @@ function mock_fetch(num: number): CardIntervace[] {
 const Library = () => {
   const match = useMatch(routes.LIBRARY);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const [cards, setCards] = useState<CardIntervace[] | undefined>([]);
+  const [cards, setCards] = useState<CardInterface[] | undefined>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [filteredCards, setFilteredCards] = useState<CardIntervace[] | undefined>([]); 
+  const [filteredCards, setFilteredCards] = useState<CardInterface[] | undefined>([]);
 
   const translate = useTranslate();
 
@@ -86,42 +93,214 @@ const Library = () => {
   //   if (!specification)
   //       return
 
-  //   const systemIdentifier = await findComponentSystemIdentifier(specification);
-  //   const explanation = await findComponentExplanation(specification);
-  //   const gitUrl = await findComponentGit(specification);
-  //   const installationMethod = await findComponentInstallationMethod(specification);
-  //   const componentType = await findComponentType(specification);
-  //   const componentNote = await findComponentNote(specification);
-  //   const deps = await findComponentDeps(specification);
+  const initiateAgent = async () => {
+    const construction = new ScConstruction();
+    const myNode = '_darudaru';
+    const action_components_search = await searchAddrById('action_components_search');
+    const question_node = await searchAddrById('question');
+    const question_initiated = await searchAddrById('question_initiated');
+    if (!question_node || !action_components_search || !question_initiated) return;
 
-  //   console.log(
-  //       `Component system identifier: ${systemIdentifier}
-  //       Git url: ${gitUrl}
-  //       Installation method ScAddr: ${installationMethod?.value}
-  //       Component type: ${componentType}
-  //       Component explanation: ${explanation}
-  //       Component note: ${componentNote}
-  //       Deps: ${deps}`
-  //   );
-  // }));
+    construction.createNode(ScType.NodeConst, myNode);
+    construction.createEdge(ScType.EdgeAccessConstPosPerm, question_node, myNode);
+    construction.createEdge(ScType.EdgeAccessConstPosPerm, action_components_search, myNode);
+    construction.createEdge(ScType.EdgeAccessConstPosPerm, question_initiated, myNode);
+    const res = await client.createElements(construction);
+    return res;
+  };
 
-  const tmp = async () => {
-    const actionNode = await searchAddrById("cat_reusable_component_specification");
-    console.log(actionNode);
+  const getResultNode = async (answerNode: ScAddr) => {
+    const { nrelAnswer } = await scUtils.findKeynodes('nrel_answer');
+    if (!nrelAnswer) return;
+    const template = new ScTemplate();
+    const answerAlias = '_answer';
+    template.tripleWithRelation(
+      answerNode,
+      ScType.EdgeDCommonVar,
+      [ScType.NodeVarStruct, answerAlias],
+      ScType.EdgeAccessVarPosPerm,
+      nrelAnswer,
+    );
+    const result = await client.templateSearch(template);
+    const answerScAddr = result.length ? result[0].get(answerAlias) : undefined;
+    return answerScAddr;
+  };
 
-    // if (scAddr){
-    //   const data =  await client.getLinkContents([scAddr]);
-    //   console.log(data);
-    // }
-  }
+  const findSpecifications = async () => {
+    const agentResult = await initiateAgent();
+    if (!agentResult) return;
+
+    let specificationsAddr: ScAddr | undefined = undefined;
+
+    await Promise.all(
+      agentResult.map(async (answerNode) => {
+        const answerScAddr = await getResultNode(answerNode);
+        if (answerScAddr) {
+          specificationsAddr = answerScAddr;
+        }
+      }),
+    );
+    if (!specificationsAddr) return;
+
+    const template = new ScTemplate();
+    const answerAlias = '_answer';
+    template.triple(specificationsAddr, ScType.EdgeAccessVarPosPerm, [
+      ScType.NodeVarStruct,
+      answerAlias,
+    ]);
+
+    const result = await client.templateSearch(template);
+    const specificationArrds = result.map((tuple) => tuple.get(answerAlias));
+
+    await Promise.all(
+      specificationArrds.map(async (spec) => {
+        const template = new ScTemplate();
+        const answerAlias = '_answer';
+        const { conceptReusableComponent } = await scUtils.findKeynodes(
+          'concept_reusable_component',
+        );
+        template.triple(spec, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, answerAlias]);
+        template.triple(conceptReusableComponent, ScType.EdgeAccessVarPosPerm, [
+          ScType.NodeVar,
+          answerAlias,
+        ]);
+
+        const result = await client.templateSearch(template);
+        const specAddr = result.length ? result[0].get(answerAlias) : undefined;
+        if (!specAddr) return;
+
+        const systemIdentifier = await findComponentSystemIdentifier(specAddr);
+        const explanation = await findComponentExplanation(specAddr);
+        const gitUrl = await findComponentGit(specAddr);
+        const installationMethod = await findComponentInstallationMethod(specAddr);
+        const componentType = await findComponentType(specAddr);
+
+        console.log(
+          `Component system identifier: ${systemIdentifier}\nGit url: ${gitUrl}\nInstallation method ScAddr: ${installationMethod?.value}\nComponent type: ${componentType}\nComponent explanation: ${explanation}`,
+        );
+      }),
+    );
+  };
+
+  const findComponentGit = async (componentAddr: ScAddr): Promise<string | number | undefined> => {
+    const template = new ScTemplate();
+    const { nrelComponentAddress } = await scUtils.findKeynodes('nrel_component_address');
+    const gitAlias = '_git';
+    template.tripleWithRelation(
+      componentAddr,
+      ScType.EdgeDCommonVar,
+      [ScType.LinkVar, gitAlias],
+      ScType.EdgeAccessVarPosPerm,
+      nrelComponentAddress,
+    );
+    const result = await client.templateSearch(template);
+    const gitScAddr = result.length ? result[0].get(gitAlias) : undefined;
+
+    if (!gitScAddr) return undefined;
+
+    const linkContents = await client.getLinkContents([gitScAddr]);
+    return linkContents[0].data;
+  };
+
+  const findComponentInstallationMethod = async (componentAddr: ScAddr) => {
+    const template = new ScTemplate();
+    const { nrelInstallationMethod } = await scUtils.findKeynodes('nrel_installation_method');
+    const methodAlias = '_method';
+    template.tripleWithRelation(
+      componentAddr,
+      ScType.EdgeDCommonVar,
+      [ScType.NodeVar, methodAlias],
+      ScType.EdgeAccessVarPosPerm,
+      nrelInstallationMethod,
+    );
+    const result = await client.templateSearch(template);
+    const methodScAddr = result.length ? result[0].get(methodAlias) : undefined;
+    return methodScAddr;
+  };
+
+  const findComponentSystemIdentifier = async (componentAddr: ScAddr) => {
+    const template = new ScTemplate();
+    const { nrelSystemIdentifier } = await scUtils.findKeynodes('nrel_system_identifier');
+    const systemIdentifierAlias = '_systemIdentifier';
+    template.tripleWithRelation(
+      componentAddr,
+      ScType.EdgeDCommonVar,
+      [ScType.LinkVar, systemIdentifierAlias],
+      ScType.EdgeAccessVarPosPerm,
+      nrelSystemIdentifier,
+    );
+    const result = await client.templateSearch(template);
+    const systemIdentifierScAddr = result.length ? result[0].get(systemIdentifierAlias) : undefined;
+    if (!systemIdentifierScAddr) return undefined;
+
+    const linkContents = await client.getLinkContents([systemIdentifierScAddr]);
+    return linkContents[0].data;
+  };
+
+  const findComponentExplanation = async (componentAddr: ScAddr) => {
+    const template = new ScTemplate();
+    const { nrelExplanation } = await scUtils.findKeynodes('nrel_explanation');
+    const explanationAlias = '_explanation';
+    template.tripleWithRelation(
+      componentAddr,
+      ScType.EdgeDCommonVar,
+      [ScType.LinkVar, explanationAlias],
+      ScType.EdgeAccessVarPosPerm,
+      nrelExplanation,
+    );
+    const result = await client.templateSearch(template);
+    const explanationScAddr = result.length ? result[0].get(explanationAlias) : undefined;
+    if (!explanationScAddr) return undefined;
+
+    const linkContents = await client.getLinkContents([explanationScAddr]);
+    return linkContents[0].data;
+  };
+
+  let testScAddr: ScAddr;
+  const testFindScAddr = async () => {
+    const testScAddr = await searchAddrById('concept_cat_specification');
+    console.log(testScAddr)
+  };
+
+  const findComponentType = async (componentAddr: ScAddr) => {
+    const types = [
+      'concept_reusable_kb_component',
+      'concept_reusable_ps_component',
+      'concept_reusable_interface_component',
+      'concept_reusable_embedded_ostis_system',
+    ];
+    const typesScAddr = await Promise.all(types.map(async (type) => await searchAddrById(type)));
+    console.log(typesScAddr);
+    const componentTypes: ScAddr[] = [];
+
+    await Promise.all(
+      typesScAddr.map(async (type) => {
+        if (!type) return;
+
+        const template = new ScTemplate();
+        template.triple(type, ScType.EdgeAccessVarPosPerm, componentAddr);
+
+        const result = await client.templateSearch(template);
+        if (result.length) {
+          console.log(result);
+          componentTypes.push(type);
+        }
+      }),
+    );
+    return componentTypes;
+  };
 
   useEffect(() => {
     setCards(mock_fetch(15));
-    findComponentsSpecifications();
+    findSpecifications();
+    testFindScAddr();
   }, []);
-  
+
   useEffect(() => {
-    const filtered = selectedFilters.length > 0 ? cards?.filter((card) => selectedFilters.includes(card.subtitle)) : cards;
+    const filtered =
+      selectedFilters.length > 0
+        ? cards?.filter((card) => selectedFilters.includes(card.type))
+        : cards;
     setFilteredCards(filtered);
   }, [cards, selectedFilters]);
 
@@ -136,8 +315,8 @@ const Library = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    const filtered = cards?.filter((card) => card.title.includes(value)); 
-    setFilteredCards(filtered); 
+    const filtered = cards?.filter((card) => card.name.includes(value));
+    setFilteredCards(filtered);
   };
 
   const toggleFilterVisibility = () => {
@@ -208,7 +387,13 @@ const Library = () => {
         </div>
         <div className={styles.CardsContainer}>
           {filteredCards?.map((item) => (
-            <Card title={item.title} subtitle={item.subtitle} description={item.description} />
+            <Card
+              name={item.name}
+              type={item.type}
+              description={item.description}
+              github={item.github}
+              scAddr={testScAddr}
+            />
           ))}
         </div>
       </div>
