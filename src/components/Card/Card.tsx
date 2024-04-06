@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './Card.module.scss';
-import { CardComponentType, CardComponentImageType } from './types';
+import { CardComponentType } from './types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
 import { ScAddr } from 'ts-sc-client';
 
@@ -26,18 +26,22 @@ export const Card: React.FC<ComponentCardProps> = ({ name, type, description, gi
 
   switch (type) {
     case CardComponentType.interface:
+      name = name.replace(/_/g, ' ');
       logoComponent = <Interface />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleInterface);
       break;
     case CardComponentType.knowledgeBase:
+      name = name.replace(/_/g, ' ');
       logoComponent = <KnowledgeBase />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleKnowledgeBase);
       break;
     case CardComponentType.problemSolver:
+      name = name.replace(/_/g, ' ');
       logoComponent = <ProblemSolver />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleProblemSolver);
       break;
     case CardComponentType.subSystem:
+      name = name.replace(/_/g, ' ');
       logoComponent = <Subsystem />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleSubSystem);
       break;
@@ -57,13 +61,7 @@ export const Card: React.FC<ComponentCardProps> = ({ name, type, description, gi
     <div className={styles.container} onClick={handleContainerClick}>
       {showCardInfo && (
         <div className={styles.overlay}>
-          <CardInfo
-            name={name}
-            type={type}
-            description={description}
-            github={github}
-            scAddr={scAddr}
-          />
+          <CardInfo scAddr={scAddr} />
         </div>
       )}
       <div className={styles.info}>
@@ -80,9 +78,9 @@ export const Card: React.FC<ComponentCardProps> = ({ name, type, description, gi
       </div>
 
       <div className={styles.infoUrl}>
-        <div className={styles.icon} onClick={() => window.open(github)}>
+        <a href={github} className={styles.icon}>
           <GithubIcon />
-        </div>
+        </a>
 
         <button className={styles.installLink}>Install</button>
       </div>

@@ -25,7 +25,7 @@ export const findComponentGit = async (
   return linkContents[0].data;
 };
 
-const findComponentInstallationMethod = async (componentAddr: ScAddr) => {
+export const findComponentInstallationMethod = async (componentAddr: ScAddr) => {
   const template = new ScTemplate();
   const { nrelInstallationMethod } = await scUtils.findKeynodes('nrel_installation_method');
   const methodAlias = '_method';
@@ -59,6 +59,24 @@ export const findComponentSystemIdentifier = async (componentAddr: ScAddr) => {
   return linkContents[0].data;
 };
 
+export const findComponentAuthor = async (componentAddr: ScAddr) => {
+  const template = new ScTemplate();
+  const { nrelAuthors } = await scUtils.findKeynodes('nrel_authors');
+  const authorAlias = '_author';
+  template.tripleWithRelation(
+    componentAddr,
+    ScType.EdgeDCommonVar,
+    [ScType.LinkVar, authorAlias],
+    ScType.EdgeAccessVarPosPerm,
+    nrelAuthors,
+  );
+  const result = await client.templateSearch(template);
+  const authorScAddr = result.length ? result[0].get(authorAlias) : undefined;
+  if (!authorScAddr) return undefined;
+  const linkContents = await client.getLinkContents([authorScAddr]);
+  return linkContents[0].data;
+};
+
 export const findComponentExplanation = async (componentAddr: ScAddr) => {
   const template = new ScTemplate();
   const { nrelExplanation } = await scUtils.findKeynodes('nrel_explanation');
@@ -78,7 +96,7 @@ export const findComponentExplanation = async (componentAddr: ScAddr) => {
   return linkContents[0].data;
 };
 
-const findComponentNote = async (componentAddr: ScAddr) => {
+export const findComponentNote = async (componentAddr: ScAddr) => {
   const template = new ScTemplate();
   const { nrelNote } = await scUtils.findKeynodes('nrel_note');
   const noteAlias = '_note';
@@ -96,8 +114,7 @@ const findComponentNote = async (componentAddr: ScAddr) => {
   const linkContents = await client.getLinkContents([noteScAddr]);
   return linkContents[0].data;
 };
-
-const findComponentDeps = async (componentAddr: ScAddr) => {
+export const findComponentDeps = async (componentAddr: ScAddr) => {
   const template = new ScTemplate();
   const { nrelComponentDependencies } = await scUtils.findKeynodes('nrel_component_dependencies');
   const dependenciesAlias = '_dependencies';
@@ -108,44 +125,42 @@ const findComponentDeps = async (componentAddr: ScAddr) => {
     ScType.EdgeAccessVarPosPerm,
     nrelComponentDependencies,
   );
-  const result = await client.templateSearch(template);
-  const ScAddr = result.length ? result[0].get(dependenciesAlias) : undefined;
-  return ScAddr;
+  const results = await client.templateSearch(template);
+  const fetchDeps: ScAddr[] = results.map((result) => result.get(dependenciesAlias));
+  return fetchDeps;
 };
 
 export const findComponentType = async (componentAddr: ScAddr) => {
-    const types = {
-      'concept_reusable_kb_component': CardComponentType.knowledgeBase,
-      'concept_reusable_ps_component': CardComponentType.problemSolver,
-      'concept_reusable_interface_component': CardComponentType.interface,
-      'concept_reusable_embedded_ostis_system': CardComponentType.subSystem,
-    };
-  
-    const typesScAddr = new Map<ScAddr, CardComponentType>();
-  
-    await Promise.all(
-      Object.entries(types).map(async ([type, componentType]) => {
-        const scAddr = await searchAddrById(type);
-        if (scAddr) typesScAddr.set(scAddr, componentType);
-      }),
-    );
-  
-    console.log("Map", typesScAddr);
-    const componentTypes: CardComponentType[] = [];
-  
-    for (const [addr, componentType] of typesScAddr.entries()) {
-      const template = new ScTemplate();
-      template.triple(addr, ScType.EdgeAccessVarPosPerm, componentAddr);
-  
-      const result = await client.templateSearch(template);
-      if (result.length) {
-        componentTypes.push(componentType);
-      }
-    }
-  
-    console.log("Component types: ", componentTypes);
-    return componentTypes[0];
+  const types = {
+    concept_reusable_kb_component: CardComponentType.knowledgeBase,
+    concept_reusable_ps_component: CardComponentType.problemSolver,
+    concept_reusable_interface_component: CardComponentType.interface,
+    concept_reusable_embedded_ostis_system: CardComponentType.subSystem,
   };
+
+  const typesScAddr = new Map<ScAddr, CardComponentType>();
+
+  await Promise.all(
+    Object.entries(types).map(async ([type, componentType]) => {
+      const scAddr = await searchAddrById(type);
+      if (scAddr) typesScAddr.set(scAddr, componentType);
+    }),
+  );
+
+  const componentTypes: CardComponentType[] = [];
+
+  for (const [addr, componentType] of typesScAddr.entries()) {
+    const template = new ScTemplate();
+    template.triple(addr, ScType.EdgeAccessVarPosPerm, componentAddr);
+
+    const result = await client.templateSearch(template);
+    if (result.length) {
+      componentTypes.push(componentType);
+    }
+  }
+
+  return componentTypes[0];
+};
 
 const initiateComponentSearchAgent = async () => {
   const construction = new ScConstruction();
