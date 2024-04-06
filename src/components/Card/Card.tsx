@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './Card.module.scss';
 import { CardComponentType, CardComponentImageType } from './types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
+import { ScAddr } from 'ts-sc-client';
 
 import Interface from '@assets/images/DefaultPluginImages/Interface.svg';
 import KnowledgeBase from '@assets/images/DefaultPluginImages/KnowledgeBase.svg';
@@ -10,18 +11,20 @@ import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg'
 import Subsystem from '@assets/images/DefaultPluginImages/Subsystem.svg';
 import GithubIcon from '@assets/images/GithubIcon.svg';
 
-interface ComponentCardProps {
-  title: string;
-  subtitle: CardComponentType;
+export interface ComponentCardProps {
+  name: string;
+  type: CardComponentType;
   description: string;
+  github: string;
+  scAddr: ScAddr;
 }
 
-export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, description }) => {
+export const Card: React.FC<ComponentCardProps> = ({ name, type, description, github, scAddr }) => {
   const [showCardInfo, setShowCardInfo] = useState(false);
   let logoComponent: React.ReactNode;
   let subtitleClassName = classNames(styles.subtitle, styles.defaultSubtitle);
 
-  switch (subtitle) {
+  switch (type) {
     case CardComponentType.interface:
       logoComponent = <Interface />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleInterface);
@@ -46,11 +49,21 @@ export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, descriptio
     setShowCardInfo(!showCardInfo);
   };
 
+  useEffect(() => {
+    console.log(scAddr);
+  });
+
   return (
     <div className={styles.container} onClick={handleContainerClick}>
       {showCardInfo && (
         <div className={styles.overlay}>
-          <CardInfo />
+          <CardInfo
+            name={name}
+            type={type}
+            description={description}
+            github={github}
+            scAddr={scAddr}
+          />
         </div>
       )}
       <div className={styles.info}>
@@ -58,8 +71,8 @@ export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, descriptio
 
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>
-            <div className={styles.title}>{title}</div>
-            <div className={subtitleClassName}>{subtitle}</div>
+            <div className={styles.title}>{name}</div>
+            <div className={subtitleClassName}>{type}</div>
           </div>
 
           <div className={styles.description}>{description}</div>
@@ -67,7 +80,7 @@ export const Card: React.FC<ComponentCardProps> = ({ title, subtitle, descriptio
       </div>
 
       <div className={styles.infoUrl}>
-        <div className={styles.icon}>
+        <div className={styles.icon} onClick={() => window.open(github)}>
           <GithubIcon />
         </div>
 
