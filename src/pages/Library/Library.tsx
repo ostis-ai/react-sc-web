@@ -9,10 +9,17 @@ import SearchIcon from '@assets/images/Search.svg';
 import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
-import { findComponentsSpecifications, findComponentGit, getSpecification, findComponentSystemIdentifier, findComponentExplanation } from "./utils";
-import { client, scUtils } from '@api';
-import { searchAddrById } from '@api/sc/search/search'
-import { ScAddr, ScType, ScTemplate, ScConstruction } from 'ts-sc-client';
+import {
+  findSpecifiactions,
+  findComponentGit,
+  getComponent,
+  findComponentSystemIdentifier,
+  findComponentExplanation,
+  findComponentType,
+} from '../../api/requests/getSpecification';
+import { ScAddr } from 'ts-sc-client';
+
+import { searchAddrById } from '@api/sc/search/search';
 
 interface CardInterface {
   name: string;
@@ -34,8 +41,12 @@ const Library = () => {
   const translate = useTranslate();
 
   const fetchSpecifiactions = async () => {
-    const specifications = await findSpecifiactions();
-    setSpecifications(specifications);
+    // const specifications = await findSpecifiactions();
+    // setSpecifications(specifications);
+    const components: ScAddr[] = [];
+    const testScAddr = await searchAddrById('cat_reusable_component_specification');
+    if (testScAddr) components.push(testScAddr);
+    setSpecifications(components);
   };
 
   const fetchCards = async () => {
@@ -43,11 +54,11 @@ const Library = () => {
       const newCards = await Promise.all(
         specifications.map(async (specification) => {
           return await fetchComponentCard(specification);
-        })
+        }),
       );
       setCards(newCards);
     } catch (error) {
-      console.error("Error fetching components specifications:", error);
+      console.error('Error fetching components specifications:', error);
       throw error;
     }
   };
@@ -59,21 +70,21 @@ const Library = () => {
         findComponentSystemIdentifier(component),
         findComponentType(component),
         findComponentGit(component),
-        findComponentExplanation(component)
+        findComponentExplanation(component),
       ]);
       const card: CardInterface = {
-        name: systemIdentifier ? systemIdentifier as string : "...",
+        name: systemIdentifier ? (systemIdentifier as string) : '...',
         type: type,
-        description: explanation ? explanation as string : "...",
-        github: git ? git as string : "...",
+        description: explanation ? (explanation as string) : '...',
+        github: git ? (git as string) : '...',
         component: component,
       };
       return card;
     } catch (error) {
-      console.error("Error fetching component specification:", error);
+      console.error('Error fetching component specification:', error);
       throw error;
     }
-  }
+  };
 
   useEffect(() => {
     fetchSpecifiactions();
@@ -112,84 +123,82 @@ const Library = () => {
 
   return (
     <>
-    { showComponent &&
-      <CardInfo scAddr={showComponent} setShowComponent={setShowComponent} />
-    }
-    <div className={styles.libraryContainer}>
-      <div className={styles.scrollableContent}>
-        <div className={styles.header}>
-          <Input
-            className={styles.searchField}
-            placeholder={translate({ ru: 'Поиск компонент', en: 'Search for components' })}
-            iconLeft={<SearchIcon />}
-            onChange={handleSearchChange}
-          />
-          <div className={styles.Filter}>
-            <button className={styles.FilterButton} onClick={toggleFilterVisibility}>
-              <FilterIcon />
-              <label>{translate({ ru: 'Фильтр', en: 'Filter' })}</label>
-            </button>
-            <form className={isFilterVisible ? styles.visible : ''}>
-              <div className={styles.Option}>
-                <input
-                  type="checkbox"
-                  id="knowledge-base"
-                  name="options[]"
-                  value="knowledge-base"
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="knowledge-base">knowledge base</label>
-              </div>
+      {showComponent && <CardInfo scAddr={showComponent} setShowComponent={setShowComponent} />}
+      <div className={styles.libraryContainer}>
+        <div className={styles.scrollableContent}>
+          <div className={styles.header}>
+            <Input
+              className={styles.searchField}
+              placeholder={translate({ ru: 'Поиск компонент', en: 'Search for components' })}
+              iconLeft={<SearchIcon />}
+              onChange={handleSearchChange}
+            />
+            <div className={styles.Filter}>
+              <button className={styles.FilterButton} onClick={toggleFilterVisibility}>
+                <FilterIcon />
+                <label>{translate({ ru: 'Фильтр', en: 'Filter' })}</label>
+              </button>
+              <form className={isFilterVisible ? styles.visible : ''}>
+                <div className={styles.Option}>
+                  <input
+                    type="checkbox"
+                    id="knowledge-base"
+                    name="options[]"
+                    value="knowledge-base"
+                    onChange={handleFilterChange}
+                  />
+                  <label htmlFor="knowledge-base">knowledge base</label>
+                </div>
 
-              <div className={styles.Option}>
-                <input
-                  type="checkbox"
-                  id="problem-solver"
-                  name="options[]"
-                  value="problem-solver"
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="problem-solver">problem solver</label>
-              </div>
-              
-              <div className={styles.Option}>
-                <input
-                  type="checkbox"
-                  id="interface"
-                  name="options[]"
-                  value="interface"
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="interface">interface</label>
-              </div>
+                <div className={styles.Option}>
+                  <input
+                    type="checkbox"
+                    id="problem-solver"
+                    name="options[]"
+                    value="problem-solver"
+                    onChange={handleFilterChange}
+                  />
+                  <label htmlFor="problem-solver">problem solver</label>
+                </div>
 
-              <div className={styles.Option}>
-                <input
-                  type="checkbox"
-                  id="subsystem"
-                  name="options[]"
-                  value="subsystem"
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="subsystem">subsystem</label>
-              </div>
-            </form>
+                <div className={styles.Option}>
+                  <input
+                    type="checkbox"
+                    id="interface"
+                    name="options[]"
+                    value="interface"
+                    onChange={handleFilterChange}
+                  />
+                  <label htmlFor="interface">interface</label>
+                </div>
+
+                <div className={styles.Option}>
+                  <input
+                    type="checkbox"
+                    id="subsystem"
+                    name="options[]"
+                    value="subsystem"
+                    onChange={handleFilterChange}
+                  />
+                  <label htmlFor="subsystem">subsystem</label>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div className={styles.CardsContainer}>
+            {filteredCards?.map((item) => (
+              <Card
+                name={item.name}
+                type={item.type}
+                description={item.description}
+                github={item.github}
+                component={item.component}
+                setShowComponent={setShowComponent}
+              />
+            ))}
           </div>
         </div>
-        <div className={styles.CardsContainer}>
-          {filteredCards?.map((item) => (
-            <Card
-              name={item.name}
-              type={item.type}
-              description={item.description}
-              github={item.github}
-              component={item.component}
-              setShowComponent={setShowComponent}
-            />
-          ))}
-        </div>
       </div>
-    </div>
     </>
   );
 };

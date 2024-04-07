@@ -1,12 +1,13 @@
 import styles from './CardInfo.module.scss';
 import { ScAddr } from 'ts-sc-client';
 import { useState, useEffect } from 'react';
-
+import classNames from 'classnames';
 import { CardComponentType } from '@components/Card/types';
 import CloseIcon from '@assets/images/CloseIcon.svg';
 import DynamicallyInstalledComponent from '@assets/images/DynamicallyInstalledComponent.svg';
 import ReusableComponent from '@assets/images/ReusableComponent.svg';
 import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';
+import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
 
 import {
   findComponentAuthor,
@@ -19,11 +20,11 @@ import {
   findComponentNote,
   findSpecifiactions,
   getComponent,
-} from '../../pages/Library/utils';
+} from '../../api/requests/getSpecification';
 
 interface CardInfoProps {
   scAddr: ScAddr;
-  setShowComponent: React.Dispatch<React.SetStateAction<ScAddr | undefined>>,
+  setShowComponent: React.Dispatch<React.SetStateAction<ScAddr | undefined>>;
 }
 
 export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) => {
@@ -35,11 +36,27 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [note, setNote] = useState<string>('');
   const [dependencies, setDependencies] = useState<Map<ScAddr, string>>(new Map());
 
+  let logoComponent: React.ReactNode = <ProblemSolver />;
+  let subtitleClassName = classNames(styles.subtitle, styles.cardType);
+
+  if (type) {
+    logoComponent = getCardLogo(type);
+    subtitleClassName = getSubtitleClassName(type);
+  }
+
   // TODO: installationMethod unused
   const fetchComponent = async (component: ScAddr) => {
     try {
-      const [systemIdentifier, type, git, explanation, note, installationMethod, dependencies, authors] = 
-      await Promise.all([
+      const [
+        systemIdentifier,
+        type,
+        git,
+        explanation,
+        note,
+        installationMethod,
+        dependencies,
+        authors,
+      ] = await Promise.all([
         findComponentSystemIdentifier(component),
         findComponentType(component),
         findComponentGit(component),
@@ -47,41 +64,45 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
         findComponentNote(component),
         findComponentInstallationMethod(component),
         findComponentDeps(component),
-        findComponentAuthor(component)
+        findComponentAuthor(component),
       ]);
 
-      setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : "...");
+      setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : '...');
       setType(type);
-      setGithub(git ? git as string : "#");
-      setExplanation(explanation ? explanation as string : "...");
-      setNote(note ? note as string : "...");
-      setDependencies(dependencies)
-      setAuthor(authors ? authors.join(", ") : "...");
+      setGithub(git ? (git as string) : '#');
+      setExplanation(explanation ? (explanation as string) : '...');
+      setNote(note ? (note as string) : '...');
+      setDependencies(dependencies);
+      setAuthor(authors ? authors.join(', ') : '...');
+      // console.log("Deps", dependencies);
     } catch (error) {
-      console.error("Error fetching component specification:", error);
+      console.error('Error fetching component specification:', error);
       throw error;
     }
-  }
+  };
 
   useEffect(() => {
     fetchComponent(scAddr);
-  })
+  });
 
   const handleWrapperClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
   };
   return (
-    <div className={styles.container} onClick={(event) => {setShowComponent(undefined)}}>
+    <div
+      className={styles.container}
+      onClick={(event) => {
+        setShowComponent(undefined);
+      }}
+    >
       <div className={styles.wrapper} onClick={handleWrapperClick}>
         <div className={styles.cardInfo}>
-          <div className={styles.logo}>
-            <ProblemSolver />
-          </div>
+          <div className={styles.logo}>{logoComponent}</div>
           <div className={styles.info}>
             <div className={styles.infoItem}>
               <div className={styles.title}>{name}</div>
               <div className={styles.tool}>
-                <div className={styles.cardType}>{type}</div>
+                <div className={subtitleClassName}>{type}</div>
                 <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
                   <CloseIcon className={styles.closeIcon} />
                 </button>
@@ -101,7 +122,10 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
           <div className={styles.dependencies}>
             <div className={styles.blockName}>Зависимости компонента</div>
             {Array.from(dependencies.entries()).map(([scAddr, value]) => (
-              <div className={styles.componentDependencies} onClick={() => setShowComponent(scAddr)}>
+              <div
+                className={styles.componentDependencies}
+                onClick={() => setShowComponent(scAddr)}
+              >
                 {value}
               </div>
             ))}
@@ -111,7 +135,9 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
         <div className={styles.address}>
           <div className={styles.blockName}>Адрес хранилища</div>
           <div className={styles.storageAddress}>
-            <a href={github} target="_blank" rel="noopener noreferrer">{github}</a>
+            <a href={github} target="_blank" rel="noopener noreferrer">
+              {github}
+            </a>
           </div>
         </div>
 
