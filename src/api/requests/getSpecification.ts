@@ -2,6 +2,7 @@ import { searchAddrById } from '@api/sc/search/search';
 import { ScAddr, ScConstruction, ScTemplate, ScType } from 'ts-sc-client';
 import { client, scUtils } from '@api/sc';
 import { CardComponentType } from '@components/Card/types';
+import { InstallMethodType } from '@components/CardInfo/types';
 
 export const findSpecifiactions = async () => {
   const initiatidAgentStuct = await initiateComponentSearchAgent();
@@ -104,6 +105,16 @@ export const findComponentGit = async (component: ScAddr) => {
 };
 
 export const findComponentInstallationMethod = async (component: ScAddr) => {
+  //TODO: past the type of reusable component that requires a system restart when installed into types
+  const installationTypes: { [key: string]: InstallMethodType } = {
+    concept_reusable_dynamically_installed_component: InstallMethodType.DynamicallyInstalledComponent,
+  };
+  const installationTypesScAddr = new Map<ScAddr, string>();
+  const typesPromises = Object.keys(installationTypes).map(async (type) => {
+    const scAddr = await searchAddrById(type);
+    if (scAddr) installationTypesScAddr.set(scAddr, type);
+  });
+  await Promise.all(typesPromises);
   const template = new ScTemplate();
   const { nrelInstallationMethod } = await scUtils.findKeynodes('nrel_installation_method');
   const methodAlias = '_method';
@@ -116,7 +127,11 @@ export const findComponentInstallationMethod = async (component: ScAddr) => {
   );
   const result = await client.templateSearch(template);
   const methodScAddr = result.length ? result[0].get(methodAlias) : undefined;
-  return methodScAddr;
+  if (methodScAddr !== undefined && installationTypesScAddr.has(methodScAddr)) {
+    return installationTypesScAddr.get(methodScAddr);
+  }
+  
+  return undefined;
 };
 
 export const findComponentSystemIdentifier = async (component: ScAddr) => {

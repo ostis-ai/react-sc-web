@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { CardComponentType } from '@components/Card/types';
 import CloseIcon from '@assets/images/CloseIcon.svg';
 import DynamicallyInstalledComponent from '@assets/images/DynamicallyInstalledComponent.svg';
-import ReusableComponent from '@assets/images/ReusableComponent.svg';
 import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';
 import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
 
@@ -21,6 +20,8 @@ import {
   findSpecifiactions,
   getComponent,
 } from '../../api/requests/getSpecification';
+import { InstallMethodType } from './types';
+import { getInstallationMethodType } from './utils';
 
 interface CardInfoProps {
   scAddr: ScAddr;
@@ -34,16 +35,21 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [type, setType] = useState<CardComponentType>();
   const [author, setAuthor] = useState<string | '...'>('...');
   const [note, setNote] = useState<string>('');
+  const [installMethod, setInstallMethod] = useState<InstallMethodType>();
   const [dependencies, setDependencies] = useState<Map<ScAddr, string>>(new Map());
 
   let logoComponent: React.ReactNode = <ProblemSolver />;
   let subtitleClassName = classNames(styles.subtitle, styles.cardType);
+  let installationMethodImg: React.ReactNode = <DynamicallyInstalledComponent />;
 
   if (type) {
     logoComponent = getCardLogo(type);
     subtitleClassName = getSubtitleClassName(type);
   }
 
+  if(installMethod) {
+    installationMethodImg = getInstallationMethodType(installMethod);
+  }
   // TODO: installationMethod unused
   const fetchComponent = async (component: ScAddr) => {
     try {
@@ -69,12 +75,13 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
       setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : '...');
       setType(type);
+      setInstallMethod(installMethod)
       setGithub(git ? (git as string) : '#');
       setExplanation(explanation ? (explanation as string) : '...');
       setNote(note ? (note as string) : '...');
       setDependencies(dependencies);
       setAuthor(authors ? authors.join(', ') : '...');
-      // console.log("Deps", dependencies);
+      console.log(installationMethod)
     } catch (error) {
       console.error('Error fetching component specification:', error);
       throw error;
@@ -144,7 +151,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
         <div className={styles.installationMethod}>
           <div className={styles.blockName}>Метод установки</div>
           <div className={styles.componentImg}>
-            <DynamicallyInstalledComponent />
+            {installationMethodImg}
           </div>
         </div>
 
