@@ -21,6 +21,7 @@ import { ScAddr } from 'ts-sc-client';
 
 import { searchAddrById } from '@api/sc/search/search';
 
+
 interface CardInterface {
   name: string;
   type: CardComponentType;
