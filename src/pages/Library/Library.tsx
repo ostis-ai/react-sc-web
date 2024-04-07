@@ -41,12 +41,8 @@ const Library = () => {
   const translate = useTranslate();
 
   const fetchSpecifiactions = async () => {
-    // const specifications = await findSpecifiactions();
-    // setSpecifications(specifications);
-    const components: ScAddr[] = [];
-    const testScAddr = await searchAddrById('cat_reusable_component_specification');
-    if (testScAddr) components.push(testScAddr);
-    setSpecifications(components);
+    const specifications = await findSpecifiactions();
+    setSpecifications(specifications);
   };
 
   const fetchCards = async () => {
