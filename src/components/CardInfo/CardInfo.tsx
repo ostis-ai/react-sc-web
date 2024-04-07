@@ -17,15 +17,16 @@ import {
   findComponentType,
   findComponentInstallationMethod,
   findComponentNote,
+  findSpecifiactions,
+  getComponent,
 } from '../../pages/Library/utils';
 
 interface CardInfoProps {
   scAddr: ScAddr;
+  setShowComponent: React.Dispatch<React.SetStateAction<ScAddr | undefined>>,
 }
 
-export const CardInfo: React.FC<CardInfoProps> = ({ scAddr }) => {
-  const [selectedScAddr, setSelectedScAddr] = useState<ScAddr | null>(null);
-
+export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) => {
   const [name, setName] = useState<string | '...'>('...');
   const [github, setGithub] = useState<string | '#'>('#');
   const [explanation, setExplanation] = useState<string | '...'>('...');
@@ -33,112 +34,98 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr }) => {
   const [author, setAuthor] = useState<string | '...'>('...');
   const [note, setNote] = useState<string>('');
   const [dependencies, setDependencies] = useState<Map<ScAddr, string>>(new Map());
-  const getDependenciesSystemIdentifier = async () => {
-    const fetchDeps: (ScAddr | undefined)[] = (await findComponentDeps(scAddr)) as (
-      | ScAddr
-      | undefined
-    )[];
-    console.log(fetchDeps.length);
-    if (fetchDeps && fetchDeps.length > 0) {
-      const updatedDependencies: Map<ScAddr, string> = new Map(dependencies);
-      await Promise.all(
-        fetchDeps.map(async (depScAddr) => {
-          if (depScAddr) {
-            const nodeSystemIdentifier = await findComponentSystemIdentifier(depScAddr);
-            if (nodeSystemIdentifier) {
-              updatedDependencies.set(depScAddr, nodeSystemIdentifier.toString());
-            }
-          }
-        }),
-      );
-      setDependencies(updatedDependencies);
+
+  // TODO: installationMethod unused
+  const fetchComponent = async (component: ScAddr) => {
+    try {
+      const [systemIdentifier, type, git, explanation, note, installationMethod, dependencies, authors] = 
+      await Promise.all([
+        findComponentSystemIdentifier(component),
+        findComponentType(component),
+        findComponentGit(component),
+        findComponentExplanation(component),
+        findComponentNote(component),
+        findComponentInstallationMethod(component),
+        findComponentDeps(component),
+        findComponentAuthor(component)
+      ]);
+
+      setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : "...");
+      setType(type);
+      setGithub(git ? git as string : "#");
+      setExplanation(explanation ? explanation as string : "...");
+      setNote(note ? note as string : "...");
+      setDependencies(dependencies)
+      setAuthor(authors ? authors.join(", ") : "...");
+    } catch (error) {
+      console.error("Error fetching component specification:", error);
+      throw error;
     }
-  };
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const fetchedName = scAddr
-        ? ((await findComponentSystemIdentifier(scAddr)) as string)
-        : '...';
-      const fetchedGithub = scAddr ? ((await findComponentGit(scAddr)) as string) : '#';
-      const fetchedExplanation = scAddr
-        ? ((await findComponentExplanation(scAddr)) as string)
-        : '...';
-      const fetchedType = await findComponentType(scAddr);
-      const fetchedNote = (await findComponentNote(scAddr)) as string;
-      const fetchedInstallationMethod = await findComponentInstallationMethod(scAddr);
-      const fetchedDeps = await findComponentDeps(scAddr);
-      const fetchedAuthors = scAddr ? ((await findComponentAuthor(scAddr)) as string) : '...';
+    fetchComponent(scAddr);
+  })
 
-      await getDependenciesSystemIdentifier();
-      setName(fetchedName.replace(/_/g, ' '));
-      setGithub(fetchedGithub);
-      setExplanation(fetchedExplanation);
-      setType(fetchedType);
-      setNote(fetchedNote);
-      setAuthor(fetchedAuthors);
-    };
-
-    fetchData();
-  }, []);
-
+  const handleWrapperClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+  };
   return (
-    <div className={styles.container}>
-      <div className={styles.cardInfo}>
-        <div className={styles.logo}>
-          <ProblemSolver />
-        </div>
-
-        <div className={styles.info}>
-          <div className={styles.infoItem}>
-            <div className={styles.title}>{name}</div>
-            <div className={styles.tool}>
-              <div className={styles.cardType}>{type}</div>
-              <button className={styles.closeButton}>
-                <CloseIcon className={styles.closeIcon} />
-              </button>
-            </div>
+    <div className={styles.container} onClick={(event) => {setShowComponent(undefined)}}>
+      <div className={styles.wrapper} onClick={handleWrapperClick}>
+        <div className={styles.cardInfo}>
+          <div className={styles.logo}>
+            <ProblemSolver />
           </div>
-          <div className={styles.subtitle}>{note}</div>
-        </div>
-      </div>
-      {explanation && (
-        <div className={styles.annotation}>
-          <div className={styles.blockName}>Примечание</div>
-          <div className={styles.subtitle}>{explanation}</div>
-        </div>
-      )}
-
-      {dependencies && dependencies.size > 0 && (
-        <div className={styles.dependencies}>
-          <div className={styles.blockName}>Зависимости компонента</div>
-          {Array.from(dependencies.entries()).map(([scAddr, value]) => (
-            <div className={styles.componentDependencies} onClick={() => setSelectedScAddr(scAddr)}>
-              {value}
+          <div className={styles.info}>
+            <div className={styles.infoItem}>
+              <div className={styles.title}>{name}</div>
+              <div className={styles.tool}>
+                <div className={styles.cardType}>{type}</div>
+                <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
+                  <CloseIcon className={styles.closeIcon} />
+                </button>
+              </div>
             </div>
-          ))}
+            <div className={styles.subtitle}>{note}</div>
+          </div>
         </div>
-      )}
+        {explanation && (
+          <div className={styles.annotation}>
+            <div className={styles.blockName}>Примечание</div>
+            <div className={styles.subtitle}>{explanation}</div>
+          </div>
+        )}
 
-      {selectedScAddr && <CardInfo scAddr={selectedScAddr} />}
+        {dependencies && dependencies.size > 0 && (
+          <div className={styles.dependencies}>
+            <div className={styles.blockName}>Зависимости компонента</div>
+            {Array.from(dependencies.entries()).map(([scAddr, value]) => (
+              <div className={styles.componentDependencies} onClick={() => setShowComponent(scAddr)}>
+                {value}
+              </div>
+            ))}
+          </div>
+        )}
 
-      <div className={styles.address}>
-        <div className={styles.blockName}>Адрес хранилища</div>
-        <div className={styles.storageAddress}>
-          <a href={github}>{github}</a>
+        <div className={styles.address}>
+          <div className={styles.blockName}>Адрес хранилища</div>
+          <div className={styles.storageAddress}>
+            <a href={github} target="_blank" rel="noopener noreferrer">{github}</a>
+          </div>
         </div>
-      </div>
 
-      <div className={styles.installationMethod}>
-        <div className={styles.blockName}>Метод установки</div>
-        <div className={styles.componentImg}>
-          <DynamicallyInstalledComponent />
+        <div className={styles.installationMethod}>
+          <div className={styles.blockName}>Метод установки</div>
+          <div className={styles.componentImg}>
+            <DynamicallyInstalledComponent />
+          </div>
         </div>
-      </div>
 
-      <div className={styles.autorship}>
-        <div className={styles.blockName}>Автор</div>
-        <div className={styles.subtitle}>{author}</div>
+        <div className={styles.autorship}>
+          <div className={styles.blockName}>Автор</div>
+          <div className={styles.subtitle}>{author}</div>
+        </div>
       </div>
     </div>
   );

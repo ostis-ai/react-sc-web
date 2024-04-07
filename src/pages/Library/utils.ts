@@ -1,16 +1,96 @@
-import { searchAddrById } from '@api/sc/search/search';
-import { ScAddr, ScConstruction, ScTemplate, ScType } from 'ts-sc-client';
-import { client, scUtils } from '@api/sc';
-import { CardComponentType } from '@components/Card/types';
+import { searchAddrById } from "@api/sc/search/search";
+import { ScAddr, ScConstruction, ScTemplate, ScType } from "ts-sc-client";
+import { client, scUtils } from "@api/sc";
+import { CardComponentType } from "@components/Card/types";
 
-export const findComponentGit = async (
-  componentAddr: ScAddr,
-): Promise<string | number | undefined> => {
+// TODO: move this logic to api
+
+export const findSpecifiactions = async () => {
+  const initiatidAgentStuct = await initiateComponentSearchAgent();
+  if (!initiatidAgentStuct) return [];
+
+  // TODO: get by index (return underfied if get by index now)
+  let agentResult: ScAddr | undefined = undefined;
+  await Promise.all(
+    initiatidAgentStuct.map(async (answerNode) => {
+      const currentAgentResult = await getAgentResult(answerNode);
+      if (currentAgentResult) {
+        agentResult = currentAgentResult;
+      }
+    }),
+  );
+  if (!agentResult) return [];
+
+  const specifications = await getSpecifications(agentResult);
+  return specifications;
+};
+
+const initiateComponentSearchAgent = async () => {
+  const construction = new ScConstruction();
+  const questionNode = "_question_node";
+  const actionComponentsSearch = await searchAddrById("action_components_search");
+  const question = await searchAddrById("question");
+  const questionInitiated = await searchAddrById("question_initiated");
+  if (!question || !actionComponentsSearch || !questionInitiated) return;
+
+  construction.createNode(ScType.NodeConst, questionNode);
+  construction.createEdge(ScType.EdgeAccessConstPosPerm, question, questionNode);
+  construction.createEdge(ScType.EdgeAccessConstPosPerm, actionComponentsSearch, questionNode);
+  construction.createEdge(ScType.EdgeAccessConstPosPerm, questionInitiated, questionNode);
+  const result = await client.createElements(construction);
+  return result;
+};
+
+const getAgentResult = async (answerNode: ScAddr) => {
+  const { nrelAnswer } = await scUtils.findKeynodes("nrel_answer");
+  if (!nrelAnswer) return;
   const template = new ScTemplate();
-  const { nrelComponentAddress } = await scUtils.findKeynodes('nrel_component_address');
-  const gitAlias = '_git';
+  const answerAlias = "_answer";
   template.tripleWithRelation(
-    componentAddr,
+    answerNode,
+    ScType.EdgeDCommonVar,
+    [ScType.NodeVarStruct, answerAlias],
+    ScType.EdgeAccessVarPosPerm,
+    nrelAnswer,
+  );
+  const result = await client.templateSearch(template);
+  const answerScAddr = result.length ? result[0].get(answerAlias) : undefined;
+  return answerScAddr;
+};
+
+
+const getSpecifications = async (agentResult: ScAddr) => {
+  const template = new ScTemplate();
+  const answerAlias = "_answer";
+  template.triple(agentResult, ScType.EdgeAccessVarPosPerm, [ScType.NodeVarStruct, answerAlias]);
+  const result = await client.templateSearch(template);
+  const components = result.map((tuple) => tuple.get(answerAlias));
+  return components;
+};
+
+
+export const getComponent = async (specification: ScAddr) => {
+  const template = new ScTemplate();
+  const componentAlias = "_component";
+  const { conceptReusableComponent } = await scUtils.findKeynodes("concept_reusable_component");
+  template.triple(specification, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, componentAlias]);
+  template.triple(conceptReusableComponent, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, componentAlias]);
+  const result = await client.templateSearch(template);
+  if (!result.length) {
+    const errorStr = `Cannot find component of sepecification with ScAddr ${specification.value}`;
+    console.error(errorStr);
+    throw Error(errorStr);
+  }
+  return result[0].get(componentAlias)
+};
+
+
+export const findComponentGit = async (component: ScAddr) => {
+  const template = new ScTemplate();
+  const { nrelComponentAddress } = await scUtils.findKeynodes("nrel_component_address");
+  const gitAlias = "_git";
+  template.tripleWithRelation(
+    component,
     ScType.EdgeDCommonVar,
     [ScType.LinkVar, gitAlias],
     ScType.EdgeAccessVarPosPerm,
@@ -25,12 +105,12 @@ export const findComponentGit = async (
   return linkContents[0].data;
 };
 
-export const findComponentInstallationMethod = async (componentAddr: ScAddr) => {
+export const findComponentInstallationMethod = async (component: ScAddr) => {
   const template = new ScTemplate();
-  const { nrelInstallationMethod } = await scUtils.findKeynodes('nrel_installation_method');
-  const methodAlias = '_method';
+  const { nrelInstallationMethod } = await scUtils.findKeynodes("nrel_installation_method");
+  const methodAlias = "_method";
   template.tripleWithRelation(
-    componentAddr,
+    component,
     ScType.EdgeDCommonVar,
     [ScType.NodeVar, methodAlias],
     ScType.EdgeAccessVarPosPerm,
@@ -41,12 +121,12 @@ export const findComponentInstallationMethod = async (componentAddr: ScAddr) => 
   return methodScAddr;
 };
 
-export const findComponentSystemIdentifier = async (componentAddr: ScAddr) => {
+export const findComponentSystemIdentifier = async (component: ScAddr) => {
   const template = new ScTemplate();
-  const { nrelSystemIdentifier } = await scUtils.findKeynodes('nrel_system_identifier');
-  const systemIdentifierAlias = '_systemIdentifier';
+  const { nrelSystemIdentifier } = await scUtils.findKeynodes("nrel_system_identifier");
+  const systemIdentifierAlias = "_systemIdentifier";
   template.tripleWithRelation(
-    componentAddr,
+    component,
     ScType.EdgeDCommonVar,
     [ScType.LinkVar, systemIdentifierAlias],
     ScType.EdgeAccessVarPosPerm,
@@ -59,30 +139,45 @@ export const findComponentSystemIdentifier = async (componentAddr: ScAddr) => {
   return linkContents[0].data;
 };
 
-export const findComponentAuthor = async (componentAddr: ScAddr) => {
+export const findComponentAuthor = async (component: ScAddr) => {
   const template = new ScTemplate();
-  const { nrelAuthors } = await scUtils.findKeynodes('nrel_authors');
-  const authorAlias = '_author';
+  const { nrelAuthors } = await scUtils.findKeynodes("nrel_authors");
+  const authorAlias = "_author";
   template.tripleWithRelation(
-    componentAddr,
+    component,
     ScType.EdgeDCommonVar,
-    [ScType.LinkVar, authorAlias],
+    [ScType.NodeVar, authorAlias],
     ScType.EdgeAccessVarPosPerm,
     nrelAuthors,
   );
   const result = await client.templateSearch(template);
   const authorScAddr = result.length ? result[0].get(authorAlias) : undefined;
-  if (!authorScAddr) return undefined;
-  const linkContents = await client.getLinkContents([authorScAddr]);
-  return linkContents[0].data;
+  if (!authorScAddr) {
+    return undefined;
+  }
+  const authors = await findAuthors(authorScAddr);
+  return authors;
 };
 
-export const findComponentExplanation = async (componentAddr: ScAddr) => {
+
+const findAuthors = async (authorsNode: ScAddr) => {
   const template = new ScTemplate();
-  const { nrelExplanation } = await scUtils.findKeynodes('nrel_explanation');
-  const explanationAlias = '_explanation';
+  const authorAlias = "_author";
+  template.triple(authorsNode, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, authorAlias]);
+  const result = await client.templateSearch(template);
+  const authors = await Promise.all(
+    result.map(async (author) => await findComponentSystemIdentifier(author.get(authorAlias)))
+  );
+  return authors;
+}
+
+
+export const findComponentExplanation = async (component: ScAddr) => {
+  const template = new ScTemplate();
+  const { nrelExplanation } = await scUtils.findKeynodes("nrel_explanation");
+  const explanationAlias = "_explanation";
   template.tripleWithRelation(
-    componentAddr,
+    component,
     ScType.EdgeDCommonVar,
     [ScType.LinkVar, explanationAlias],
     ScType.EdgeAccessVarPosPerm,
@@ -96,12 +191,13 @@ export const findComponentExplanation = async (componentAddr: ScAddr) => {
   return linkContents[0].data;
 };
 
-export const findComponentNote = async (componentAddr: ScAddr) => {
+
+export const findComponentNote = async (component: ScAddr) => {
   const template = new ScTemplate();
-  const { nrelNote } = await scUtils.findKeynodes('nrel_note');
-  const noteAlias = '_note';
+  const { nrelNote } = await scUtils.findKeynodes("nrel_note");
+  const noteAlias = "_note";
   template.tripleWithRelation(
-    componentAddr,
+    component,
     ScType.EdgeDCommonVar,
     [ScType.LinkVar, noteAlias],
     ScType.EdgeAccessVarPosPerm,
@@ -114,44 +210,63 @@ export const findComponentNote = async (componentAddr: ScAddr) => {
   const linkContents = await client.getLinkContents([noteScAddr]);
   return linkContents[0].data;
 };
-export const findComponentDeps = async (componentAddr: ScAddr) => {
+
+
+export const findComponentDeps = async (component: ScAddr) => {
   const template = new ScTemplate();
-  const { nrelComponentDependencies } = await scUtils.findKeynodes('nrel_component_dependencies');
-  const dependenciesAlias = '_dependencies';
+  const { nrelComponentDependencies } = await scUtils.findKeynodes("nrel_component_dependencies");
+  const dependenciesAlias = "_dependencies";
   template.tripleWithRelation(
-    componentAddr,
+    component,
     ScType.EdgeDCommonVar,
     [ScType.NodeVar, dependenciesAlias],
     ScType.EdgeAccessVarPosPerm,
     nrelComponentDependencies,
   );
-  const results = await client.templateSearch(template);
-  const fetchDeps: ScAddr[] = results.map((result) => result.get(dependenciesAlias));
-  return fetchDeps;
+  const result = await client.templateSearch(template);
+  if (!result.length)
+    return new Map<ScAddr, string>()
+  const deps = await findDeps(result[0].get(dependenciesAlias));
+  return deps;
 };
 
-export const findComponentType = async (componentAddr: ScAddr) => {
+
+const findDeps = async (depsAddr: ScAddr) => {
+  const template = new ScTemplate();
+  const depAlias = "_dependency";
+  template.triple(depsAddr, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, depAlias]);
+  const result = await client.templateSearch(template);
+  const depsMap = new Map<ScAddr, string>();
+  await Promise.all(
+    result.map(async (author): Promise<void> => {
+      const depAddr = author.get(depAlias)
+      const depSystemIdentifier = await findComponentSystemIdentifier(depAddr)
+      depsMap.set(depAddr, depSystemIdentifier ? depSystemIdentifier as string : "...");
+    }),
+  );
+  return depsMap;
+}
+
+
+export const findComponentType = async (component: ScAddr) => {
   const types = {
     concept_reusable_kb_component: CardComponentType.knowledgeBase,
     concept_reusable_ps_component: CardComponentType.problemSolver,
     concept_reusable_interface_component: CardComponentType.interface,
     concept_reusable_embedded_ostis_system: CardComponentType.subSystem,
   };
-
   const typesScAddr = new Map<ScAddr, CardComponentType>();
-
   await Promise.all(
     Object.entries(types).map(async ([type, componentType]) => {
       const scAddr = await searchAddrById(type);
       if (scAddr) typesScAddr.set(scAddr, componentType);
     }),
   );
-
   const componentTypes: CardComponentType[] = [];
 
   for (const [addr, componentType] of typesScAddr.entries()) {
     const template = new ScTemplate();
-    template.triple(addr, ScType.EdgeAccessVarPosPerm, componentAddr);
+    template.triple(addr, ScType.EdgeAccessVarPosPerm, component);
 
     const result = await client.templateSearch(template);
     if (result.length) {
@@ -160,80 +275,4 @@ export const findComponentType = async (componentAddr: ScAddr) => {
   }
 
   return componentTypes[0];
-};
-
-const initiateComponentSearchAgent = async () => {
-  const construction = new ScConstruction();
-  const questionNode = '_question_node';
-  const actionComponentsSearch = await searchAddrById('action_components_search');
-  const question = await searchAddrById('question');
-  const questionInitiated = await searchAddrById('question_initiated');
-  if (!question || !actionComponentsSearch || !questionInitiated) return;
-
-  construction.createNode(ScType.NodeConst, questionNode);
-  construction.createEdge(ScType.EdgeAccessConstPosPerm, question, questionNode);
-  construction.createEdge(ScType.EdgeAccessConstPosPerm, actionComponentsSearch, questionNode);
-  construction.createEdge(ScType.EdgeAccessConstPosPerm, questionInitiated, questionNode);
-  const result = await client.createElements(construction);
-  return result;
-};
-
-const getAgentResult = async (answerNode: ScAddr) => {
-  const { nrelAnswer } = await scUtils.findKeynodes('nrel_answer');
-  if (!nrelAnswer) return;
-  const template = new ScTemplate();
-  const answerAlias = '_answer';
-  template.tripleWithRelation(
-    answerNode,
-    ScType.EdgeDCommonVar,
-    [ScType.NodeVarStruct, answerAlias],
-    ScType.EdgeAccessVarPosPerm,
-    nrelAnswer,
-  );
-  const result = await client.templateSearch(template);
-  const answerScAddr = result.length ? result[0].get(answerAlias) : undefined;
-  return answerScAddr;
-};
-
-const getComponents = async (agentResult: ScAddr) => {
-  const template = new ScTemplate();
-  const answerAlias = '_answer';
-  template.triple(agentResult, ScType.EdgeAccessVarPosPerm, [ScType.NodeVarStruct, answerAlias]);
-  const result = await client.templateSearch(template);
-  const components = result.map((tuple) => tuple.get(answerAlias));
-  return components;
-};
-
-export const getSpecification = async (component: ScAddr) => {
-  const template = new ScTemplate();
-  const specificationAlias = '_specification';
-  const { conceptReusableComponent } = await scUtils.findKeynodes('concept_reusable_component');
-  template.triple(component, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, specificationAlias]);
-  template.triple(conceptReusableComponent, ScType.EdgeAccessVarPosPerm, [
-    ScType.NodeVar,
-    specificationAlias,
-  ]);
-
-  const result = await client.templateSearch(template);
-  return result.length ? result[0].get(specificationAlias) : undefined;
-};
-
-export const findComponentsSpecifications = async () => {
-  const initiatidAgentStuct = await initiateComponentSearchAgent();
-  if (!initiatidAgentStuct) return;
-
-  // TODO: get by index (return underfied if get by index now)
-  let agentResult: ScAddr | undefined = undefined;
-  await Promise.all(
-    initiatidAgentStuct.map(async (answerNode) => {
-      const currentAgentResult = await getAgentResult(answerNode);
-      if (currentAgentResult) {
-        agentResult = currentAgentResult;
-      }
-    }),
-  );
-  if (!agentResult) return;
-
-  const components = await getComponents(agentResult);
-  return components;
 };

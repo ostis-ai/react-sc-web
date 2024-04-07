@@ -4,14 +4,15 @@ import { useMatch } from 'react-router';
 import { routes } from '@constants';
 import { Card } from '@components/Card/Card';
 import { Input } from '@components/input/Input';
+import { CardInfo } from '@components/CardInfo/CardInfo';
 import SearchIcon from '@assets/images/Search.svg';
 import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
 import {
-  findComponentsSpecifications,
+  findSpecifiactions,
   findComponentGit,
-  getSpecification,
+  getComponent,
   findComponentSystemIdentifier,
   findComponentExplanation,
   findComponentType
@@ -25,84 +26,7 @@ interface CardInterface {
   type: CardComponentType;
   description: string;
   github: string;
-  scAddr: ScAddr;
-}
-
-function getRandomInt(min: number, max: number): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-async function mock_fetch(components: ScAddr[]) {
-  const test_arr: CardInterface[] = [];
-  await Promise.all(
-    components.map(async (component) => {
-      const type = getRandomInt(0, 3);
-      let element: CardInterface;
-
-      const specification = await getSpecification(component);
-      const git = specification ? ((await findComponentGit(specification)) as string) : '#';
-      const systemIdentifier = specification
-        ? ((await findComponentSystemIdentifier(specification)) as string)
-        : '...';
-      const explanation = specification
-        ? ((await findComponentExplanation(specification)) as string)
-        : '...';
-      console.log(git);
-
-      switch (type) {
-        case 0:
-          element = {
-            name: systemIdentifier,
-            type: CardComponentType.knowledgeBase,
-            description: explanation,
-            github: git,
-            scAddr: component,
-          };
-          break;
-        case 1:
-          element = {
-            name: systemIdentifier,
-            type: CardComponentType.interface,
-            description: explanation,
-            github: git,
-            scAddr: component,
-          };
-          break;
-        case 2:
-          element = {
-            name: systemIdentifier,
-            type: CardComponentType.problemSolver,
-            description: explanation,
-            github: git,
-            scAddr: component,
-          };
-          break;
-        case 3:
-          element = {
-            name: systemIdentifier,
-            type: CardComponentType.subSystem,
-            description: explanation,
-            github: git,
-            scAddr: component,
-          };
-          break;
-        default:
-          element = {
-            name: 'Unknown',
-            type: CardComponentType.unknown,
-            description: explanation,
-            github: git,
-            scAddr: component,
-          };
-          break;
-      }
-      test_arr.push(element);
-    }),
-  );
-  console.log(test_arr);
-  return test_arr;
+  component: ScAddr;
 }
 
 const Library = () => {
@@ -111,77 +35,60 @@ const Library = () => {
   const [cards, setCards] = useState<CardInterface[] | undefined>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [filteredCards, setFilteredCards] = useState<CardInterface[] | undefined>([]);
-  const [components, setComponents] = useState<ScAddr[] | undefined>([]);
+  const [specifications, setSpecifications] = useState<ScAddr[]>([]);
+  const [showComponent, setShowComponent] = useState<ScAddr | undefined>();
 
   const translate = useTranslate();
 
-  const testFindScAddr = async () => {
-    const components: ScAddr[] = [];
-    const testScAddr = await searchAddrById('concept_cat_specification');
-    console.log(testScAddr);
-    if (testScAddr) components.push(testScAddr);
-
-    const test_arr: CardInterface[] = [];
-    await Promise.all(
-      components.map(async (component) => {
-        
-        const git = await findComponentGit(component) as string;
-        const systemIdentifier = await findComponentSystemIdentifier(component) as string
-        const explanation = await findComponentExplanation(component) as string
-        const type = await findComponentType(component);
-
-        const element: CardInterface = {
-          name: systemIdentifier,
-          type: type,
-          description: explanation,
-          github: git,
-          scAddr: component,
-        };
-        test_arr.push(element);
-      }),
-    );
-    setCards(test_arr);
+  const fetchSpecifiactions = async () => {
+    const specifications = await findSpecifiactions();
+    setSpecifications(specifications);
   };
 
-  // await Promise.all(components.map(async (component) => {
-  //   const specification = await getSpecification(component);
-  //   if (!specification)
-  //       return
-  //   const systemIdentifier = await findComponentSystemIdentifier(specification);
-  //   const explanation = await findComponentExplanation(specification);
-  //   const gitUrl = await findComponentGit(specification);
-  //   const installationMethod = await findComponentInstallationMethod(specification);
-  //   const componentType = await findComponentType(specification);
-  //   const componentNote = await findComponentNote(specification);
-  //   const deps = await findComponentDeps(specification);
+  const fetchCards = async () => {
+    try {
+      const newCards = await Promise.all(
+        specifications.map(async (specification) => {
+          return await fetchComponentCard(specification);
+        })
+      );
+      setCards(newCards);
+    } catch (error) {
+      console.error("Error fetching components specifications:", error);
+      throw error;
+    }
+  };
 
-  //   console.log(
-  //       `Component system identifier: ${systemIdentifier}
-  //       Git url: ${gitUrl}
-  //       Installation method ScAddr: ${installationMethod?.value}
-  //       Component type: ${componentType}
-  //       Component explanation: ${explanation}
-  //       Component note: ${componentNote}
-  //       Deps: ${deps}`
-  //   );
-  // }));
+  const fetchComponentCard = async (specification: ScAddr) => {
+    try {
+      const component = await getComponent(specification);
+      const [systemIdentifier, type, git, explanation] = await Promise.all([
+        findComponentSystemIdentifier(component),
+        findComponentType(component),
+        findComponentGit(component),
+        findComponentExplanation(component)
+      ]);
+      const card: CardInterface = {
+        name: systemIdentifier ? systemIdentifier as string : "...",
+        type: type,
+        description: explanation ? explanation as string : "...",
+        github: git ? git as string : "...",
+        component: component,
+      };
+      return card;
+    } catch (error) {
+      console.error("Error fetching component specification:", error);
+      throw error;
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const components = await findComponentsSpecifications();
-      setComponents(components);
-    };
-    fetchData();
+    fetchSpecifiactions();
   }, []);
 
   useEffect(() => {
-    testFindScAddr();
-    const setData = async (components: ScAddr[]) => {
-      const tmp = await mock_fetch(components);
-      setCards(tmp);
-    };
-    if (components) setData(components);
-  }, [components]);
+    fetchCards();
+  }, [specifications]);
 
   useEffect(() => {
     const filtered =
@@ -211,6 +118,10 @@ const Library = () => {
   };
 
   return (
+    <>
+    { showComponent &&
+      <CardInfo scAddr={showComponent} setShowComponent={setShowComponent} />
+    }
     <div className={styles.libraryContainer}>
       <div className={styles.scrollableContent}>
         <div className={styles.header}>
@@ -279,12 +190,14 @@ const Library = () => {
               type={item.type}
               description={item.description}
               github={item.github}
-              scAddr={item.scAddr}
+              component={item.component}
+              setShowComponent={setShowComponent}
             />
           ))}
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -16,32 +16,31 @@ export interface ComponentCardProps {
   type: CardComponentType;
   description: string;
   github: string;
-  scAddr: ScAddr;
+  component: ScAddr;
+  setShowComponent: React.Dispatch<React.SetStateAction<ScAddr | undefined>>,
 }
 
-export const Card: React.FC<ComponentCardProps> = ({ name, type, description, github, scAddr }) => {
-  const [showCardInfo, setShowCardInfo] = useState(false);
+export const Card: React.FC<ComponentCardProps> = ({ name, type, description, github, component, setShowComponent }) => {
   let logoComponent: React.ReactNode;
   let subtitleClassName = classNames(styles.subtitle, styles.defaultSubtitle);
+  name = name.replace(/_/g, ' ');
 
+
+  // TODO: separate this logic into utils or merge with CardComponentType enum and also use it in CardInfo
   switch (type) {
     case CardComponentType.interface:
-      name = name.replace(/_/g, ' ');
       logoComponent = <Interface />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleInterface);
       break;
     case CardComponentType.knowledgeBase:
-      name = name.replace(/_/g, ' ');
       logoComponent = <KnowledgeBase />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleKnowledgeBase);
       break;
     case CardComponentType.problemSolver:
-      name = name.replace(/_/g, ' ');
       logoComponent = <ProblemSolver />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleProblemSolver);
       break;
     case CardComponentType.subSystem:
-      name = name.replace(/_/g, ' ');
       logoComponent = <Subsystem />;
       subtitleClassName = classNames(styles.subtitle, styles.subtitleSubSystem);
       break;
@@ -50,20 +49,11 @@ export const Card: React.FC<ComponentCardProps> = ({ name, type, description, gi
   }
 
   const handleContainerClick = () => {
-    setShowCardInfo(!showCardInfo);
+    setShowComponent(component);
   };
-
-  useEffect(() => {
-    console.log(scAddr);
-  });
 
   return (
     <div className={styles.container} onClick={handleContainerClick}>
-      {showCardInfo && (
-        <div className={styles.overlay}>
-          <CardInfo scAddr={scAddr} />
-        </div>
-      )}
       <div className={styles.info}>
         <div className={styles.logo}>{logoComponent}</div>
 
@@ -78,11 +68,15 @@ export const Card: React.FC<ComponentCardProps> = ({ name, type, description, gi
       </div>
 
       <div className={styles.infoUrl}>
-        <a href={github} className={styles.icon}>
-          <GithubIcon />
-        </a>
-
-        <button className={styles.installLink}>Install</button>
+        <a 
+          href={github} 
+          className={styles.icon} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          onClick={(event)=> event.stopPropagation()}><GithubIcon /></a>
+        <button 
+          className={styles.installLink} 
+          onClick={(event)=> event.stopPropagation()}>Install</button>
       </div>
     </div>
   );
