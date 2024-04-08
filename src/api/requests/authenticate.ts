@@ -23,26 +23,4 @@ export const authenticateUser = async (req: IRequest): Promise<ScAddr> => {
   if (!resp) throw new Error('unauthenticated');
 
   return resp;
-
-  /*
-
-  const answer = await scUtils.getAnswer(actionNode);
-
-  if (!answer) return false;
-
-  const { conceptAuthorisedUser } = await scUtils.findKeynodes('concept_authorised_user');
-
-  const userAlias = '_user_alias';
-
-  const userTemplate = new ScTemplate();
-  userTemplate.triple(answer, ScType.EdgeAccessVarPosPerm, [ScType.NodeConst, userAlias]);
-  userTemplate.triple(conceptAuthorisedUser, ScType.EdgeAccessVarPosPerm, userAlias);
-
-  const linkRes = await client.templateSearch(userTemplate);
-
-  if (!linkRes.length) return false;
-
-  return true;
-
-  */
 };

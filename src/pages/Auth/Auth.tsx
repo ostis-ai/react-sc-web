@@ -1,7 +1,6 @@
 import { FormEvent, useRef } from 'react';
 
 import { useTranslate } from 'ostis-ui-lib';
-
 import { authenticateUser } from '@api/requests/authenticate';
 
 import styles from './Auth.module.scss';
@@ -16,12 +15,10 @@ import { Button } from '@components/Button';
 
 const Auth = () => {
   const translate = useTranslate();
-
   const addError = useErrorToast();
-
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
+
   const loginRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
