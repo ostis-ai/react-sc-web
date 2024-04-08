@@ -3,12 +3,12 @@ import { ScAddr, ScConstruction, ScTemplate, ScType } from 'ts-sc-client';
 import { client, scUtils } from '@api/sc';
 import { CardComponentType } from '@components/Card/types';
 import { InstallMethodType } from '@components/CardInfo/types';
+import { compose } from '@reduxjs/toolkit';
 
 export const findSpecifiactions = async () => {
   const initiatidAgentStuct = await initiateComponentSearchAgent();
   if (!initiatidAgentStuct) return [];
 
-  // TODO: get by index (return underfied if get by index now)
   let agentResult: ScAddr | undefined = undefined;
   await Promise.all(
     initiatidAgentStuct.map(async (answerNode) => {
@@ -105,32 +105,30 @@ export const findComponentGit = async (component: ScAddr) => {
 };
 
 export const findComponentInstallationMethod = async (component: ScAddr) => {
-  //TODO: past the type of reusable component that requires a system restart when installed into types
   const installationTypes: { [key: string]: InstallMethodType } = {
-    concept_reusable_dynamically_installed_component: InstallMethodType.DynamicallyInstalledComponent,
+    concept_reusable_dynamically_installed_component:
+      InstallMethodType.DynamicallyInstalledComponent,
+    concept_reusable_kb_component: InstallMethodType.ReusableComponent,
   };
-  const installationTypesScAddr = new Map<ScAddr, string>();
+  const installationTypesScAddr = new Map<string, ScAddr>();
+
   const typesPromises = Object.keys(installationTypes).map(async (type) => {
     const scAddr = await searchAddrById(type);
-    if (scAddr) installationTypesScAddr.set(scAddr, type);
+    if (scAddr) installationTypesScAddr.set(type, scAddr);
   });
+
   await Promise.all(typesPromises);
-  const template = new ScTemplate();
-  const { nrelInstallationMethod } = await scUtils.findKeynodes('nrel_installation_method');
-  const methodAlias = '_method';
-  template.tripleWithRelation(
-    component,
-    ScType.EdgeDCommonVar,
-    [ScType.NodeVar, methodAlias],
-    ScType.EdgeAccessVarPosPerm,
-    nrelInstallationMethod,
-  );
-  const result = await client.templateSearch(template);
-  const methodScAddr = result.length ? result[0].get(methodAlias) : undefined;
-  if (methodScAddr !== undefined && installationTypesScAddr.has(methodScAddr)) {
-    return installationTypesScAddr.get(methodScAddr);
+
+  for (const [installationType, addr] of installationTypesScAddr.entries()) {
+    const template = new ScTemplate();
+    const answerAlias = '_answer';
+    template.triple(addr, ScType.EdgeAccessVarPosPerm, [component, answerAlias]);
+
+    const result = await client.templateSearch(template);
+    const resultScAddr = result.length ? result[0].get(answerAlias) : undefined;
+    if (resultScAddr?.value === component.value) return installationType;
   }
-  
+
   return undefined;
 };
 
