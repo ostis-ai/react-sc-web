@@ -43,7 +43,6 @@
   line-height: 25px;
   color: #323232;
   max-width: 140px;
-
 }
 
 .subtitle {
@@ -52,31 +51,26 @@
   border-radius: 8px;
   font-size: 15px;
   color: #ffffff;
-
 }
 
 .subtitleSubSystem {
   background-color: #f56060;
   width: 95px;
-
 }
 
 .subtitleKnowledgeBase {
   background-color: #7fbca9;
   width: 135px;
-
 }
 
 .subtitleInterface {
   background-color: #f59e60;
   width: 80px;
-
 }
 
 .subtitleProblemSolver {
   background-color: #5f95e5;
   width: 125px;
-
 }
 
 .infoUrl {
@@ -96,6 +90,13 @@
   color: #5896c0;
   border: none;
   order: 2;
+  cursor: pointer;
+}
+
+.installLink:active,
+.installLink:hover {
+  color: #265c80;
+  cursor: pointer;
 }
 
 .overlay {

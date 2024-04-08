@@ -38,19 +38,25 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [installMethod, setInstallMethod] = useState<InstallMethodType>();
   const [dependencies, setDependencies] = useState<Map<ScAddr, string>>(new Map());
 
-  let logoComponent: React.ReactNode = <ProblemSolver />;
-  let subtitleClassName = classNames(styles.subtitle, styles.cardType);
-  let installationMethodImg: React.ReactNode = <DynamicallyInstalledComponent />;
+  const [logoComponent, setLogoComponent] = useState<React.ReactNode>();
+  const [subtitleClassName, setSubtitleClassName] = useState<string>();
+  const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>(
+    <DynamicallyInstalledComponent />,
+  );
 
-  if (type) {
-    logoComponent = getCardLogo(type);
-    subtitleClassName = getSubtitleClassName(type);
-  }
+  useEffect(() => {
+    if (type) {
+      setLogoComponent(getCardLogo(type));
+      setSubtitleClassName(getSubtitleClassName(type));
+    }
+  }, [type]);
 
-  if(installMethod) {
-    installationMethodImg = getInstallationMethodType(installMethod);
-  }
-  // TODO: installationMethod unused
+  useEffect(() => {
+    if (installMethod) {
+      setInstallMethodImg(getInstallationMethodType(installMethod));
+    }
+  }, [installMethod]);
+
   const fetchComponent = async (component: ScAddr) => {
     try {
       const [
@@ -75,13 +81,13 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
       setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : '...');
       setType(type);
-      setInstallMethod(installMethod)
+      setInstallMethod(installMethod);
       setGithub(git ? (git as string) : '#');
       setExplanation(explanation ? (explanation as string) : '...');
       setNote(note ? (note as string) : '...');
       setDependencies(dependencies);
       setAuthor(authors ? authors.join(', ') : '...');
-      console.log(installationMethod)
+      console.log(installationMethod);
     } catch (error) {
       console.error('Error fetching component specification:', error);
       throw error;
@@ -150,9 +156,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
         <div className={styles.installationMethod}>
           <div className={styles.blockName}>Метод установки</div>
-          <div className={styles.componentImg}>
-            {installationMethodImg}
-          </div>
+          <div className={styles.componentImg}>{installationMethodImg}</div>
         </div>
 
         <div className={styles.autorship}>
