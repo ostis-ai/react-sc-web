@@ -1,13 +1,9 @@
 import styles from './CardInfo.module.scss';
 import { ScAddr } from 'ts-sc-client';
 import { useState, useEffect } from 'react';
-import classNames from 'classnames';
 import { CardComponentType } from '@components/Card/types';
 import CloseIcon from '@assets/images/CloseIcon.svg';
-import DynamicallyInstalledComponent from '@assets/images/DynamicallyInstalledComponent.svg';
-import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';
 import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
-
 import {
   findComponentAuthor,
   findComponentGit,
@@ -17,8 +13,6 @@ import {
   findComponentType,
   findComponentInstallationMethod,
   findComponentNote,
-  findSpecifiactions,
-  getComponent,
 } from '../../api/requests/getSpecification';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
@@ -41,7 +35,6 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [logoComponent, setLogoComponent] = useState<React.ReactNode>();
   const [subtitleClassName, setSubtitleClassName] = useState<string>();
   const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>(
-    <DynamicallyInstalledComponent />,
   );
 
   useEffect(() => {
@@ -81,7 +74,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
       setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : '...');
       setType(type);
-      setInstallMethod(installMethod);
+      setInstallMethod(installationMethod as InstallMethodType);
       setGithub(git ? (git as string) : '#');
       setExplanation(explanation ? (explanation as string) : '...');
       setNote(note ? (note as string) : '...');
