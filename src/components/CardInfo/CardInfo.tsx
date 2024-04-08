@@ -87,7 +87,6 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
       setNote(note ? (note as string) : '...');
       setDependencies(dependencies);
       setAuthor(authors ? authors.join(', ') : '...');
-      console.log(installationMethod);
     } catch (error) {
       console.error('Error fetching component specification:', error);
       throw error;
