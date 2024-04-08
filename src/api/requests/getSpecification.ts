@@ -3,7 +3,6 @@ import { ScAddr, ScConstruction, ScTemplate, ScType } from 'ts-sc-client';
 import { client, scUtils } from '@api/sc';
 import { CardComponentType } from '@components/Card/types';
 import { InstallMethodType } from '@components/CardInfo/types';
-import { compose } from '@reduxjs/toolkit';
 
 export const findSpecifiactions = async () => {
   const initiatidAgentStuct = await initiateComponentSearchAgent();
@@ -106,9 +105,8 @@ export const findComponentGit = async (component: ScAddr) => {
 
 export const findComponentInstallationMethod = async (component: ScAddr) => {
   const installationTypes: { [key: string]: InstallMethodType } = {
-    concept_reusable_dynamically_installed_component:
-      InstallMethodType.DynamicallyInstalledComponent,
-    concept_reusable_kb_component: InstallMethodType.ReusableComponent,
+    concept_reusable_dynamically_installed_component: InstallMethodType.DynamicallyInstalledComponent,
+    concept_reusable_component_requiring_restart: InstallMethodType.ReusableComponent,
   };
   const installationTypesScAddr = new Map<string, ScAddr>();
 
@@ -126,7 +124,7 @@ export const findComponentInstallationMethod = async (component: ScAddr) => {
 
     const result = await client.templateSearch(template);
     const resultScAddr = result.length ? result[0].get(answerAlias) : undefined;
-    if (resultScAddr?.value === component.value) return installationType;
+    if (resultScAddr?.value === component.value) return installationTypes[installationType];;
   }
 
   return undefined;
