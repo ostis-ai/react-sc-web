@@ -1,13 +1,9 @@
 import styles from './CardInfo.module.scss';
 import { ScAddr } from 'ts-sc-client';
 import { useState, useEffect } from 'react';
-import classNames from 'classnames';
 import { CardComponentType } from '@components/Card/types';
 import CloseIcon from '@assets/images/CloseIcon.svg';
-import DynamicallyInstalledComponent from '@assets/images/DynamicallyInstalledComponent.svg';
-import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';
 import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
-
 import {
   findComponentAuthor,
   findComponentGit,
@@ -17,8 +13,6 @@ import {
   findComponentType,
   findComponentInstallationMethod,
   findComponentNote,
-  findSpecifiactions,
-  getComponent,
 } from '../../api/requests/getSpecification';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
@@ -38,19 +32,24 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [installMethod, setInstallMethod] = useState<InstallMethodType>();
   const [dependencies, setDependencies] = useState<Map<ScAddr, string>>(new Map());
 
-  let logoComponent: React.ReactNode = <ProblemSolver />;
-  let subtitleClassName = classNames(styles.subtitle, styles.cardType);
-  let installationMethodImg: React.ReactNode = <DynamicallyInstalledComponent />;
+  const [logoComponent, setLogoComponent] = useState<React.ReactNode>();
+  const [subtitleClassName, setSubtitleClassName] = useState<string>();
+  const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>(
+  );
 
-  if (type) {
-    logoComponent = getCardLogo(type);
-    subtitleClassName = getSubtitleClassName(type);
-  }
+  useEffect(() => {
+    if (type) {
+      setLogoComponent(getCardLogo(type));
+      setSubtitleClassName(getSubtitleClassName(type));
+    }
+  }, [type]);
 
-  if(installMethod) {
-    installationMethodImg = getInstallationMethodType(installMethod);
-  }
-  // TODO: installationMethod unused
+  useEffect(() => {
+    if (installMethod) {
+      setInstallMethodImg(getInstallationMethodType(installMethod));
+    }
+  }, [installMethod]);
+
   const fetchComponent = async (component: ScAddr) => {
     try {
       const [
@@ -75,13 +74,12 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
       setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : '...');
       setType(type);
-      setInstallMethod(installMethod)
+      setInstallMethod(installationMethod as InstallMethodType);
       setGithub(git ? (git as string) : '#');
       setExplanation(explanation ? (explanation as string) : '...');
       setNote(note ? (note as string) : '...');
       setDependencies(dependencies);
       setAuthor(authors ? authors.join(', ') : '...');
-      console.log(installationMethod)
     } catch (error) {
       console.error('Error fetching component specification:', error);
       throw error;
@@ -150,9 +148,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
         <div className={styles.installationMethod}>
           <div className={styles.blockName}>Метод установки</div>
-          <div className={styles.componentImg}>
-            {installationMethodImg}
-          </div>
+          <div className={styles.componentImg}>{installationMethodImg}</div>
         </div>
 
         <div className={styles.autorship}>

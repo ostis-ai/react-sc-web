@@ -12,10 +12,17 @@ export interface ComponentCardProps {
   description: string;
   github: string;
   component: ScAddr;
-  setShowComponent: React.Dispatch<React.SetStateAction<ScAddr | undefined>>,
+  setShowComponent: React.Dispatch<React.SetStateAction<ScAddr | undefined>>;
 }
 
-export const Card: React.FC<ComponentCardProps> = ({ name, type, description, github, component, setShowComponent }) => {
+export const Card: React.FC<ComponentCardProps> = ({
+  name,
+  type,
+  description,
+  github,
+  component,
+  setShowComponent,
+}) => {
   const logoComponent = getCardLogo(type);
   const subtitleClassName = getSubtitleClassName(type);
   name = name.replace(/_/g, ' ');
@@ -40,10 +47,10 @@ export const Card: React.FC<ComponentCardProps> = ({ name, type, description, gi
       </div>
 
       <div className={styles.infoUrl}>
-        <a 
-          href={github} 
-          className={styles.icon} 
-          target="_blank" 
+        <a
+          href={github}
+          className={styles.icon}
+          target="_blank"
           rel="noopener noreferrer"
           onClick={(event)=> event.stopPropagation()}><GithubIcon /></a>
         <button 
