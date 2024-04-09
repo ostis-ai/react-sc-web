@@ -3,6 +3,7 @@ import styles from './Card.module.scss';
 import { CardComponentType } from './types';
 import { ScAddr } from 'ts-sc-client';
 import { getCardLogo, getSubtitleClassName } from './utils';
+import { initiateComponentInstallAgent } from "../../api/sc/install/install";
 import GithubIcon from '@assets/images/GithubIcon.svg';
 
 export interface ComponentCardProps {
@@ -47,7 +48,7 @@ export const Card: React.FC<ComponentCardProps> = ({ name, type, description, gi
           onClick={(event)=> event.stopPropagation()}><GithubIcon /></a>
         <button 
           className={styles.installLink} 
-          onClick={(event)=> event.stopPropagation()}>Install</button>
+          onClick={(event)=> {initiateComponentInstallAgent(component); event.stopPropagation()}}>Install</button>
       </div>
     </div>
   );
