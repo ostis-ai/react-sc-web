@@ -19,7 +19,6 @@ import {
 } from '../../api/requests/getSpecification';
 import { ScAddr } from 'ts-sc-client';
 
-import { searchAddrById } from '@api/sc/search/search';
 
 
 interface CardInterface {
@@ -88,7 +87,13 @@ const Library = () => {
   }, []);
 
   useEffect(() => {
-    fetchCards();
+    // NOTE: sometimes the agent returns wrong result (apparently on the first run), so a check is made.
+    if (!specifications.length) {
+      fetchSpecifiactions();
+    }
+    else {
+      fetchCards();
+    }
   }, [specifications]);
 
   useEffect(() => {
