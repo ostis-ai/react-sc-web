@@ -1,59 +1,19 @@
 import { searchAddrById } from '@api/sc/search/search';
-import { ScAddr, ScConstruction, ScTemplate, ScType } from 'ts-sc-client';
+import { ScAddr, ScTemplate, ScType } from 'ts-sc-client';
+import { Action } from '@api/sc/actions/Action';
 import { client, scUtils } from '@api/sc';
 import { CardComponentType } from '@components/Card/types';
 import { InstallMethodType } from '@components/CardInfo/types';
 
-export const findSpecifiactions = async () => {
-  const initiatidAgentStuct = await initiateComponentSearchAgent();
-  if (!initiatidAgentStuct) return [];
 
-  let agentResult: ScAddr | undefined = undefined;
-  await Promise.all(
-    initiatidAgentStuct.map(async (answerNode) => {
-      const currentAgentResult = await getAgentResult(answerNode);
-      if (currentAgentResult) {
-        agentResult = currentAgentResult;
-      }
-    }),
-  );
+export const findSpecifiactions = async () => {
+  const action = new Action("action_components_search");
+  const agentResult = await action.initiate();
+
   if (!agentResult) return [];
 
   const specifications = await getSpecifications(agentResult);
   return specifications;
-};
-
-const initiateComponentSearchAgent = async () => {
-  const construction = new ScConstruction();
-  const questionNode = '_question_node';
-  const actionComponentsSearch = await searchAddrById('action_components_search');
-  const question = await searchAddrById('question');
-  const questionInitiated = await searchAddrById('question_initiated');
-  if (!question || !actionComponentsSearch || !questionInitiated) return;
-
-  construction.createNode(ScType.NodeConst, questionNode);
-  construction.createEdge(ScType.EdgeAccessConstPosPerm, question, questionNode);
-  construction.createEdge(ScType.EdgeAccessConstPosPerm, actionComponentsSearch, questionNode);
-  construction.createEdge(ScType.EdgeAccessConstPosPerm, questionInitiated, questionNode);
-  const result = await client.createElements(construction);
-  return result;
-};
-
-const getAgentResult = async (answerNode: ScAddr) => {
-  const { nrelAnswer } = await scUtils.findKeynodes('nrel_answer');
-  if (!nrelAnswer) return;
-  const template = new ScTemplate();
-  const answerAlias = '_answer';
-  template.tripleWithRelation(
-    answerNode,
-    ScType.EdgeDCommonVar,
-    [ScType.NodeVarStruct, answerAlias],
-    ScType.EdgeAccessVarPosPerm,
-    nrelAnswer,
-  );
-  const result = await client.templateSearch(template);
-  const answerScAddr = result.length ? result[0].get(answerAlias) : undefined;
-  return answerScAddr;
 };
 
 const getSpecifications = async (agentResult: ScAddr) => {
@@ -70,10 +30,7 @@ export const getComponent = async (specification: ScAddr) => {
   const componentAlias = '_component';
   const { conceptReusableComponent } = await scUtils.findKeynodes('concept_reusable_component');
   template.triple(specification, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, componentAlias]);
-  template.triple(conceptReusableComponent, ScType.EdgeAccessVarPosPerm, [
-    ScType.NodeVar,
-    componentAlias,
-  ]);
+  template.triple(conceptReusableComponent, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, componentAlias,]);
   const result = await client.templateSearch(template);
   if (!result.length) {
     const errorStr = `Cannot find component of sepecification with ScAddr ${specification.value}`;
@@ -264,17 +221,14 @@ export const findComponentType = async (component: ScAddr) => {
       if (scAddr) typesScAddr.set(scAddr, componentType);
     }),
   );
-  const componentTypes: CardComponentType[] = [];
 
   for (const [addr, componentType] of typesScAddr.entries()) {
     const template = new ScTemplate();
     template.triple(addr, ScType.EdgeAccessVarPosPerm, component);
-
     const result = await client.templateSearch(template);
     if (result.length) {
-      componentTypes.push(componentType);
+      return componentType;
     }
   }
-
-  return componentTypes[0];
+  return CardComponentType.unknown;
 };
