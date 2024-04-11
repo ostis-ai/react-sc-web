@@ -38,7 +38,7 @@ cd react-sc-web
 #### Run sc-web with allowed_origins
 ```sh
 cd sc-web
-python3 server/app.py" --allowed_origins=http://localhost:3000
+python3 server/app.py --allowed_origins=http://localhost:3000
 ```
 
 #### Run react-sc-web
