@@ -20,7 +20,6 @@ import {
 import { ScAddr } from 'ts-sc-client';
 
 
-
 interface CardInterface {
   name: string;
   type: CardComponentType;
@@ -39,6 +38,14 @@ const Library = () => {
   const [showComponent, setShowComponent] = useState<ScAddr | undefined>();
 
   const translate = useTranslate();
+
+  useEffect(() => {
+    fetchSpecifiactions();
+  }, []);
+
+  useEffect(() => {
+    fetchCards();
+  }, [specifications]);
 
   const fetchSpecifiactions = async () => {
     const specifications = await findSpecifiactions();
@@ -81,20 +88,6 @@ const Library = () => {
       throw error;
     }
   };
-
-  useEffect(() => {
-    fetchSpecifiactions();
-  }, []);
-
-  useEffect(() => {
-    // NOTE: sometimes the agent returns wrong result (apparently on the first run), so a check is made.
-    if (!specifications.length) {
-      fetchSpecifiactions();
-    }
-    else {
-      fetchCards();
-    }
-  }, [specifications]);
 
   useEffect(() => {
     const filtered =
