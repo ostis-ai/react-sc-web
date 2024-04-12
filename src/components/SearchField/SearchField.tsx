@@ -75,7 +75,6 @@ export const SearchField: FC<IProps> = ({ className }) => {
       onChange={onChange}
       emptyMessage={emptyMessage}
       iconsLeft={<SearchIcon />}
-      autoFocus
     >
       {(options || []).map((option) => (
         <Option key={option} value={option} className={styles.option}>
