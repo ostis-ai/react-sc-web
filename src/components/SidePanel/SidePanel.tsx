@@ -52,7 +52,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     <div className={className}>
       <div className={styles.sideBarContent}>
         <div className={styles.searchFieldWrap}>
-          <Tooltip systemId="ui_search_panel">
+          <Tooltip systemId="ui_search">
             <SearchField className={styles.searchField} />
           </Tooltip>
         </div>
@@ -69,6 +69,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
               rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
               onRightClick={onAddClick}
               expanded
+              systemId="ui_section"
             >
               <ErrorBoundary
                 title={translate({
@@ -83,7 +84,11 @@ export const SidePanel: FC<IProps> = ({ className }) => {
             </Accordion>
           </div>
           <div className={styles.decompositionAndHistoryPanels}>
-            <Accordion header={translate({ ru: 'История', en: 'History' })} leftIcon={<Clock />}>
+            <Accordion
+              header={translate({ ru: 'История', en: 'History' })}
+              leftIcon={<Clock />}
+              systemId="ui_history"
+            >
               <ErrorBoundary
                 title={translate({
                   ru: 'Ошибка получения истории',

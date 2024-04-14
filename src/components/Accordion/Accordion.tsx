@@ -14,6 +14,7 @@ interface IProps {
   className?: string;
   expanded?: boolean;
   isAutoControl?: boolean;
+  systemId: string;
   onRightClick?: () => void;
   onToggle?: (expanded: boolean) => void;
 }
@@ -28,6 +29,7 @@ export const Accordion: FC<IProps> = ({
   expanded: outerExpanded = true,
   isAutoControl = true,
   onRightClick,
+  systemId,
 }) => {
   const [expanded, , , onToggleExpanded] = useBooleanState(outerExpanded, {
     updateable: true,
@@ -47,9 +49,6 @@ export const Accordion: FC<IProps> = ({
 
     onRightClick?.();
   };
-
-  const systemId =
-    header === 'История' || header === 'History' ? 'ui_history_panel' : 'ui_section_panel';
 
   return (
     <div className={className}>

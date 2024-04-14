@@ -46,7 +46,7 @@ export const Layout: FC<IProps> = ({ children }) => {
             <Language />
           </div>
           <div>
-            <Tooltip systemId="ui_log_in_button">
+            <Tooltip systemId="ui_login">
               <button className={styles.logInButton}>
                 {translate({ ru: 'Войти', en: 'Login' })}
               </button>
