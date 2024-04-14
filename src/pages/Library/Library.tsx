@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useTranslate } from 'ostis-ui-lib';
-import { useMatch } from 'react-router';
-import { routes } from '@constants';
 import { Card } from '@components/Card/Card';
 import { Input } from '@components/input/Input';
 import { CardInfo } from '@components/CardInfo/CardInfo';
@@ -19,7 +17,6 @@ import {
 } from '../../api/requests/getSpecification';
 import { ScAddr } from 'ts-sc-client';
 
-
 interface CardInterface {
   name: string;
   type: CardComponentType;
@@ -29,7 +26,6 @@ interface CardInterface {
 }
 
 const Library = () => {
-  const match = useMatch(routes.LIBRARY);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [cards, setCards] = useState<CardInterface[] | undefined>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);

@@ -37,3 +37,16 @@ export const getSubtitleClassName = (type: CardComponentType): string => {
       return classNames(styles.subtitle, styles.defaultSubtitle);
   }
 };
+
+export const truncateString = (str: string): string => {
+  if (str.length <= 25) {
+    return str.replace(/_/g, ' ');
+  }
+
+  const truncatedString = str.slice(0, 25);
+  const lastSpaceIndex = truncatedString.lastIndexOf('_');
+  let finalString = truncatedString.substring(0, lastSpaceIndex).replace(/_/g, ' ');
+  finalString += '...';
+
+  return finalString;
+};
