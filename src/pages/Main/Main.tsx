@@ -1,13 +1,13 @@
-import { SwitchViewMode, TScLanguageTab } from 'ostis-ui-lib';
+import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 import { generatePath, Outlet, useLocation, useMatch, useNavigate } from 'react-router';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 import { routes } from '@constants';
 import { useDispatch } from '@hooks/redux';
 import { setFormat } from '@store/commonSlice';
 
 import styles from './Main.module.scss';
 
-const StyledSwitchViewMode = styled(SwitchViewMode)`
+const StyledSwitchScgScn = styled(SwitchScgScn)`
   position: absolute;
 
   right: 24px;
@@ -25,14 +25,7 @@ const Main = () => {
 
   const dispatch = useDispatch();
 
-  let activeTab: TScLanguageTab;
-  if (location.pathname.includes('scg')) {
-    activeTab = 'scg';
-  } else if (location.pathname.includes('scn')) {
-    activeTab = 'scn';
-  } else {
-    activeTab = 'native';
-  }
+  const activeTab = location.pathname.includes('scg') ? 'scg' : 'scn';
 
   const onChange = (newActiveTab: TScLanguageTab) => {
     dispatch(setFormat(newActiveTab));
@@ -59,7 +52,7 @@ const Main = () => {
 
   return (
     <div className={styles.wrapper}>
-      <StyledSwitchViewMode tab={activeTab} onTabClick={onChange} />
+      <StyledSwitchScgScn tab={activeTab} onTabClick={onChange} />
       <Outlet />
     </div>
   );

@@ -1,9 +1,7 @@
 import { FC, ReactNode } from 'react';
-import { Language } from '@components/Language';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
-import Logo from '@assets/images/Logo.svg';
 
 import styles from './Layout.module.scss';
 import { Language } from '@components/Language';
