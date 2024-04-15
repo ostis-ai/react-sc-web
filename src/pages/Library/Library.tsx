@@ -8,6 +8,7 @@ import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
 import {
+  findSpecifiactions,
   findComponentGit,
   getComponent,
   findComponentSystemIdentifier,
@@ -15,7 +16,6 @@ import {
   findComponentType,
 } from '../../api/requests/getSpecification';
 import { ScAddr } from 'ts-sc-client';
-import { searchAddrById } from '@api/sc/search/search';
 
 interface CardInterface {
   name: string;
