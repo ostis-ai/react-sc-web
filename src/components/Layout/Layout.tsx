@@ -6,18 +6,22 @@ import { SidePanelWrapper } from '@components/SidePanelWrapper';
 import Logo from '@assets/images/Logo.svg';
 
 import styles from './Layout.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { Language } from '@components/Language';
+import { Link } from 'react-router-dom';
+import Logo from '@assets/images/Logo.svg';
 import { routes } from '@constants';
+import { setActiveLink } from '@store/activeLinkSlice';
+import { useDispatch } from 'react-redux';
 
 export interface IProps {
   children?: ReactNode;
 }
 
 export const Layout: FC<IProps> = ({ children }) => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogoOnClick = () => {
-    navigate(routes.MAIN);
+    dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
   };
 
   return (

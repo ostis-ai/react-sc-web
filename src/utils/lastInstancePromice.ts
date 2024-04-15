@@ -1,9 +1,7 @@
 import { nanoid } from 'nanoid';
 
-// TODO: Дока
-
 /**
- * Returns wheteher async function passed to the params is last in unresolved promices stack.
+ * Returns whether async function passed to the params is last in unresolved promices stack.
  *
  * @param func
  * @returns
