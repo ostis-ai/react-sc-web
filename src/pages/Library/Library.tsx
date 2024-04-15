@@ -8,7 +8,6 @@ import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
 import {
-  findSpecifiactions,
   findComponentGit,
   getComponent,
   findComponentSystemIdentifier,
@@ -16,6 +15,7 @@ import {
   findComponentType,
 } from '../../api/requests/getSpecification';
 import { ScAddr } from 'ts-sc-client';
+import { searchAddrById } from '@api/sc/search/search';
 
 interface CardInterface {
   name: string;
@@ -44,8 +44,13 @@ const Library = () => {
   }, [specifications]);
 
   const fetchSpecifiactions = async () => {
-    const specifications = await findSpecifiactions();
-    setSpecifications(specifications);
+    // const specifications = await findSpecifiactions();
+    // setSpecifications(specifications);
+
+    const components: ScAddr[] = [];
+    const testsScAddr = await searchAddrById('cat_reusable_component_specification');
+    if (testsScAddr) components.push(testsScAddr);
+    setSpecifications(components);
   };
 
   const fetchCards = async () => {
@@ -112,10 +117,14 @@ const Library = () => {
     setIsFilterVisible(!isFilterVisible);
   };
 
+  const closeFilterForm = () => {
+    if (isFilterVisible === true) setIsFilterVisible(false);
+  };
+
   return (
     <>
       {showComponent && <CardInfo scAddr={showComponent} setShowComponent={setShowComponent} />}
-      <div className={styles.libraryContainer}>
+      <div className={styles.libraryContainer} onClick={closeFilterForm}>
         <div className={styles.scrollableContent}>
           <div className={styles.header}>
             <Input
@@ -123,7 +132,6 @@ const Library = () => {
               placeholder={translate({ ru: 'Поиск компонент', en: 'Search for components' })}
               iconLeft={<SearchIcon />}
               onChange={handleSearchChange}
-              onClick={() => setIsFilterVisible(false)}
             />
             <div className={styles.Filter}>
               <button className={styles.FilterButton} onClick={toggleFilterVisibility}>
