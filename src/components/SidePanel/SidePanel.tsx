@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import { useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import { DecompositionPanel } from '@components/DecompositionPanel';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getHistory } from '@api/requests/userHistory';
@@ -15,6 +16,7 @@ import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
 import { selectAuth } from '@store/authSlice';
+import { Tooltip } from '@components/ToolTip/ToolTip';
 
 interface IProps {
   className?: string;
@@ -52,7 +54,9 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     <div className={className}>
       <div className={styles.sideBarContent}>
         <div className={styles.searchFieldWrap}>
-          <SearchField className={styles.searchField} />
+          <Tooltip systemId="ui_search">
+            <SearchField className={styles.searchField} />
+          </Tooltip>
         </div>
         <div
           className={classNames(styles.accordionContent, {
@@ -67,6 +71,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
               rightIcon={isAuthorised ? <Plus /> : null}
               onRightClick={onAddClick}
               expanded
+              systemId="ui_section"
             >
               <ErrorBoundary
                 title={translate({
@@ -81,7 +86,11 @@ export const SidePanel: FC<IProps> = ({ className }) => {
             </Accordion>
           </div>
           <div className={styles.decompositionAndHistoryPanels}>
-            <Accordion header={translate({ ru: 'История', en: 'History' })} leftIcon={<Clock />}>
+            <Accordion
+              header={translate({ ru: 'История', en: 'History' })}
+              leftIcon={<Clock />}
+              systemId="ui_history"
+            >
               <ErrorBoundary
                 title={translate({
                   ru: 'Ошибка получения истории',

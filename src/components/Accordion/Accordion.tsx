@@ -2,6 +2,7 @@ import { Expandable, useBooleanState } from 'ostis-ui-lib';
 import { FC, ReactNode } from 'react';
 import ChevronDown from '@assets/images/chevronDown.svg';
 import { IconButton } from '@components/IconButton';
+import { Tooltip } from '@components/ToolTip/ToolTip';
 
 import { ChevronDownWrapper, ContentWrapper, HeaderWrapper, Icon, LeftContent } from './styled';
 
@@ -13,6 +14,7 @@ interface IProps {
   className?: string;
   expanded?: boolean;
   isAutoControl?: boolean;
+  systemId: string;
   onRightClick?: () => void;
   onToggle?: (expanded: boolean) => void;
 }
@@ -27,6 +29,7 @@ export const Accordion: FC<IProps> = ({
   expanded: outerExpanded = true,
   isAutoControl = true,
   onRightClick,
+  systemId,
 }) => {
   const [expanded, , , onToggleExpanded] = useBooleanState(outerExpanded, {
     updateable: true,
@@ -50,13 +53,15 @@ export const Accordion: FC<IProps> = ({
   return (
     <div className={className}>
       <HeaderWrapper>
-        <LeftContent onClick={onHeaderClick}>
-          {leftIcon && <Icon>{leftIcon}</Icon>}
-          {header}
-          <ChevronDownWrapper expanded={expanded}>
-            <ChevronDown width="24" height="24" />
-          </ChevronDownWrapper>
-        </LeftContent>
+        <Tooltip systemId={systemId}>
+          <LeftContent onClick={onHeaderClick}>
+            {leftIcon && <Icon>{leftIcon}</Icon>}
+            {header}
+            <ChevronDownWrapper expanded={expanded}>
+              <ChevronDown width="24" height="24" />
+            </ChevronDownWrapper>
+          </LeftContent>
+        </Tooltip>
         {rightIcon && (
           <IconButton squared={true} onClick={onIconBtnClick}>
             {rightIcon}
