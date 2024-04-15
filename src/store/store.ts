@@ -9,6 +9,7 @@ export const store = configureStore({
   reducer: {
     [commonSlice.name]: commonSlice.reducer,
     [requestHistorySlice.name]: requestHistorySlice.reducer,
+    [requestDialogHistorySlice.name]: requestDialogHistorySlice.reducer,
     [argsFixingSlice.name]: argsFixingSlice.reducer,
     [requestActiveLink.name]: requestActiveLink.reducer,
   },

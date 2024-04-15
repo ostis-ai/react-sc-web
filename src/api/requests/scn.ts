@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { IScnNode } from 'ostis-ui-lib';
 import { ScAddr } from 'ts-sc-client';
-import { client, isAxiosError, scUtils } from '@api';
+import { client, isAxiosError } from '@api';
 import { shiftMap } from '@utils';
 
 import { translate } from './requests';

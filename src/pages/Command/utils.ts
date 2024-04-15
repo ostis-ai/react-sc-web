@@ -14,4 +14,7 @@ const executeCommandInner = async ({ commandAddr, addr, args }: IArgs) => {
   return await doCommand(targetCommandAddr, targetAddr, ...args);
 };
 
-export const debouncedExecuteCommand = debounceWithReturn(lastInstancePromice(executeCommandInner), 500);
+export const debouncedExecuteCommand = debounceWithReturn(
+  lastInstancePromice(executeCommandInner),
+  500,
+);

@@ -6,7 +6,7 @@ import styles from './IconButton.module.scss';
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   squared?: boolean;
   disabled?: boolean;
-  dimention?: 's' | 'm' | 'l';
+  dimention?: 's' | 'm' | 'l' | 'xl';
 }
 
 export const IconButton = forwardRef<HTMLButtonElement, IProps>(
