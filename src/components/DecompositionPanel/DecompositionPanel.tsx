@@ -16,7 +16,11 @@ interface IProps {
   deleteable?: boolean;
 }
 
-export const DecompositionPanel: FC<IProps> = ({ className, editable = false, deleteable = false }) => {
+export const DecompositionPanel: FC<IProps> = ({
+  className,
+  editable = false,
+  deleteable = false,
+}) => {
   const {
     isMenuListLoading,
     menuList,
@@ -61,7 +65,11 @@ export const DecompositionPanel: FC<IProps> = ({ className, editable = false, de
     <div className={className}>
       <Nav>
         {!isMenuListLoading && (
-          <NavigationList data={menuList?.children || emptyArray} editable={editable} deleteable={deleteable}>
+          <NavigationList
+            data={menuList?.children || emptyArray}
+            editable={editable}
+            deleteable={deleteable}
+          >
             <>
               {isAddInputShow && (
                 <TextAreaItem

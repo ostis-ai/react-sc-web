@@ -6,13 +6,15 @@ import { SidePanelWrapper } from '@components/SidePanelWrapper';
 import styles from './Layout.module.scss';
 import { Language } from '@components/Language';
 import { DevModeSwitch } from '@components/DevModeSwitch';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@assets/images/Logo.svg';
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslate } from 'ostis-ui-lib';
 import { Tooltip } from '@components/ToolTip/ToolTip';
+import { selectAuth } from '@store/authSlice';
+import UserIcon from "@assets/images/UserIcon.svg"
 
 export interface IProps {
   children?: ReactNode;
@@ -21,9 +23,17 @@ export interface IProps {
 export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
   const translate = useTranslate();
+  const navigate = useNavigate();
+
+  const username = useSelector(selectAuth);
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
+  };
+
+  const handleLogInButtonClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    return navigate(routes.AUTH);
   };
 
   return (
@@ -46,11 +56,18 @@ export const Layout: FC<IProps> = ({ children }) => {
             <Language />
           </div>
           <div>
-            <Tooltip systemId="ui_login">
-              <button className={styles.logInButton}>
-                {translate({ ru: 'Войти', en: 'Login' })}
-              </button>
-            </Tooltip>
+            {username != '' ? (
+              <div className={styles.profileWrapper}>
+                <UserIcon />
+                <div className={styles.profileUsername}>{username}</div>
+              </div>
+            ) : (
+              <Tooltip systemId="ui_login">
+                <button className={styles.logInButton} onClick={handleLogInButtonClick}>
+                  {translate({ ru: 'Войти', en: 'Login' })}
+                </button>
+              </Tooltip>
+            )}
           </div>
         </div>
       </header>

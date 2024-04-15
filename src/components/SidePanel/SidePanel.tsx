@@ -28,7 +28,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
   const user = useSelector(selectUser);
 
   const username = useSelector(selectAuth);
-  const isAuthorised = username != ""
+  const isAuthorised = username != '';
 
   const { onAddClick } = useDecompositionContext();
 

@@ -10,7 +10,7 @@ interface IInitialState {
 }
 
 const initialState: IInitialState = {
-  username: "",
+  username: '',
 };
 
 export const authSlice = createSlice({

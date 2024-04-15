@@ -19,8 +19,19 @@ interface IProps {
   className?: string;
 }
 
-export const Scn = ({ isLoading, tree, scgUrl, renderRequestPanel, onAskQuestion, question, className }: IProps) => {
-  const { page, scrollRef, targetRef } = useInfiniteScroll({ total: tree?.children?.length || 1, pageSize: PAGE_SIZE });
+export const Scn = ({
+  isLoading,
+  tree,
+  scgUrl,
+  renderRequestPanel,
+  onAskQuestion,
+  question,
+  className,
+}: IProps) => {
+  const { page, scrollRef, targetRef } = useInfiniteScroll({
+    total: tree?.children?.length || 1,
+    pageSize: PAGE_SIZE,
+  });
 
   useEffect(() => {
     scrollRef.current?.scroll(0, 0);

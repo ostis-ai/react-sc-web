@@ -12,7 +12,7 @@ interface ILanguageProps {
   secondaryLanguageColor?: HEXColor;
 }
 
-// TODO: colors 
+// TODO: colors
 
 export const Language: FC<ILanguageProps> = ({ primaryLanguageColor, secondaryLanguageColor }) => {
   const { lang, setLang } = useLanguageContext();

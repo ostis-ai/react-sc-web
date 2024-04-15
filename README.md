@@ -47,6 +47,7 @@ python3 server/app.py" --allowed_origins=http://localhost:3000
 ```
 
 #### Run react-sc-web
+
 ```sh
 cd react-sc-web
 ./scripts/run_react_sc_web.sh

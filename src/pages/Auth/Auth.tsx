@@ -69,7 +69,9 @@ const Auth = () => {
             <div></div>
             <a href="#forget">{translate({ ru: 'Забыли пароль?', en: 'Forgot your password?' })}</a>
           </div>
-          <Button className={styles.loginFormSubmit}>{translate({ ru: "Подтвердить", en: "Submit" })}</Button>
+          <Button className={styles.loginFormSubmit}>
+            {translate({ ru: 'Подтвердить', en: 'Submit' })}
+          </Button>
         </form>
       </div>
     </div>

@@ -23,11 +23,16 @@ const updateByPath = (
   const innerUpdated = tree.children.some((child) => paths.includes(child.id));
   return {
     ...tree,
-    children: innerUpdated ? tree.children.map((child) => updateByPath(child, paths, id, cb)) : tree.children,
+    children: innerUpdated
+      ? tree.children.map((child) => updateByPath(child, paths, id, cb))
+      : tree.children,
   };
 };
 
-export const findParent = (tree: ITransformedDecomposition, id: number): ITransformedDecomposition | null => {
+export const findParent = (
+  tree: ITransformedDecomposition,
+  id: number,
+): ITransformedDecomposition | null => {
   if (tree.children.find((elem) => elem.id === id)) return tree;
 
   for (const child of tree.children) {

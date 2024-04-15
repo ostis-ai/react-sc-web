@@ -64,9 +64,7 @@ const SkeletonItem = ({ tree }: ISkeletonItemProps) => (
 const ScnSkeletonWrapper = () => (
   <Wrapper>
     <StyledSkeleton height={26} width={getRandomInt(250, 350)} />
-    {initialTree.children?.map((child) => (
-      <SkeletonItem key={child.id} tree={child} />
-    ))}
+    {initialTree.children?.map((child) => <SkeletonItem key={child.id} tree={child} />)}
   </Wrapper>
 );
 

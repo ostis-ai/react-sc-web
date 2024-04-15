@@ -44,7 +44,10 @@ export const KeywordNode = ({ children, tree }: PropsWithChildren<INodeProps>) =
   );
 };
 
-export const LinkNode = ({ children, tree: { addr, content, contentType } }: PropsWithChildren<INodeProps>) => (
+export const LinkNode = ({
+  children,
+  tree: { addr, content, contentType },
+}: PropsWithChildren<INodeProps>) => (
   <>
     <ScLink addr={addr} content={content} contentType={contentType} />
     {children}
