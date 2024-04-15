@@ -4,7 +4,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 10;
   display: flex;
   justify-content: center;
@@ -30,7 +30,6 @@
 .cardInfo {
   display: flex;
   justify-content: space-between;
-
 }
 
 .logo {
@@ -41,7 +40,6 @@
   order: 2;
   width: 90%;
   margin-left: 20px;
-
 }
 
 .infoItem {
@@ -79,6 +77,7 @@
 .closeButton {
   background-color: #ffffff;
   border: none;
+  cursor: pointer;
 }
 
 .annotation {
@@ -106,7 +105,7 @@
   margin-top: 10px;
 }
 
-.storageAddress a{
+.storageAddress a {
   color: #4678b9;
 }
 

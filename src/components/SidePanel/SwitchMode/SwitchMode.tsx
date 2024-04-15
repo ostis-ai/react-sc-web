@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './SwitchMode.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { routes } from '@constants';
 import AskAiPageButton from '@assets/images/AskAiPageButton.svg';
 import AskAiPageButtonFocus from '@assets/images/AskAiPageButtonFocus.svg';
@@ -10,28 +10,35 @@ import LibraryPageButton from '@assets/images/LibraryPageButton.svg';
 import LibraryPageButtonFocus from '@assets/images/LibraryPageButtonFocus.svg';
 
 export const SwitchMode = () => {
-  const [activePage, setActivePage] = useState<string | '/'>(routes.MAIN);
+  const [activePage, setActivePage] = useState<string | '/'>();
+  const location = useLocation();
 
   const handlePageClick = (page: string) => {
     setActivePage(page);
-    localStorage.setItem('activePage', page);
   };
 
   useEffect(() => {
-    const savedActivePage = localStorage.getItem('activePage');
-    if (savedActivePage) {
-      setActivePage(savedActivePage);
+    if (location.pathname.substring(0, 2) === '/q' || location.pathname.substring(0, 2) === '/c') {
+      setActivePage(routes.MAIN);
+    } else {
+      setActivePage(location.pathname);
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <div className={styles.switchModeButtonsWrapper}>
       <Link
         to={routes.MAIN}
         className={styles.switchModeButton}
-        onClick={() => handlePageClick(routes.MAIN)}
+        onClick={() => handlePageClick(routes.QUESTION)}
       >
-        {activePage === routes.MAIN ? <ScnPageButtonFocus /> : <ScnPageButton />}
+        {activePage === routes.MAIN ||
+        activePage === routes.QUESTION ||
+        activePage === routes.COMMAND ? (
+          <ScnPageButtonFocus />
+        ) : (
+          <ScnPageButton />
+        )}
       </Link>
       <Link
         to={routes.ASK_AI}
