@@ -5,6 +5,7 @@ import { ScAddr } from 'ts-sc-client';
 import { getCardLogo, getSubtitleClassName, truncateString } from './utils';
 import { initiateComponentInstallAgent } from '../../api/sc/install/install';
 import GithubIcon from '@assets/images/GithubIcon.svg';
+import { useTranslate } from 'ostis-ui-lib';
 
 export interface ComponentCardProps {
   name: string;
@@ -23,6 +24,7 @@ export const Card: React.FC<ComponentCardProps> = ({
   component,
   setShowComponent,
 }) => {
+  const translate = useTranslate();
   const logoComponent = getCardLogo(type);
   const subtitleClassName = getSubtitleClassName(type);
   name = truncateString(name);
@@ -63,7 +65,7 @@ export const Card: React.FC<ComponentCardProps> = ({
             event.stopPropagation();
           }}
         >
-          Install
+          {translate({ ru: 'Установить', en: 'Install' })}
         </button>
       </div>
     </div>
