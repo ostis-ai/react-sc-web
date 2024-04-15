@@ -18,7 +18,7 @@ interface IUserBody {
   status: IUserStatus;
 }
 
-export type TFormat = 'scn' | 'scg';
+export type TFormat = 'scn' | 'scg' | 'native';
 
 interface IInitialState {
   user: IUserBody;
@@ -28,9 +28,7 @@ interface IInitialState {
 const initialState: IInitialState = {
   format: 'scn',
   user: {
-    data: localStorage.getItem('user')
-      ? JSON.parse(localStorage.getItem('user') as string)
-      : null,
+    data: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null,
     status: {
       isLoading: false,
       isError: false,

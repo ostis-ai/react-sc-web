@@ -62,7 +62,8 @@
     color: $dull-grey;
   }
 
-  &:hover, &_focused {
+  &:hover,
+  &_focused {
     border-color: $dark-blue;
   }
 

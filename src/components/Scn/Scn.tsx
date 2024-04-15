@@ -5,6 +5,7 @@ import { doCommand } from '@api/requests/command';
 import { getScnTree } from '@api/requests/scn';
 import { scUtils } from '@api/sc';
 import { isAxiosError } from '@api/utils';
+import ArrowIcon from '@assets/images/goBack.svg';
 import { Button } from '@components/Button';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { Notification } from '@components/Notification';
@@ -20,7 +21,6 @@ import { useLazyTimeout } from '@hooks/useTimeout';
 
 import styles from './Scn.module.scss';
 import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.scss';
-import ArrowIcon from '@assets/images/goBack.svg';
 
 const timeoutText = {
   ru: (
