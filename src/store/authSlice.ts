@@ -2,27 +2,27 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IRootState } from '@store/model';
 
 export interface IRequest {
-  isAuthorised: boolean;
+  username: string;
 }
 
 interface IInitialState {
-  isAuthorised: boolean;
+  username: string;
 }
 
 const initialState: IInitialState = {
-  isAuthorised: false,
+  username: "",
 };
 
 export const authSlice = createSlice({
   name: 'authSlice',
   initialState,
   reducers: {
-    setIsAuthorised(state, action: PayloadAction<IRequest>) {
-      state.isAuthorised = action.payload.isAuthorised;
+    setUsername(state, action: PayloadAction<IRequest>) {
+      state.username = action.payload.username;
     },
   },
 });
 
-export const selectIsAuthorised = (state: IRootState) => state.authSlice.isAuthorised;
+export const selectAuth = (state: IRootState) => state.authSlice.username;
 
-export const { setIsAuthorised } = authSlice.actions;
+export const { setUsername } = authSlice.actions;

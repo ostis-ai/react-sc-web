@@ -6,7 +6,7 @@ import { authenticateUser } from '@api/requests/authenticate';
 import styles from './Auth.module.scss';
 
 import { useDispatch } from '@hooks/redux';
-import { setIsAuthorised } from '@store/authSlice';
+import { setUsername } from '@store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
 import { useErrorToast } from '@hooks/useErrorToast';
@@ -31,7 +31,7 @@ const Auth = () => {
     if (login && password) {
       authenticateUser({ login, password })
         .then((_resp) => {
-          dispatch(setIsAuthorised({ isAuthorised: true }));
+          dispatch(setUsername({ username: login }));
           navigate(routes.MAIN);
         })
         .catch((error) => {
@@ -69,7 +69,7 @@ const Auth = () => {
             <div></div>
             <a href="#forget">{translate({ ru: 'Забыли пароль?', en: 'Forgot your password?' })}</a>
           </div>
-          <Button className={styles.loginFormSubmit}>Submit</Button>
+          <Button className={styles.loginFormSubmit}>{translate({ ru: "Подтвердить", en: "Submit" })}</Button>
         </form>
       </div>
     </div>

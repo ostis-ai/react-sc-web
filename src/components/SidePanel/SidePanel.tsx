@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { getHistory } from '@api/requests/userHistory';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
@@ -12,22 +11,22 @@ import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { HistoryPanel } from '@components/HistoryPanel';
 import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
-import { selectUser, setFormat } from '@store/commonSlice';
+import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
-import { selectIsAuthorised } from '@store/authSlice';
+import { selectAuth } from '@store/authSlice';
 
 interface IProps {
   className?: string;
 }
 
 export const SidePanel: FC<IProps> = ({ className }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
 
-  const isAuthorise = useSelector(selectIsAuthorised);
+  const username = useSelector(selectAuth);
+  const isAuthorised = username != ""
 
   const { onAddClick } = useDecompositionContext();
 
@@ -57,15 +56,15 @@ export const SidePanel: FC<IProps> = ({ className }) => {
         </div>
         <div
           className={classNames(styles.accordionContent, {
-            [styles.accordionContent_userCanEdit]: isAuthorise,
-            [styles.accordionContent_admin]: isAuthorise,
+            [styles.accordionContent_userCanEdit]: isAuthorised,
+            [styles.accordionContent_admin]: isAuthorised,
           })}
         >
           <div>
             <Accordion
               header={translate({ ru: 'Разделы', en: 'Sections' })}
               leftIcon={<Sections />}
-              rightIcon={isAuthorise ? <Plus /> : null}
+              rightIcon={isAuthorised ? <Plus /> : null}
               onRightClick={onAddClick}
               expanded
             >
@@ -77,7 +76,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                 className={styles.errorBoundary}
               >
-                {<DecompositionPanel editable={isAuthorise} deleteable={isAuthorise} />}
+                {<DecompositionPanel editable={isAuthorised} deleteable={isAuthorised} />}
               </ErrorBoundary>
             </Accordion>
           </div>
