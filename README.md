@@ -9,30 +9,26 @@ Go to the [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem), chec
 #### Build and run with **Docker** (using [ostis-web-platform](https://github.com/ostis-ai/ostis-web-platform))
 
 Change the docker-compose.yml using any editor to allow the origin of react-sc-web:
-
 ```yaml
 services:
   web:
-    image: ostis/sc-web:0.8.1-Unlock
-    build:
-      context: ./sc-web
-    restart: unless-stopped
-    command:
-      - '--server-host=machine'
-      - '--allowed_origins=http://localhost:3000' # <- add this line
-    ports:
-      - '8000:8000'
+     image: ostis/sc-web:0.8.1-Unlock
+     build:
+       context: ./sc-web
+     restart: unless-stopped
+     command:
+       - "--server-host=machine"
+       - "--allowed_origins=http://localhost:3000" # <- add this line
+     ports:
+       - "8000:8000"
 ```
-
 Then proceed in the terminal:
-
 ```sh
 docker compose run machine build # build kb
 docker compose up # or run just the machine / web service, e.g. docker compose up machine
 ```
 
 #### Install react-sc-web
-
 ```sh
 git clone git@github.com:ostis-ai/react-sc-web.git
 cd react-sc-web
@@ -40,14 +36,12 @@ cd react-sc-web
 ```
 
 #### Run sc-web with allowed_origins
-
 ```sh
 cd sc-web
-python3 server/app.py" --allowed_origins=http://localhost:3000
+python3 server/app.py --allowed_origins=http://localhost:3000
 ```
 
 #### Run react-sc-web
-
 ```sh
 cd react-sc-web
 ./scripts/run_react_sc_web.sh
@@ -97,3 +91,4 @@ To analyze the code and find problems according to the given rules, described in
 ├── package.json
 └── tsconfig.json
 ```
+
