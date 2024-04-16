@@ -32,7 +32,7 @@ export const AuthLayout: FC<IProps> = ({ children }) => {
       </div>
       <div className={styles.header}>
         <div className={styles.languageWrapper}>
-          <Language primaryLanguageColor={'#ffffff'} secondaryLanguageColor={'#A5AEC4'} />
+          <Language primaryLanguageColor={'#F2F2F2'} secondaryLanguageColor={'#A5AEC4'} />
         </div>
       </div>
       <main className={styles.main}>{children}</main>

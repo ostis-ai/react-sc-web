@@ -12,8 +12,6 @@ interface ILanguageProps {
   secondaryLanguageColor?: HEXColor;
 }
 
-// TODO: colors
-
 export const Language: FC<ILanguageProps> = ({ primaryLanguageColor, secondaryLanguageColor }) => {
   const { lang, setLang } = useLanguageContext();
 
@@ -33,6 +31,7 @@ export const Language: FC<ILanguageProps> = ({ primaryLanguageColor, secondaryLa
             className={classNames(styles.language, styles.engLanguage, {
               [styles.activeLanguage]: lang === 'en',
             })}
+            style={lang == 'en' ? primaryLanguageStyle : secondaryLanguageStyle}
             onClick={setLanguage('en')}
           >
             En
@@ -44,6 +43,7 @@ export const Language: FC<ILanguageProps> = ({ primaryLanguageColor, secondaryLa
             className={classNames(styles.language, styles.rusLanguage, {
               [styles.activeLanguage]: lang === 'ru',
             })}
+            style={lang == 'ru' ? primaryLanguageStyle : secondaryLanguageStyle}
             onClick={setLanguage('ru')}
           >
             Ru
