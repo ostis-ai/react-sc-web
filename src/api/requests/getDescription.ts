@@ -1,8 +1,9 @@
-import { ScAddr } from 'ts-sc-client';
+import { ScAddr, ScConstruction, ScLinkContent, ScLinkContentType, ScType, ScClient, ScTemplate,} from 'ts-sc-client';
 import { client, isAxiosError, scUtils } from '@api';
 
 import { doCommand } from './command';
 import { searchAddrById } from '@api/sc/search/search';
+import { Action } from '@api/sc/actions/Action';
 import { TLanguage, langToKeynode, snakeToCamelCase } from 'ostis-ui-lib';
 
 const getLanguage = async (lang: TLanguage) => {
@@ -56,23 +57,39 @@ export const getDescriptionByAddr = async (elementAddr: number) => {
 };
 
 export const getDescriptionById = async (id: string, lang: TLanguage) => {
-  const { uiMenuSummary } = await scUtils.findKeynodes('ui_menu_summary');
+  const action = new Action('action_reply_to_message');
+  const constr = new ScConstruction();
+  constr.createLink(ScType.LinkConst, new ScLinkContent(id, ScLinkContentType.String));
+  const [linkAddr] = await client.createElements(constr);
 
-  const elementAddr = await searchAddrById(id);
-  if (!elementAddr) return null;
+  const { conceptTextFile } = await scUtils.findKeynodes('concept_text_file');
 
-  const foundLang = await getLanguage(lang);
+  const textLinkTemplate = new ScTemplate();
+  textLinkTemplate.triple(conceptTextFile, ScType.EdgeAccessVarPosPerm, linkAddr);
 
-  const commandResult = await doCommand(uiMenuSummary.value, elementAddr.value, foundLang.value);
+  const res = await client.templateGenerate(textLinkTemplate);
 
-  if (isAxiosError(commandResult)) return null;
+  await action.addArgs(linkAddr);
 
-  const questionNode = commandResult.data.question;
-  const answer = await scUtils.getAnswer(new ScAddr(questionNode));
+  const answerAddr = await action.initiate();
 
-  if (!answer) return null;
+  if (!answerAddr) return null;
 
-  const contents = await client.getLinkContents([answer]);
+  const answerAlias = '_answerLink';
+  const answerLinkTemplate = new ScTemplate();
+  answerLinkTemplate.triple(answerAddr, ScType.EdgeAccessVarPosPerm, [
+    ScType.LinkVar,
+    answerAlias,
+  ]);
+
+  const answerLink = await client.templateSearch(answerLinkTemplate);
+
+  if (!answerLink.length) return null;
+
+  const answerLinkAddr = answerLink[0].get(answerAlias);
+
+
+  const contents = await client.getLinkContents([answerLinkAddr]);
   const content = contents[0].data;
 
   return String(content);
