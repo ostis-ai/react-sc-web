@@ -15,8 +15,10 @@ import { setActiveLink } from '@store/activeLinkSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslate } from 'ostis-ui-lib';
 import { Tooltip } from '@components/ToolTip/ToolTip';
-import { selectAuth } from '@store/authSlice';
+import { selectAuth, setUsername } from '@store/authSlice';
+
 import UserIcon from '@assets/images/UserIcon.svg';
+import GoBackIcon from '@assets/images/goBackDark.svg';
 
 export interface IProps {
   children?: ReactNode;
@@ -40,6 +42,11 @@ export const Layout: FC<IProps> = ({ children }) => {
     return navigate(routes.AUTH);
   };
 
+  const handleLogOutButtonClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    dispatch(setUsername({ username: '' }));
+  };
+
   return (
     <div className={styles.root}>
       <div className={styles.logoWrapper}>
@@ -50,12 +57,24 @@ export const Layout: FC<IProps> = ({ children }) => {
         </Link>
       </div>
       <header className={styles.header}>
-        <div className={styles.headerButtonWrapper}>
+        <div
+          className={cn({
+            [styles.authHeaderButtonWrapper]: username != '',
+            [styles.unauthHeaderButtonWrapper]: username == '',
+          })}
+        >
           <div>
             <Tooltip systemId="ui_dev_mode">
               <DevModeSwitch />
             </Tooltip>
           </div>
+          {username == '' ? (
+            <div className={styles.languageWrapper}>
+              <Language />
+            </div>
+          ) : (
+            <></>
+          )}
           <div className={cn(styles.authWrapper, { [styles.profileWrapperWithLogout]: logout })}>
             {username != '' ? (
               <div className={styles.profileWrapper} onClick={() => setLogout(!logout)}>
@@ -69,7 +88,8 @@ export const Layout: FC<IProps> = ({ children }) => {
                   >
                     <div className={styles.languageWrapper}>
                       <Language />
-                      <button className={styles.logoutButton} onClick={handleLogInButtonClick}>
+                      <button className={styles.logoutButton} onClick={handleLogOutButtonClick}>
+                        <GoBackIcon />
                         {translate({ ru: 'Выйти', en: 'Logout' })}
                       </button>
                     </div>

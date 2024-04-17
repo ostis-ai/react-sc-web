@@ -70,7 +70,7 @@
   }
 }
 
-.headerButtonWrapper {
+.authHeaderButtonWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -78,6 +78,15 @@
   height: 42px;
   gap: 32px;
   margin-right: 50px;
+}
+
+.unauthHeaderButtonWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 380px;
+  height: 42px;
+  gap: 32px;
 }
 
 .authWrapper {
