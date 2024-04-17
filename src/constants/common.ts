@@ -12,7 +12,7 @@ export const BASE_PATH = process.env.BASE_PATH ?? defaultBasePath;
 export const SC_URL = process.env.SC_URL!;
 export const API_URL = defaultApiUrl;
 
-export const DEFAULT_SYSTEM_ID = 'knowledge_base_IMS' as const;
+export const DEFAULT_SYSTEM_ID = 'myself' as const;
 export const DEFAULT_COMMAND_SYSTEM_ID = 'ui_menu_view_full_semantic_neighborhood' as const;
 
 export const DEFAULT_COMMAND_PATH = generatePath(routes.COMMAND, {
