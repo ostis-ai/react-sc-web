@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import { DecompositionPanel, Scn, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -15,6 +15,7 @@ import { useSelector } from '@hooks';
 import { selectUser, setFormat } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
+import { SwitchMode } from './SwitchMode';
 
 interface IProps {
   className?: string;
@@ -58,6 +59,8 @@ export const SidePanel: FC<IProps> = ({ className }) => {
             [styles.accordionContent_admin]: !!user?.is_admin,
           })}
         >
+          <SwitchMode />
+
           <div>
             <Accordion
               header={translate({ ru: 'Разделы', en: 'Sections' })}
