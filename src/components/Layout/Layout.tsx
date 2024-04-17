@@ -1,7 +1,9 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
+
+import cn from 'classnames';
 
 import styles from './Layout.module.scss';
 import { Language } from '@components/Language';
@@ -14,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslate } from 'ostis-ui-lib';
 import { Tooltip } from '@components/ToolTip/ToolTip';
 import { selectAuth } from '@store/authSlice';
-import UserIcon from "@assets/images/UserIcon.svg"
+import UserIcon from '@assets/images/UserIcon.svg';
 
 export interface IProps {
   children?: ReactNode;
@@ -24,6 +26,8 @@ export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
   const translate = useTranslate();
   const navigate = useNavigate();
+
+  const [logout, setLogout] = useState<boolean>();
 
   const username = useSelector(selectAuth);
 
@@ -52,14 +56,27 @@ export const Layout: FC<IProps> = ({ children }) => {
               <DevModeSwitch />
             </Tooltip>
           </div>
-          <div className={styles.languageWrapper}>
-            <Language />
-          </div>
-          <div>
+          <div className={cn(styles.authWrapper, { [styles.profileWrapperWithLogout]: logout })}>
             {username != '' ? (
-              <div className={styles.profileWrapper}>
+              <div className={styles.profileWrapper} onClick={() => setLogout(!logout)}>
                 <UserIcon />
                 <div className={styles.profileUsername}>{username}</div>
+                {logout ? (
+                  <div
+                    className={cn(styles.logoutWrapper, {
+                      [styles.profileWrapperWithLogout]: logout,
+                    })}
+                  >
+                    <div className={styles.languageWrapper}>
+                      <Language />
+                      <button className={styles.logoutButton} onClick={handleLogInButtonClick}>
+                        {translate({ ru: 'Выйти', en: 'Logout' })}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             ) : (
               <Tooltip systemId="ui_login">
