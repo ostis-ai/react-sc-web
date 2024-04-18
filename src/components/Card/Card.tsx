@@ -6,6 +6,7 @@ import { getCardLogo, getSubtitleClassName, truncateString } from './utils';
 import { initiateComponentInstallAgent } from '../../api/sc/install/install';
 import GithubIcon from '@assets/images/GithubIcon.svg';
 import { useTranslate } from 'ostis-ui-lib';
+import { truncateSync } from 'fs';
 
 export interface ComponentCardProps {
   name: string;
@@ -27,7 +28,7 @@ export const Card: React.FC<ComponentCardProps> = ({
   const translate = useTranslate();
   const logoComponent = getCardLogo(type);
   const subtitleClassName = getSubtitleClassName(type);
-  name = truncateString(name);
+  name = truncateString(name, 25);
 
   const handleContainerClick = () => {
     setShowComponent(component);
@@ -44,7 +45,7 @@ export const Card: React.FC<ComponentCardProps> = ({
             <div className={subtitleClassName}>{type}</div>
           </div>
 
-          <div className={styles.description}>{description}</div>
+          <div className={styles.description}>{truncateString(description, 120)}</div>
         </div>
       </div>
 
