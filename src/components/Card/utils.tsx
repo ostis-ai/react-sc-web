@@ -43,9 +43,7 @@ export const truncateString = (str: string, length: number): string => {
     return str.replace(/_/g, ' ');
   }
 
-  const truncatedString = str.slice(0, length);
-  const lastSpaceIndex = truncatedString.lastIndexOf('_');
-  let finalString = truncatedString.substring(0, lastSpaceIndex).replace(/_/g, ' ');
+  let finalString = str.substring(0, length).replace(/_/g, ' ');
   finalString += '...';
 
   return finalString;
