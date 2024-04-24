@@ -5,14 +5,16 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
+      args:
+        - "SC_URL=${SC_URL:-ws://localhost:8090/ws_json}"
+        - "API_URL=${API_URL:-http://localhost:8000}"
     restart: unless-stopped
     ports:
-      - '3000:3000'
+      - '${PORT:-3000}:3000'
     volumes:
       - caddy-config:/config
       - caddy-data:/data
       - ./Caddyfile:/etc/caddy/Caddyfile
-      # - ../.env:/sc-web/build/.env
 
 volumes:
   caddy-config:

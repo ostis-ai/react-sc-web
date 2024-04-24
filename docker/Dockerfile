@@ -7,6 +7,9 @@ RUN npm install
 
 COPY . .
 
+ARG SC_URL
+ARG API_URL
+
 RUN npm run build
 
 FROM caddy:2.7-alpine as final
