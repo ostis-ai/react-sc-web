@@ -128,7 +128,7 @@ const Library = () => {
           <div className={styles.header}>
             <Input
               className={styles.searchField}
-              placeholder={translate({ ru: 'Поиск компонент', en: 'Search for components' })}
+              placeholder={translate({ ru: 'Поиск компонентов', en: 'Search for components' })}
               iconLeft={<SearchIcon />}
               onChange={handleSearchChange}
             />

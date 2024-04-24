@@ -39,12 +39,12 @@ export const getSubtitleClassName = (type: CardComponentType): string => {
 };
 
 export const truncateString = (str: string, length: number): string => {
-  if (str.length <= length) {
-    return str.replace(/_/g, ' ');
+  const stringWithSpaces = str.replace(/_/g, ' ');
+  if (stringWithSpaces.length <= length) {
+    return stringWithSpaces;
   }
-
-  let finalString = str.substring(0, length).replace(/_/g, ' ');
-  finalString += '...';
-
+  const truncatedString = stringWithSpaces.slice(0, length);
+  const lastSpaceIndex = truncatedString.lastIndexOf(' ');
+  const finalString = truncatedString.substring(0, lastSpaceIndex) + '...';
   return finalString;
 };
