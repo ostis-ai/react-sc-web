@@ -1,0 +1,19 @@
+services:
+  caddy:
+    image: react-sc-web:latest
+    container_name: react-sc-web
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - caddy-config:/config
+      - caddy-data:/data
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      # - ../.env:/sc-web/build/.env
+
+volumes:
+  caddy-config:
+  caddy-data:
