@@ -1,7 +1,8 @@
 :3000 {
   root * /sc-web/build
-  rewrite /q/* /index.html
-  rewrite /l/* /index.html
-  rewrite /c/* /index.html
   file_server
+  handle_errors {
+    rewrite * /index.html
+    file_server
+  }
 }
