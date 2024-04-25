@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useTranslate } from 'ostis-ui-lib';
+import {langToKeynode, useTranslate} from 'ostis-ui-lib';
 import { Card } from '@components/Card/Card';
 import { Input } from '@components/input/Input';
 import { CardInfo } from '@components/CardInfo/CardInfo';
+import { useLanguage } from "ostis-ui-lib";
 import SearchIcon from '@assets/images/Search.svg';
 import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
 import {
   searchSpecifications,
-  searchComponentUsingGit,
+  searchComponentGit,
   searchComponentBySpecification,
-  searchComponentSystemIdentifier,
+  searchComponentMainIdentifier,
   searchComponentExplanation,
   searchComponentType,
 } from '@api/requests/getSpecification';
@@ -33,6 +34,7 @@ const Library = () => {
   const [specifications, setSpecifications] = useState<ScAddr[]>([]);
   const [showComponent, setShowComponent] = useState<ScAddr | undefined>();
 
+  const lang = useLanguage()
   const translate = useTranslate();
 
   useEffect(() => {
@@ -65,14 +67,14 @@ const Library = () => {
   const fetchComponentCard = async (specification: ScAddr) => {
     try {
       const component = await searchComponentBySpecification(specification);
-      const [systemIdentifier, type, git, explanation] = await Promise.all([
-        searchComponentSystemIdentifier(component),
+      const [mainIdentifier, type, git, explanation] = await Promise.all([
+        searchComponentMainIdentifier(component, langToKeynode[lang]),
         searchComponentType(component),
-        searchComponentUsingGit(component),
+        searchComponentGit(component),
         searchComponentExplanation(component),
       ]);
       const card: CardInterface = {
-        name: systemIdentifier ? (systemIdentifier as string) : '...',
+        name: mainIdentifier ? (mainIdentifier as string) : '...',
         type: type,
         description: explanation ? (explanation as string) : '...',
         github: git ? (git as string) : '...',

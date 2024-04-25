@@ -27,7 +27,6 @@ export const Card: React.FC<ComponentCardProps> = ({
   const translate = useTranslate();
   const logoComponent = getCardLogo(type);
   const subtitleClassName = getSubtitleClassName(type);
-  name = truncateString(name, 25);
 
   const handleContainerClick = () => {
     setShowComponent(component);
@@ -40,11 +39,11 @@ export const Card: React.FC<ComponentCardProps> = ({
 
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>
-            <div className={styles.title}>{name}</div>
-            <div className={subtitleClassName}>{type}</div>
+              <div className={subtitleClassName}>{type}</div>
           </div>
+        <div className={styles.title}>{name}</div>
 
-          <div className={styles.description}>{truncateString(description, 100)}</div>
+        <div className={styles.description}>{description}</div>
         </div>
       </div>
 

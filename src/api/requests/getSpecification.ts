@@ -1,10 +1,9 @@
 import { searchAddrById } from '@api/sc/search/search';
 import { ScAddr, ScTemplate, ScType } from 'ts-sc-client';
 import { Action } from '@api/sc/actions/Action';
-import { client, scUtils } from '@api/sc';
+import {client, helper, scUtils} from '@api/sc';
 import { CardComponentType } from '@components/Card/types';
 import { InstallMethodType } from '@components/CardInfo/types';
-
 
 export const searchSpecifications = async () => {
   const action = new Action("action_components_search");
@@ -40,7 +39,7 @@ export const searchComponentBySpecification = async (specification: ScAddr) => {
   return result[0].get(componentAlias);
 };
 
-export const searchComponentUsingGit = async (component: ScAddr) => {
+export const searchComponentGit = async (component: ScAddr) => {
   const template = new ScTemplate();
   const { nrelComponentAddress } = await scUtils.searchKeynodes('nrel_component_address');
   const gitAlias = '_git';
@@ -88,22 +87,12 @@ export const searchComponentInstallationMethod = async (component: ScAddr) => {
 };
 
 export const searchComponentSystemIdentifier = async (component: ScAddr) => {
-  const template = new ScTemplate();
-  const { nrelSystemIdentifier } = await scUtils.searchKeynodes('nrel_system_identifier');
-  const systemIdentifierAlias = '_systemIdentifier';
-  template.quintuple(
-    component,
-    ScType.VarCommonArc,
-    [ScType.VarNodeLink, systemIdentifierAlias],
-    ScType.VarPermPosArc,
-    nrelSystemIdentifier,
-  );
-  const result = await client.searchByTemplate(template);
-  const systemIdentifierScAddr = result.length ? result[0].get(systemIdentifierAlias) : undefined;
-  if (!systemIdentifierScAddr) return undefined;
-  const linkContents = await client.getLinkContents([systemIdentifierScAddr]);
-  return linkContents[0].data;
+  return helper.getSystemIdentifier(component)
 };
+
+export const searchComponentMainIdentifier = async (component: ScAddr, lang: string) => {
+    return helper.getMainIdentifier(component, lang)
+}
 
 export const searchComponentAuthor = async (component: ScAddr) => {
   const template = new ScTemplate();
