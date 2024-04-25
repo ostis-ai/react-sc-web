@@ -1,14 +1,86 @@
-# React sc-web
+## React sc-web
 
-### Quick start (recommended)
+- [Quick start](#quick-start)
+- [Installation](#installation)
+  * [Production](#production)
+  * [Development](#development)
+- [Develop with Docker in another project](#develop-with-docker-in-another-project)
+- [Configuration](#configuration)
+- [Recommendations](#recommendations)
+- [Files structure](#files-structure)
+
+### Quick start
 
 Go to the [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem), checkout to the `demo` branch and follow installation and run instructions.
 
-### Run in another system
+### Installation
 
-#### Build and run with **Docker** (using [ostis-web-platform](https://github.com/ostis-ai/ostis-web-platform))
+First of all **clone the project on you local machine**.
 
-Change the docker-compose.yml using any editor to allow the origin of react-sc-web:
+```sh
+git clone git@github.com:ostis-ai/react-sc-web.git
+cd react-sc-web
+```
+
+Note that this project has runtime dependency on [sc-web](https://github.com/ostis-ai/sc-web), which must be up and running with **allowed origins**.
+
+Appropriate backend must be up as well. 
+
+#### Production
+
+In order to get working production build one needs to configure a web-server to serve builded project files.
+
+This project provides a docker support for this purpose and it's also the most simple way to run the interface in production.
+
+```sh
+# navigate to react-sc-web directory
+# sc-web and backend must be already running
+cd docker
+docker compose build
+docker compose up
+```
+
+Otherwise one can configure its own web-server of choice. When doing so you need to get the production build first.
+
+**Install dependencies and create production build**
+
+```sh
+# navigate to react-sc-web directory
+./scripts/install_react_sc_web_dependencies.sh
+npm run build
+```
+
+#### Development
+
+**Install dependencies**
+
+```sh
+# navigate to react-sc-web directory
+./scripts/install_react_sc_web_dependencies.sh
+```
+
+**Run sc-web with allowed_origins**
+
+```sh
+# navigate to sc-web directory
+python3 server/app.py --allowed_origins=http://localhost:3000
+```
+
+**Run react-sc-web**
+
+```sh
+# navigate to react-sc-web directory
+./scripts/run_react_sc_web.sh
+```
+
+Application starts on port 3000 by default.
+
+
+### Develop with **Docker** in another project
+
+Example is shown with [ostis-web-platform](https://github.com/ostis-ai/ostis-web-platform) project
+
+Change the `docker-compose.yml` using any editor to allow the origin of react-sc-web:
 ```yaml
 services:
   web:
@@ -22,37 +94,18 @@ services:
      ports:
        - "8000:8000"
 ```
+
 Then proceed in the terminal:
+
 ```sh
+# navigate to the appropriate project folder
 docker compose run machine build # build kb
 docker compose up # or run just the machine / web service, e.g. docker compose up machine
 ```
 
-#### Install react-sc-web
-```sh
-git clone git@github.com:ostis-ai/react-sc-web.git
-cd react-sc-web
-./scripts/install_react_sc_web_dependencies.sh
-```
+### Configuration
 
-#### Run sc-web with allowed_origins
-```sh
-cd sc-web
-python3 server/app.py --allowed_origins=http://localhost:3000
-```
-
-#### Run react-sc-web
-```sh
-cd react-sc-web
-./scripts/run_react_sc_web.sh
-```
-
-Application starts on port 3000.
-
-### Creating production build
-
-To create production build run `npm run build`.\
-The build result is additionally gzipped to minimize the file size as much as possible.
+React-sc-web supports configuration via environment variables. To get more info on the available options check the `.env.example` file.
 
 ### Recommendations
 
@@ -82,7 +135,7 @@ To analyze the code and find problems according to the given rules, described in
 │   ├── webpack.config.js
 │   ├── webpack.dev.js
 │   └── webpack.prod.js
-├── .env
+├── .env.example
 ├── .eslintrc.js
 ├── .gitignore
 ├── .prettierrc
