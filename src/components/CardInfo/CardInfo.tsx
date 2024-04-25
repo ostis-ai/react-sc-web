@@ -8,7 +8,7 @@ import {
   findComponentAuthor,
   findComponentGit,
   findComponentDeps,
-  findComponentSystemIdentifier,
+  findComponentMainIdentifier,
   findComponentExplanation,
   findComponentType,
   findComponentInstallationMethod,
@@ -16,6 +16,7 @@ import {
 } from '../../api/requests/getSpecification';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
+import {langToKeynode, useLanguage} from "ostis-ui-lib";
 
 interface CardInfoProps {
   scAddr: ScAddr;
@@ -37,6 +38,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>(
   );
 
+  const lang = useLanguage()
   useEffect(() => {
     if (type) {
       setLogoComponent(getCardLogo(type));
@@ -53,7 +55,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const fetchComponent = async (component: ScAddr) => {
     try {
       const [
-        systemIdentifier,
+        mainIdentifier,
         type,
         git,
         explanation,
@@ -62,7 +64,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
         dependencies,
         authors,
       ] = await Promise.all([
-        findComponentSystemIdentifier(component),
+        findComponentMainIdentifier(component, langToKeynode[lang]),
         findComponentType(component),
         findComponentGit(component),
         findComponentExplanation(component),
@@ -72,7 +74,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
         findComponentAuthor(component),
       ]);
 
-      setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : '...');
+      setName(mainIdentifier ? (mainIdentifier as string) : '...');
       setType(type);
       setInstallMethod(installationMethod as InstallMethodType);
       setGithub(git ? (git as string) : '#');
@@ -97,25 +99,27 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
     <div
       className={styles.container}
       onClick={(event) => {
-        setShowComponent(undefined);
+            setShowComponent(undefined);
       }}
     >
       <div className={styles.wrapper} onClick={handleWrapperClick}>
-        <div className={styles.cardInfo}>
-          <div className={styles.logo}>{logoComponent}</div>
-          <div className={styles.info}>
-            <div className={styles.infoItem}>
-              <div className={styles.title}>{name}</div>
-              <div className={styles.tool}>
-                <div className={subtitleClassName}>{type}</div>
-                <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
-                  <CloseIcon className={styles.closeIcon} />
-                </button>
+          <div className={styles.cardInfo}>
+              <div className={styles.logo}>{logoComponent}</div>
+              <div className={styles.info}>
+                  <div className={styles.infoItem}>
+                      <div className={styles.title}>{name}</div>
+                      <div className={styles.tool}>
+                          <div className={subtitleClassName}>{type}</div>
+                          <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
+                              <CloseIcon className={styles.closeIcon} />
+                          </button>
+                      </div>
+                  </div>
+                  <div className={styles.subtitle}>{note}</div>
               </div>
-            </div>
-            <div className={styles.subtitle}>{note}</div>
           </div>
-        </div>
+          <div className={styles.scrollable}>
+
         {explanation && (
           <div className={styles.annotation}>
             <div className={styles.blockName}>Примечание</div>
@@ -155,6 +159,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
           <div className={styles.blockName}>Автор</div>
           <div className={styles.subtitle}>{author}</div>
         </div>
+      </div>
       </div>
     </div>
   );

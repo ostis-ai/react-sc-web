@@ -1,10 +1,9 @@
 import { searchAddrById } from '@api/sc/search/search';
 import { ScAddr, ScTemplate, ScType } from 'ts-sc-client';
 import { Action } from '@api/sc/actions/Action';
-import { client, scUtils } from '@api/sc';
+import {client, helper, scUtils} from '@api/sc';
 import { CardComponentType } from '@components/Card/types';
 import { InstallMethodType } from '@components/CardInfo/types';
-
 
 export const findSpecifiactions = async () => {
   const action = new Action("action_components_search");
@@ -88,22 +87,12 @@ export const findComponentInstallationMethod = async (component: ScAddr) => {
 };
 
 export const findComponentSystemIdentifier = async (component: ScAddr) => {
-  const template = new ScTemplate();
-  const { nrelSystemIdentifier } = await scUtils.findKeynodes('nrel_system_identifier');
-  const systemIdentifierAlias = '_systemIdentifier';
-  template.tripleWithRelation(
-    component,
-    ScType.EdgeDCommonVar,
-    [ScType.LinkVar, systemIdentifierAlias],
-    ScType.EdgeAccessVarPosPerm,
-    nrelSystemIdentifier,
-  );
-  const result = await client.templateSearch(template);
-  const systemIdentifierScAddr = result.length ? result[0].get(systemIdentifierAlias) : undefined;
-  if (!systemIdentifierScAddr) return undefined;
-  const linkContents = await client.getLinkContents([systemIdentifierScAddr]);
-  return linkContents[0].data;
+  return helper.getSystemIdentifier(component)
 };
+
+export const findComponentMainIdentifier = async (component: ScAddr, lang: string) => {
+    return helper.getMainIdentifier(component, lang)
+}
 
 export const findComponentAuthor = async (component: ScAddr) => {
   const template = new ScTemplate();
