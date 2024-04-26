@@ -22,7 +22,7 @@ git clone git@github.com:ostis-ai/react-sc-web.git
 cd react-sc-web
 ```
 
-Note that this project has runtime dependency on [sc-web](https://github.com/ostis-ai/sc-web), which must be up and running with **allowed origins**.
+Note that this project has runtime dependency on [sc-web](https://github.com/ostis-ai/sc-web) [feature/add-scg-iframe](https://github.com/ostis-ai/sc-web/tree/feature/add-scg-iframe) branch, which must be up and running with **allowed origins** (`python3 sc-web/server/app.py" --allowed_origins=http://localhost:3000`).
 
 Appropriate backend must be up as well. 
 
