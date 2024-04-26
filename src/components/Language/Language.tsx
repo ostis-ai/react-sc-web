@@ -1,9 +1,18 @@
 import classNames from 'classnames';
 import { TLanguage, useLanguageContext } from 'ostis-ui-lib';
+import { Tooltip } from '@components/ToolTip/ToolTip';
 
 import styles from './language.module.scss';
+import { FC } from 'react';
 
-export const Language = () => {
+type HEXColor = `#${string}`;
+
+interface ILanguageProps {
+  primaryLanguageColor?: HEXColor;
+  secondaryLanguageColor?: HEXColor;
+}
+
+export const Language: FC<ILanguageProps> = ({ primaryLanguageColor, secondaryLanguageColor }) => {
   const { lang, setLang } = useLanguageContext();
 
   const setLanguage = (lang: TLanguage) => () => {
@@ -11,26 +20,35 @@ export const Language = () => {
     setLang(lang);
   };
 
+  const primaryLanguageStyle = primaryLanguageColor ? { color: primaryLanguageColor } : {};
+  const secondaryLanguageStyle = secondaryLanguageColor ? { color: secondaryLanguageColor } : {};
+
   return (
     <div className={styles.languageWrap}>
       <div className={styles.languages}>
-        <span
-          className={classNames(styles.language, styles.engLanguage, {
-            [styles.activeLanguage]: lang === 'en',
-          })}
-          onClick={setLanguage('en')}
-        >
-          En
-        </span>
-        <span className={styles.divider} />
-        <span
-          className={classNames(styles.language, styles.rusLanguage, {
-            [styles.activeLanguage]: lang === 'ru',
-          })}
-          onClick={setLanguage('ru')}
-        >
-          Ru
-        </span>
+        <Tooltip systemId="ui_english_language">
+          <span
+            className={classNames(styles.language, styles.engLanguage, {
+              [styles.activeLanguage]: lang === 'en',
+            })}
+            style={lang == 'en' ? primaryLanguageStyle : secondaryLanguageStyle}
+            onClick={setLanguage('en')}
+          >
+            En
+          </span>
+        </Tooltip>
+        <Tooltip systemId="ui_russian_language">
+          <span className={styles.divider} />
+          <span
+            className={classNames(styles.language, styles.rusLanguage, {
+              [styles.activeLanguage]: lang === 'ru',
+            })}
+            style={lang == 'ru' ? primaryLanguageStyle : secondaryLanguageStyle}
+            onClick={setLanguage('ru')}
+          >
+            Ru
+          </span>
+        </Tooltip>
       </div>
     </div>
   );

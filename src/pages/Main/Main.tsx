@@ -1,4 +1,5 @@
-import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
+import { TScLanguageTab } from 'ostis-ui-lib';
+import { SwitchScgScn } from '@components/SwitchScgScn';
 import { generatePath, Outlet, useLocation, useMatch, useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 import { routes } from '@constants';

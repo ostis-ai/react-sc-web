@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { DecompositionPanel, Scn, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { getHistory } from '@api/requests/userHistory';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
@@ -12,9 +11,11 @@ import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { HistoryPanel } from '@components/HistoryPanel';
 import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
-import { selectUser, setFormat } from '@store/commonSlice';
+import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
+import { selectAuth } from '@store/authSlice';
+import { Tooltip } from '@components/ToolTip/ToolTip';
 import { SwitchMode } from './SwitchMode';
 
 interface IProps {
@@ -22,10 +23,12 @@ interface IProps {
 }
 
 export const SidePanel: FC<IProps> = ({ className }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
+
+  const username = useSelector(selectAuth);
+  const isAuthorised = username != '';
 
   const { onAddClick } = useDecompositionContext();
 
@@ -51,12 +54,14 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     <div className={className}>
       <div className={styles.sideBarContent}>
         <div className={styles.searchFieldWrap}>
-          <SearchField className={styles.searchField} />
+          <Tooltip systemId="ui_search">
+            <SearchField className={styles.searchField} />
+          </Tooltip>
         </div>
         <div
           className={classNames(styles.accordionContent, {
-            [styles.accordionContent_userCanEdit]: !!user?.can_edit,
-            [styles.accordionContent_admin]: !!user?.is_admin,
+            [styles.accordionContent_userCanEdit]: isAuthorised,
+            [styles.accordionContent_admin]: isAuthorised,
           })}
         >
           <SwitchMode />
@@ -65,9 +70,10 @@ export const SidePanel: FC<IProps> = ({ className }) => {
             <Accordion
               header={translate({ ru: 'Разделы', en: 'Sections' })}
               leftIcon={<Sections />}
-              rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
+              rightIcon={isAuthorised ? <Plus /> : null}
               onRightClick={onAddClick}
               expanded
+              systemId="ui_section"
             >
               <ErrorBoundary
                 title={translate({
@@ -77,12 +83,16 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                 className={styles.errorBoundary}
               >
-                {<DecompositionPanel />}
+                {<DecompositionPanel editable={isAuthorised} deleteable={isAuthorised} />}
               </ErrorBoundary>
             </Accordion>
           </div>
           <div className={styles.decompositionAndHistoryPanels}>
-            <Accordion header={translate({ ru: 'История', en: 'History' })} leftIcon={<Clock />}>
+            <Accordion
+              header={translate({ ru: 'История', en: 'History' })}
+              leftIcon={<Clock />}
+              systemId="ui_history"
+            >
               <ErrorBoundary
                 title={translate({
                   ru: 'Ошибка получения истории',

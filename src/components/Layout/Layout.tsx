@@ -1,15 +1,24 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
 
+import cn from 'classnames';
+
 import styles from './Layout.module.scss';
 import { Language } from '@components/Language';
-import { Link } from 'react-router-dom';
+import { DevModeSwitch } from '@components/DevModeSwitch';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@assets/images/Logo.svg';
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslate } from 'ostis-ui-lib';
+import { Tooltip } from '@components/ToolTip/ToolTip';
+import { selectAuth, setUsername } from '@store/authSlice';
+
+import UserIcon from '@assets/images/UserIcon.svg';
+import GoBackIcon from '@assets/images/goBackDark.svg';
 
 export interface IProps {
   children?: ReactNode;
@@ -17,21 +26,86 @@ export interface IProps {
 
 export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
+  const translate = useTranslate();
+  const navigate = useNavigate();
+
+  const [logout, setLogout] = useState<boolean>();
+
+  const username = useSelector(selectAuth);
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
+  };
+
+  const handleLogInButtonClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    return navigate(routes.AUTH);
+  };
+
+  const handleLogOutButtonClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    dispatch(setUsername({ username: '' }));
   };
 
   return (
     <div className={styles.root}>
       <div className={styles.logoWrapper}>
         <Link to={routes.MAIN} onClick={handleLogoOnClick}>
-          <Logo />
+          <Tooltip systemId="ui_logo">
+            <Logo />
+          </Tooltip>
         </Link>
       </div>
       <header className={styles.header}>
-        <div className={styles.languageWrapper}>
-          <Language />
+        <div
+          className={cn({
+            [styles.authHeaderButtonWrapper]: username != '',
+            [styles.unauthHeaderButtonWrapper]: username == '',
+          })}
+        >
+          <div>
+            <Tooltip systemId="ui_dev_mode">
+              <DevModeSwitch />
+            </Tooltip>
+          </div>
+          {username == '' ? (
+            <div className={styles.languageWrapper}>
+              <Language />
+            </div>
+          ) : (
+            <></>
+          )}
+          <div className={cn(styles.authWrapper, { [styles.profileWrapperWithLogout]: logout })}>
+            {username != '' ? (
+              <div className={styles.profileWrapper} onClick={() => setLogout(!logout)}>
+                <UserIcon />
+                <div className={styles.profileUsername}>{username}</div>
+                {logout ? (
+                  <div
+                    className={cn(styles.logoutWrapper, {
+                      [styles.profileWrapperWithLogout]: logout,
+                    })}
+                  >
+                    <div className={styles.languageWrapper}>
+                      <Language />
+                      <button className={styles.logoutButton} onClick={handleLogOutButtonClick}>
+                        <GoBackIcon />
+                        {translate({ ru: 'Выйти', en: 'Logout' })}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            ) : (
+              <Tooltip systemId="ui_login">
+                <button className={styles.logInButton} onClick={handleLogInButtonClick}>
+                  {translate({ ru: 'Войти', en: 'Login' })}
+                </button>
+              </Tooltip>
+            )}
+          </div>
         </div>
       </header>
       <SidePanelWrapper>

@@ -5,6 +5,8 @@ import { routes, DEFAULT_COMMAND_PATH } from '@constants';
 import { Command } from '@pages/Command';
 import { Main } from '@pages/Main';
 import { Question } from '@pages/Question';
+import { Auth } from '@pages/Auth';
+import { AuthLayout } from '@components/Layout/AuthLayout';
 import { Library } from '@pages/Library'
 
 export const Router = () => {
@@ -24,6 +26,14 @@ export const Router = () => {
           <Route path={routes.QUESTION} element={<Question />} />
           <Route path={routes.LIBRARY} element={<Library />} />
         </Route>
+        <Route
+          path={routes.AUTH}
+          element={
+            <AuthLayout>
+              <Auth />
+            </AuthLayout>
+          }
+        />
       </Routes>
     </Suspense>
   );
