@@ -32,7 +32,7 @@ export const getComponent = async (specification: ScAddr) => {
   template.triple(conceptReusableComponent, ScType.EdgeAccessVarPosPerm, [ScType.NodeVar, componentAlias,]);
   const result = await client.templateSearch(template);
   if (!result.length) {
-    const errorStr = `Cannot find component of sepecification with ScAddr ${specification.value}`;
+    const errorStr = `Cannot find component of specification with ScAddr ${specification.value}`;
     console.error(errorStr);
     throw Error(errorStr);
   }
@@ -200,7 +200,7 @@ export const findComponentType = async (component: ScAddr) => {
   const types = {
     concept_reusable_kb_component: CardComponentType.knowledgeBase,
     concept_reusable_ps_component: CardComponentType.problemSolver,
-    concept_reusable_interface_component: CardComponentType.interface,
+    concept_reusable_ui_component: CardComponentType.interface,
     concept_reusable_embedded_ostis_system: CardComponentType.subSystem,
   };
   const typesScAddr = new Map<ScAddr, CardComponentType>();
