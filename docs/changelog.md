@@ -11,3 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Installation and run scripts
 - Changelog
+- Docker support
+
+### Fixed
+
+- HTML tags in sc-links
+- Production build
