@@ -8,7 +8,7 @@ module.exports = merge(config, {
     minimize: false,
   },
   devServer: {
-    port: process.env.PORT,
+    port: process.env.PORT? process.env.PORT : '3000',
     hot: true,
     open: true,
     liveReload: true,
