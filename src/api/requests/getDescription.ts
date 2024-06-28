@@ -81,7 +81,7 @@ export const getDescriptionById = async (id: string, lang: TLanguage) => {
   const answerAlias = '_answerLink';
   const answerLinkTemplate = new ScTemplate();
   answerLinkTemplate.triple(answerAddr, ScType.EdgeAccessVarPosPerm, [
-    ScType.NodeVar,
+    ScType.LinkVar,
     answerAlias,
   ]);
 
