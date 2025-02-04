@@ -15,7 +15,7 @@ export const useScNavigation = () => {
 
   const goToPrevHistoryItem = useCallback(() => {
     if (!firstRequest) return navigate(DEFAULT_COMMAND_PATH);
-    navigate(generatePath(routes.QUESTION, { question: String(firstRequest.question), format }));
+    navigate(generatePath(routes.ACTION, { action: String(firstRequest.action), format }));
   }, [firstRequest, navigate, format]);
 
   const goToActiveFormatCommand = useCallback(
@@ -25,12 +25,12 @@ export const useScNavigation = () => {
     [format, navigate],
   );
 
-  const goToActiveFormatQuestion = useCallback(
-    (question: string) => {
-      navigate(generatePath(routes.QUESTION, { question, format }));
+  const goToActiveFormatAction = useCallback(
+    (action: string) => {
+      navigate(generatePath(routes.ACTION, { action, format }));
     },
     [format, navigate],
   );
 
-  return { goToActiveFormatCommand, goToActiveFormatQuestion, goToPrevHistoryItem };
+  return { goToActiveFormatCommand, goToActiveFormatAction, goToPrevHistoryItem };
 };

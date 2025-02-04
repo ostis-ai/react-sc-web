@@ -18,7 +18,7 @@ const StyledSwitchScgScn = styled(SwitchScgScn)`
 
 const Main = () => {
   const commandMatch = useMatch(routes.COMMAND);
-  const questionMatch = useMatch(routes.QUESTION);
+  const actionMatch = useMatch(routes.ACTION);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,16 +38,16 @@ const Main = () => {
       return navigate(generatePath(routes.COMMAND, { commandAddr, addr, format: newActiveTab }));
     }
 
-    if (!questionMatch) {
+    if (!actionMatch) {
       return;
     }
 
-    const { question } = questionMatch.params;
+    const { action } = actionMatch.params;
 
-    if (!question) {
+    if (!action) {
       return;
     }
-    navigate(generatePath(routes.QUESTION, { question, format: newActiveTab }));
+    navigate(generatePath(routes.ACTION, { action, format: newActiveTab }));
   };
 
   return (

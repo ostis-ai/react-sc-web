@@ -12,7 +12,7 @@ export const ScgPage = () => {
   const translate = useTranslate();
 
   const scgMatch = location.pathname.match(/^\/q\/(\d+)\/scg$/);
-  const question = scgMatch ? Number(scgMatch[1]) : undefined;
+  const action = scgMatch ? Number(scgMatch[1]) : undefined;
 
   const pathArray = location.pathname.split('/');
   return (
@@ -31,7 +31,7 @@ export const ScgPage = () => {
       })}
       shouldReturn
     >
-      <Scg className={styles.scg} question={question} show={!!scgMatch} />
+      <Scg className={styles.scg} action={action} show={!!scgMatch} />
     </ErrorBoundary>
   );
 };

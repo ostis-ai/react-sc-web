@@ -1,3 +1,4 @@
+import { Spinner, useTranslate } from 'ostis-ui-lib';
 import { useCallback, useEffect, useState } from 'react';
 import { generatePath, useMatch, useNavigate } from 'react-router';
 import { appendHistoryItem } from '@api/requests/userHistory';
@@ -7,7 +8,6 @@ import { useDispatch, useErrorToast, useSelector } from '@hooks';
 import { selectArgAddrs } from '@store';
 import { selectUserAddr } from '@store/commonSlice';
 import { addRequest } from '@store/requestHistorySlice';
-import { Spinner, useTranslate } from 'ostis-ui-lib';
 
 import styles from './Command.module.scss';
 
@@ -30,14 +30,14 @@ const Command = () => {
   const translate = useTranslate();
 
   const appendToHistory = useCallback(
-    async (question: number) => {
+    async (action: number) => {
       if (!userAddr) return;
-      const addRes = await appendHistoryItem(question, userAddr);
+      const addRes = await appendHistoryItem(action, userAddr);
       if (isAxiosError(addRes))
         addError(
           translate({
-            ru: `Не удалось сохранить вопрос ${question} в историю`,
-            en: `It's failed to save question ${question} in history`,
+            ru: `Не удалось сохранить вопрос ${action} в историю`,
+            en: `It's failed to save action ${action} in history`,
           }),
         );
     },
@@ -54,19 +54,23 @@ const Command = () => {
 
     if (isAxiosError(cmdRes)) {
       setIsLoading(false);
-      return addError(translate({ ru: 'Не удалось выполнить запрос', en: `It's failed to get request` }));
+      return addError(
+        translate({ ru: 'Не удалось выполнить запрос', en: `It's failed to get request` }),
+      );
     }
 
-    const question = cmdRes.data.question;
+    const action = cmdRes.data.action;
 
-    await appendToHistory(question);
+    await appendToHistory(action);
 
-    dispatch(addRequest({ question }));
+    dispatch(addRequest({ action }));
 
     if (!isLast) return;
 
     setIsLoading(false);
-    navigate(generatePath(routes.QUESTION, { format, question: String(question) }), { replace: true });
+    navigate(generatePath(routes.ACTION, { format, action: String(action) }), {
+      replace: true,
+    });
   }, [addError, appendToHistory, args, dispatch, match, navigate, translate]);
 
   useEffect(() => {

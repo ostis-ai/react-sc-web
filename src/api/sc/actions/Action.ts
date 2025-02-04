@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import {
   ScAddr,
   ScConstruction,
-  ScEventParams,
+  ScEventSubscriptionParams,
   ScEventType,
   ScTemplate,
   ScType,
@@ -18,7 +18,7 @@ export class Action {
 
   private action: string;
   private template: ScTemplate;
-  private actionNodeInited: Promise<void>;
+  private actionNodeInitiated: Promise<void>;
   private onFirstTripleAdded: () => void;
 
   constructor(action: string) {
@@ -27,68 +27,69 @@ export class Action {
     this.template = new ScTemplate();
 
     this.onFirstTripleAdded = () => undefined;
-    this.actionNodeInited = new Promise((resolve) => (this.onFirstTripleAdded = resolve));
+    this.actionNodeInitiated = new Promise((resolve) => (this.onFirstTripleAdded = resolve));
 
-    this.addFirstTripple();
+    this.addFirstTriple();
   }
 
-  private addFirstTripple = async () => {
-    const { question } = await scUtils.findKeynodes('question');
+  private addFirstTriple = async () => {
+    const { action } = await scUtils.searchKeynodes('action');
     this.onFirstTripleAdded();
-    this.template.triple(question, ScType.EdgeAccessVarPosPerm, [
-      ScType.NodeVar,
-      this.actionNodeAlias,
-    ]);
+    this.template.triple(action, ScType.VarPermPosArc, [ScType.VarNode, this.actionNodeAlias]);
   };
 
   private initiateAction = async (actionNode: ScAddr) => {
-    const { questionInitiated } = await scUtils.findKeynodes('question_initiated');
+    const { actionInitiated } = await scUtils.searchKeynodes('action_initiated');
 
     const construction = new ScConstruction();
-    construction.createEdge(ScType.EdgeAccessConstPosPerm, questionInitiated, actionNode);
-    client.createElements(construction);
+    construction.createEdge(ScType.ConstPermPosArc, actionInitiated, actionNode);
+    client.generateElements(construction);
   };
 
-  private subscribeToAnswer = async (actionNode: ScAddr, onResponse: () => void) => {
-    const { questionFinished } = await scUtils.findKeynodes('question_finished');
+  private subscribeToResult = async (actionNode: ScAddr, onResponse: () => void) => {
+    const { actionFinished } = await scUtils.searchKeynodes('action_finished');
     const onActionFinished = (
-      _subscibedAddr: ScAddr,
+      _subscribedAddr: ScAddr,
       _arc: ScAddr,
       anotherAddr: ScAddr,
       eventId: number,
     ) => {
-      if (anotherAddr.isValid() && anotherAddr.equal(questionFinished)) {
+      if (anotherAddr.isValid() && anotherAddr.equal(actionFinished)) {
         client.eventsDestroy(eventId);
         onResponse();
       }
     };
 
-    const eventParams = new ScEventParams(actionNode, ScEventType.AddIngoingEdge, onActionFinished);
+    const eventParams = new ScEventSubscriptionParams(
+      actionNode,
+      ScEventType.AfterGenerateOutgoingArc,
+      onActionFinished,
+    );
 
     client.eventsCreate(eventParams);
   };
 
   private findResultCircuit = async (actionNode: ScAddr) => {
-    const { nrelAnswer } = await scUtils.findKeynodes('nrel_answer');
+    const { nrelResult } = await scUtils.searchKeynodes('nrel_result');
 
     const circuitAlias = '_circuit';
     const template = new ScTemplate();
 
-    template.tripleWithRelation(
+    template.quintuple(
       actionNode,
-      ScType.EdgeDCommonVar,
-      [ScType.NodeVarStruct, circuitAlias],
-      ScType.EdgeAccessVarPosPerm,
-      nrelAnswer,
+      ScType.VarCommonArc,
+      [ScType.VarNodeStructure, circuitAlias],
+      ScType.VarPermPosArc,
+      nrelResult,
     );
-    const result = await client.templateSearch(template);
+    const result = await client.searchByTemplate(template);
 
     if (result.length) return result[0].get(circuitAlias);
     return null;
   };
 
   private generateAction = async () => {
-    const generationResult = await client.templateGenerate(this.template, {});
+    const generationResult = await client.generateByTemplate(this.template, {});
 
     if (generationResult && generationResult.size > 0) {
       return generationResult.get(this.actionNodeAlias);
@@ -97,21 +98,21 @@ export class Action {
   };
 
   public addToTemplate = async (cb: (template: ScTemplate) => void | Promise<void>) => {
-    await this.actionNodeInited;
+    await this.actionNodeInitiated;
     await cb(this.template);
   };
 
   public addArgs = async (...args: [ScTemplateParam, ...ScTemplateParam[]]) => {
-    await this.actionNodeInited;
+    await this.actionNodeInitiated;
     const rrelBaseKeynodes = args.map((_, ind) => `rrel_${ind + 1}`) as [string, ...string[]];
-    const rrelKeynodes = await scUtils.findKeynodes(...rrelBaseKeynodes);
+    const rrelKeynodes = await scUtils.searchKeynodes(...rrelBaseKeynodes);
 
     args.forEach((rrel, ind) => {
-      this.template.tripleWithRelation(
+      this.template.quintuple(
         this.actionNodeAlias,
-        ScType.EdgeAccessVarPosPerm,
+        ScType.VarPermPosArc,
         rrel,
-        ScType.EdgeAccessVarPosPerm,
+        ScType.VarPermPosArc,
         rrelKeynodes[`rrel${ind + 1}`],
       );
     });
@@ -119,12 +120,12 @@ export class Action {
 
   public initiate = () => {
     return new Promise<ScAddr | null>((resolve) => {
-      scUtils.findKeynodes(this.action).then(async (keynodes) => {
-        await this.actionNodeInited;
+      scUtils.searchKeynodes(this.action).then(async (keynodes) => {
+        await this.actionNodeInitiated;
 
         this.template.triple(
           keynodes[snakeToCamelCase(this.action)],
-          ScType.EdgeAccessVarPosPerm,
+          ScType.VarPermPosArc,
           this.actionNodeAlias,
         );
 
@@ -134,7 +135,7 @@ export class Action {
         const onResponse = async () => {
           resolve(await this.findResultCircuit(actionNode));
         };
-        await this.subscribeToAnswer(actionNode, onResponse);
+        await this.subscribeToResult(actionNode, onResponse);
         await this.initiateAction(actionNode);
       });
     });
