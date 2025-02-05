@@ -113,7 +113,7 @@ export const Scn = ({ action }: IProps) => {
     requestScn();
   }, [setTimeout, action, resetTimeoutToast, addError, translate, clearTimeout]);
 
-  const onCompleteAction = async (addr: number) => {
+  const onInitiateAction = async (addr: number) => {
     const { uiMenuViewFullSemanticNeighborhood } =
       await scUtils.searchKeynodes(DEFAULT_COMMAND_SYSTEM_ID);
     const cmdRes = await doCommand(uiMenuViewFullSemanticNeighborhood.value, addr);
@@ -156,7 +156,7 @@ export const Scn = ({ action }: IProps) => {
       scgUrl={scgUrl}
       isLoading={isLoading}
       renderRequestPanel={renderRequestPanel}
-      onCompleteAction={onCompleteAction}
+      onInitiateAction={onInitiateAction}
       action={action}
       className={styles.container}
     />
