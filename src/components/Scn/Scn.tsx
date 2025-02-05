@@ -24,14 +24,14 @@ import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.scss';
 const timeoutText = {
   ru: (
     <>
-      Похоже, ответ на ваш вопрос содержит большое количество связей и его загрузка может
+      Похоже, результат вашего действия содержит большое количество связей и его загрузка может
       выполняться дольше обычного.
       <span className={styles.waitText}>Пожалуйста, подождите...</span>
     </>
   ),
   en: (
     <>
-      Your result contains a large number of links, loading may take more time.
+      Result of your action contains a large number of links, loading may take more time.
       <span className={styles.waitText}>Please wait...</span>
     </>
   ),
@@ -113,7 +113,7 @@ export const Scn = ({ action }: IProps) => {
     requestScn();
   }, [setTimeout, action, resetTimeoutToast, addError, translate, clearTimeout]);
 
-  const onAskAction = async (addr: number) => {
+  const onCompleteAction = async (addr: number) => {
     const { uiMenuViewFullSemanticNeighborhood } =
       await scUtils.searchKeynodes(DEFAULT_COMMAND_SYSTEM_ID);
     const cmdRes = await doCommand(uiMenuViewFullSemanticNeighborhood.value, addr);
@@ -156,7 +156,7 @@ export const Scn = ({ action }: IProps) => {
       scgUrl={scgUrl}
       isLoading={isLoading}
       renderRequestPanel={renderRequestPanel}
-      onAskAction={onAskAction}
+      onCompleteAction={onCompleteAction}
       action={action}
       className={styles.container}
     />

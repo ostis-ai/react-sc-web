@@ -19,7 +19,7 @@ export const ScgPage = () => {
     <ErrorBoundary
       title={translate({ ru: 'Ошибка загрузки компонента SCg-кода', en: 'Error loading SCg' })}
       paragraph={translate({
-        ru: 'Похоже, произошла ошибка при получении ответа на ваш вопрос',
+        ru: 'Похоже, произошла ошибка при получении результата инициированного Вами действия',
         en: 'Looks like an error occured',
       })}
       advice={translate({

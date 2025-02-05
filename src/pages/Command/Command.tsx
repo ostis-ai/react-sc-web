@@ -36,7 +36,7 @@ const Command = () => {
       if (isAxiosError(addRes))
         addError(
           translate({
-            ru: `Не удалось сохранить вопрос ${action} в историю`,
+            ru: `Не удалось сохранить действие ${action} в историю`,
             en: `It's failed to save action ${action} in history`,
           }),
         );
