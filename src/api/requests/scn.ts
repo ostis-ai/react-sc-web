@@ -12,7 +12,6 @@ interface IReturnScnTree {
 
 const requestScnTree = async (action: number): Promise<IReturnScnTree | AxiosError | null> => {
   const res = await translate(action, 'format_scn_json', 'lang_ru');
-  console.log(res);
   if (isAxiosError(res)) return res;
   const { link } = res.data;
   const [{ data }] = await client.getLinkContents([new ScAddr(link)]);
