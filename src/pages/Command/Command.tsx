@@ -55,7 +55,7 @@ const Command = () => {
     if (isAxiosError(cmdRes)) {
       setIsLoading(false);
       return addError(
-        translate({ ru: 'Не удалось выполнить запрос', en: `It's failed to get request` }),
+        translate({ ru: 'Не удалось выполнить запрос', en: `It's failed to complete request` }),
       );
     }
 
