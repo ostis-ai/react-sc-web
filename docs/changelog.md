@@ -13,10 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog
 - Docker support
 
-### Changed
-
-- Migrate to API of the OSTIS Platform 0.10.0
-
 ### Fixed
 
 - HTML tags in sc-links
