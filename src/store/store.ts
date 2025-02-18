@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { requestActiveLink } from './activeLinkSlice';
 import { argsFixingSlice } from './argsFixingSlice';
 import { commonSlice } from './commonSlice';
 import { requestHistorySlice } from './requestHistorySlice';
-import { requestActiveLink } from './activeLinkSlice';
 
 export const store = configureStore({
   reducer: {

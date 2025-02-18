@@ -31,7 +31,7 @@ function GoBack() {
   return (
     <Button appearance="secondaryAction" className={styles.backButton} onClick={goBack}>
       <ArrowIcon />
-      {translate({ ru: 'Вернуться к предыдущему вопросу', en: 'Go back' })}
+      {translate({ ru: 'Вернуться к предыдущему действию', en: 'Go back' })}
     </Button>
   );
 }

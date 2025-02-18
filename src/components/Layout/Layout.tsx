@@ -1,15 +1,15 @@
 import { FC, ReactNode } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Logo from '@assets/images/Logo.svg';
+import { Language } from '@components/Language';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
 
-import styles from './Layout.module.scss';
-import { Language } from '@components/Language';
-import { Link } from 'react-router-dom';
-import Logo from '@assets/images/Logo.svg';
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
-import { useDispatch } from 'react-redux';
+import styles from './Layout.module.scss';
 
 export interface IProps {
   children?: ReactNode;

@@ -12,12 +12,12 @@ type TFormat = 'format_scn_json';
 type TLang = 'lang_ru';
 
 export const translate = async (action: number, format: TFormat, lang: TLang) => {
-  const keynodes = await scUtils.findKeynodes(format, lang);
+  const keynodes = await scUtils.searchKeynodes(format, lang);
   return request<ITranslateResult>({
     method: 'POST',
-    url: `${API_URL}/api/question/answer/translate/`,
+    url: `${API_URL}/api/action/result/translate/`,
     data: objectToFormData({
-      question: action,
+      action: action,
       format: keynodes[snakeToCamelCase(format)].value,
       lang: keynodes[snakeToCamelCase(lang)].value,
     }),

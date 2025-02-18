@@ -12,14 +12,14 @@ export const ScgPage = () => {
   const translate = useTranslate();
 
   const scgMatch = location.pathname.match(/^\/q\/(\d+)\/scg$/);
-  const question = scgMatch ? Number(scgMatch[1]) : undefined;
+  const action = scgMatch ? Number(scgMatch[1]) : undefined;
 
   const pathArray = location.pathname.split('/');
   return (
     <ErrorBoundary
       title={translate({ ru: 'Ошибка загрузки компонента SCg-кода', en: 'Error loading SCg' })}
       paragraph={translate({
-        ru: 'Похоже, произошла ошибка при получении ответа на ваш вопрос',
+        ru: 'Похоже, произошла ошибка при получении результата инициированного Вами действия',
         en: 'Looks like an error occured',
       })}
       advice={translate({
@@ -31,7 +31,7 @@ export const ScgPage = () => {
       })}
       shouldReturn
     >
-      <Scg className={styles.scg} question={question} show={!!scgMatch} />
+      <Scg className={styles.scg} action={action} show={!!scgMatch} />
     </ErrorBoundary>
   );
 };

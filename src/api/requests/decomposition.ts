@@ -19,7 +19,7 @@ interface IDecompositionItem {
 }
 
 const getLanguage = async (lang: TLanguage) => {
-  const keynodes = await scUtils.findKeynodes(langToKeynode[lang]);
+  const keynodes = await scUtils.searchKeynodes(langToKeynode[lang]);
   return keynodes[snakeToCamelCase(langToKeynode[lang])];
 };
 
@@ -27,7 +27,7 @@ export const getDecomposition = async (lang: TLanguage): Promise<Decomposition |
   const LEVEL = '10';
 
   const { uiStartScElement, uiMenuViewGetDecomposition, nrelSectionDecomposition } =
-    await scUtils.findKeynodes(
+    await scUtils.searchKeynodes(
       'ui_start_sc_element',
       'ui_menu_view_get_decomposition',
       'nrel_section_decomposition',
@@ -35,21 +35,21 @@ export const getDecomposition = async (lang: TLanguage): Promise<Decomposition |
 
   const subjectDomainAlias = '_subjDomain';
   const subjectDomainTemplate = new ScTemplate();
-  subjectDomainTemplate.triple(uiStartScElement, ScType.EdgeAccessVarPosPerm, [
-    ScType.NodeVar,
+  subjectDomainTemplate.triple(uiStartScElement, ScType.VarPermPosArc, [
+    ScType.VarNode,
     subjectDomainAlias,
   ]);
 
-  const subjectDomainRes = await client.templateSearch(subjectDomainTemplate);
+  const subjectDomainRes = await client.searchByTemplate(subjectDomainTemplate);
 
   if (!subjectDomainRes.length) return null;
 
   const subjDomainAddr = subjectDomainRes[0].get(subjectDomainAlias);
 
   const constr = new ScConstruction();
-  constr.createLink(ScType.LinkConst, new ScLinkContent(LEVEL, ScLinkContentType.String));
+  constr.generateLink(ScType.ConstNodeLink, new ScLinkContent(LEVEL, ScLinkContentType.String));
 
-  const [linkAddr] = await client.createElements(constr);
+  const [linkAddr] = await client.generateElements(constr);
 
   const foundLang = await getLanguage(lang);
 
@@ -61,20 +61,20 @@ export const getDecomposition = async (lang: TLanguage): Promise<Decomposition |
     nrelSectionDecomposition.value,
   );
 
-  //Добавить вызов тоста
+  // Добавить вызов тоста
   if (isAxiosError(commandResult)) {
     return null;
   }
 
-  const questionNode = commandResult.data.question;
-  const answer = await scUtils.getAnswer(new ScAddr(questionNode));
+  const actionNode = commandResult.data.action;
+  const result = await scUtils.getResult(new ScAddr(actionNode));
 
-  if (!answer) return null;
+  if (!result) return null;
 
   const targetLinkAlias = '_targetLink';
   const linkTemplate = new ScTemplate();
-  linkTemplate.triple(answer, ScType.EdgeAccessVarPosPerm, [ScType.LinkVar, targetLinkAlias]);
-  const linkRes = await client.templateSearch(linkTemplate);
+  linkTemplate.triple(result, ScType.VarPermPosArc, [ScType.VarNodeLink, targetLinkAlias]);
+  const linkRes = await client.searchByTemplate(linkTemplate);
 
   if (!linkRes.length) return null;
 
@@ -105,7 +105,7 @@ export const deleteDecompositionItem = (parentID: string, id: string) => {
 export const editDecompositionItem = async (addr: number, newContent: string, lang: TLanguage) => {
   const linkAlias = '_link';
 
-  const { nrelMainIdtf, ...rest } = await scUtils.findKeynodes(
+  const { nrelMainIdtf, ...rest } = await scUtils.searchKeynodes(
     'nrel_main_idtf',
     langToKeynode[lang],
   );
@@ -113,17 +113,17 @@ export const editDecompositionItem = async (addr: number, newContent: string, la
   const foundLang = rest[snakeToCamelCase(langToKeynode[lang])];
 
   const scTemplate = new ScTemplate();
-  scTemplate.tripleWithRelation(
+  scTemplate.quintuple(
     new ScAddr(addr),
-    ScType.EdgeDCommonVar,
-    [ScType.LinkVar, linkAlias],
-    ScType.EdgeAccessVarPosPerm,
+    ScType.VarCommonArc,
+    [ScType.VarNodeLink, linkAlias],
+    ScType.VarPermPosArc,
     nrelMainIdtf,
   );
 
-  scTemplate.triple(foundLang, ScType.EdgeAccessVarPosPerm, linkAlias);
+  scTemplate.triple(foundLang, ScType.VarPermPosArc, linkAlias);
 
-  const result = await client.templateSearch(scTemplate);
+  const result = await client.searchByTemplate(scTemplate);
 
   if (result.length) {
     client.setLinkContents([
@@ -132,22 +132,22 @@ export const editDecompositionItem = async (addr: number, newContent: string, la
     return true;
   }
 
-  const link = await scUtils.createLink(newContent);
+  const link = await scUtils.generateLink(newContent);
 
   if (!link) return;
 
   const template = new ScTemplate();
 
-  template.tripleWithRelation(
+  template.quintuple(
     new ScAddr(addr),
-    ScType.EdgeDCommonVar,
+    ScType.VarCommonArc,
     link,
-    ScType.EdgeAccessVarPosPerm,
+    ScType.VarPermPosArc,
     nrelMainIdtf,
   );
-  template.triple(foundLang, ScType.EdgeAccessVarPosPerm, link);
+  template.triple(foundLang, ScType.VarPermPosArc, link);
 
-  const generateRes = await client.templateGenerate(template);
+  const generateRes = await client.generateByTemplate(template);
 
   return !!generateRes;
 };

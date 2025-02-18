@@ -11,9 +11,7 @@ export const useBackNavigation = () => {
 
   const goBack = useCallback(() => {
     if (requests.length < 2) navigate(DEFAULT_COMMAND_PATH);
-    navigate(
-      generatePath(routes.QUESTION, { question: String(requests[1].question), format: 'scn' }),
-    );
+    navigate(generatePath(routes.ACTION, { action: String(requests[1].action), format: 'scn' }));
   }, [navigate, requests]);
 
   return { goBack };

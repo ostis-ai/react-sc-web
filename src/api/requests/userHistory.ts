@@ -4,7 +4,7 @@ import { client, isAxiosError, scUtils } from '@api';
 import { doCommand } from './command';
 
 export const appendHistoryItem = async (itemAddr: number, userAddr: number) => {
-  const { uiMenuViewAddActionToUserHistory } = await scUtils.findKeynodes(
+  const { uiMenuViewAddActionToUserHistory } = await scUtils.searchKeynodes(
     'ui_menu_view_add_action_to_user_history',
   );
 
@@ -12,7 +12,7 @@ export const appendHistoryItem = async (itemAddr: number, userAddr: number) => {
 };
 
 export const getHistory = async (userAddr: number) => {
-  const { uiMenuViewGetUserActionHistory } = await scUtils.findKeynodes(
+  const { uiMenuViewGetUserActionHistory } = await scUtils.searchKeynodes(
     'ui_menu_view_get_user_action_history',
   );
 
@@ -20,26 +20,26 @@ export const getHistory = async (userAddr: number) => {
 
   if (isAxiosError(res)) return null;
 
-  const actionNode = new ScAddr(res.data.question);
+  const actionNode = new ScAddr(res.data.action);
 
-  const answer = await scUtils.getAnswer(actionNode);
+  const result = await scUtils.getResult(actionNode);
 
-  if (!answer) return null;
+  if (!result) return null;
 
   const linkAlias = '_link';
   const template = new ScTemplate();
-  template.triple(answer, ScType.EdgeAccessVarPosPerm, [ScType.LinkVar, linkAlias]);
+  template.triple(result, ScType.VarPermPosArc, [ScType.VarNodeLink, linkAlias]);
 
-  const searchRes = await client.templateSearch(template);
+  const searchRes = await client.searchByTemplate(template);
 
   if (!searchRes.length) return null;
-  const answerAddr = searchRes[0].get(linkAlias);
+  const resultAddr = searchRes[0].get(linkAlias);
 
-  const contents = await client.getLinkContents([answerAddr]);
+  const contents = await client.getLinkContents([resultAddr]);
 
   const addrs = JSON.parse(String(contents[0].data)) as string[] | null;
 
   if (!addrs) return [];
 
-  return addrs.map((addr) => ({ question: Number(addr) })).reverse();
+  return addrs.map((addr) => ({ action: Number(addr) })).reverse();
 };

@@ -9,8 +9,8 @@ export const RootRedirect = () => {
   if (lastRequest) {
     return (
       <Navigate
-        to={generatePath(routes.QUESTION, {
-          question: String(lastRequest.question),
+        to={generatePath(routes.ACTION, {
+          action: String(lastRequest.action),
           format: 'scn',
         })}
         replace

@@ -1,5 +1,5 @@
-import { routes } from '@constants';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { routes } from '@constants';
 import { IRootState } from '@store/model';
 
 export interface IRequest {

@@ -8,10 +8,10 @@ import styles from './ScnPage.module.scss';
 
 export const ScnPage = () => {
   const translate = useTranslate();
-  const match = useMatch(routes.QUESTION);
+  const match = useMatch(routes.ACTION);
 
-  const question = match?.params.question;
-  if (!question) return null;
+  const action = match?.params.action;
+  if (!action) return null;
 
   return (
     <div className={styles.wrapper}>
@@ -26,7 +26,7 @@ export const ScnPage = () => {
         })}
         shouldReturn={true}
       >
-        <Scn question={Number(question)} />
+        <Scn action={Number(action)} />
       </ErrorBoundary>
     </div>
   );

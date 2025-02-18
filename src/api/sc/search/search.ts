@@ -5,14 +5,14 @@ const searchNodeByIdentifier = async (linkAddr: ScAddr, identification: ScAddr) 
   const nodeAlias = '_node';
 
   const template = new ScTemplate();
-  template.tripleWithRelation(
+  template.quintuple(
     [ScType.Unknown, nodeAlias],
-    ScType.EdgeDCommonVar,
+    ScType.VarCommonArc,
     linkAddr,
-    ScType.EdgeAccessVarPosPerm,
+    ScType.VarPermPosArc,
     identification,
   );
-  const result = await client.templateSearch(template);
+  const result = await client.searchByTemplate(template);
   if (result.length) {
     return result[0].get(nodeAlias);
   }
@@ -23,7 +23,7 @@ const searchNodeByIdentifier = async (linkAddr: ScAddr, identification: ScAddr) 
 export const searchAddrById = async (str: string) => {
   const [linkAddrs] = await client.getLinksByContents([str]);
 
-  const { nrelMainIdtf, nrelSystemIdentifier } = await scUtils.findKeynodes(
+  const { nrelMainIdtf, nrelSystemIdentifier } = await scUtils.searchKeynodes(
     'nrel_system_identifier',
     'nrel_main_idtf',
   );
