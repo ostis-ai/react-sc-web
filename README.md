@@ -1,19 +1,6 @@
-## React sc-web
+# react-sc-web
 
-- [Quick start](#quick-start)
-- [Installation](#installation)
-  * [Production](#production)
-  * [Development](#development)
-- [Develop with Docker in another project](#develop-with-docker-in-another-project)
-- [Configuration](#configuration)
-- [Recommendations](#recommendations)
-- [Files structure](#files-structure)
-
-### Quick start
-
-Go to the [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem), checkout to the `demo` branch and follow installation and run instructions.
-
-### Installation
+## Installation
 
 First of all **clone the project on you local machine**.
 
@@ -24,18 +11,15 @@ cd react-sc-web
 
 Note that this project has runtime dependency on [sc-web](https://github.com/ostis-ai/sc-web) [feature/add-scg-iframe](https://github.com/ostis-ai/sc-web/tree/feature/add-scg-iframe) branch, which must be up and running with **allowed origins** (`python3 sc-web/server/app.py --allowed_origins=http://localhost:3000`).
 
-
 Appropriate backend must be up as well. 
 
-#### Production
+### Production
 
 In order to get working production build one needs to configure a web-server to serve builded project files.
 
 This project provides a docker support for this purpose and it's also the most simple way to run the interface in production.
 
 ```sh
-# navigate to react-sc-web directory
-# sc-web and backend must be already running
 cd docker
 docker compose build
 docker compose up
@@ -46,38 +30,33 @@ Otherwise one can configure its own web-server of choice. When doing so you need
 **Install dependencies and create production build**
 
 ```sh
-# navigate to react-sc-web directory
-./scripts/install_react_sc_web_dependencies.sh
+npm install
 npm run build
 ```
 
-#### Development
+### Development
 
 **Install dependencies**
 
 ```sh
-# navigate to react-sc-web directory
-./scripts/install_react_sc_web_dependencies.sh
+npm install
 ```
 
 **Run sc-web with allowed_origins**
 
 ```sh
-# navigate to sc-web directory
 python3 server/app.py --allowed_origins=http://localhost:3000
 ```
 
 **Run react-sc-web**
 
 ```sh
-# navigate to react-sc-web directory
-./scripts/run_react_sc_web.sh
+npm run start
 ```
 
 Application starts on port 3000 by default.
 
-
-### Develop with **Docker** in another project
+## Develop with **Docker** in another project
 
 Example is shown with [ostis-web-platform](https://github.com/ostis-ai/ostis-web-platform) project
 
@@ -99,23 +78,25 @@ services:
 Then proceed in the terminal:
 
 ```sh
-# navigate to the appropriate project folder
 docker compose run machine build # build kb
 docker compose up # or run just the machine / web service, e.g. docker compose up machine
 ```
 
-### Configuration
+## Configuration
 
 React-sc-web supports configuration via environment variables. To get more info on the available options check the `.env.example` file.
 
-### Recommendations
+## Recommendations
 
-The following IDE extensions are recommended for use.\
-[Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) is a great help to avoid typos when naming variables and functions.\
-To analyze the code and find problems according to the given rules, described in .eslintrc.js file a [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) is used.\
+The following IDE extensions are recommended for use.
+
+[Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) is a great help to avoid typos when naming variables and functions.
+
+To analyze the code and find problems according to the given rules, described in .eslintrc.js file a [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) is used.
+
 [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) is used to ensure that the overall style of the code is followed throughout the project. This extension is integrated with ESLint, but can have its own rules described in .prettierrc file.
 
-### Files structure
+## Files structure
 
 ```
 ├── public
