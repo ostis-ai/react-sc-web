@@ -2,9 +2,9 @@ import { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from '@components/Layout';
 import { routes, DEFAULT_COMMAND_PATH } from '@constants';
+import { Action } from '@pages/Action';
 import { Command } from '@pages/Command';
 import { Main } from '@pages/Main';
-import { Question } from '@pages/Question';
 
 export const Router = () => {
   return (
@@ -20,7 +20,7 @@ export const Router = () => {
         >
           <Route index element={<Navigate to={DEFAULT_COMMAND_PATH} replace />} />
           <Route path={routes.COMMAND} element={<Command />} />
-          <Route path={routes.QUESTION} element={<Question />} />
+          <Route path={routes.ACTION} element={<Action />} />
         </Route>
       </Routes>
     </Suspense>

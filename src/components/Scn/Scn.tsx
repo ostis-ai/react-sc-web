@@ -5,8 +5,8 @@ import { doCommand } from '@api/requests/command';
 import { getScnTree } from '@api/requests/scn';
 import { scUtils } from '@api/sc';
 import { isAxiosError } from '@api/utils';
+import ArrowIcon from '@assets/images/goBack.svg';
 import { Button } from '@components/Button';
-import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { Notification } from '@components/Notification';
 import {
   DEFAULT_COMMAND_PATH,
@@ -20,29 +20,28 @@ import { useLazyTimeout } from '@hooks/useTimeout';
 
 import styles from './Scn.module.scss';
 import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.scss';
-import ArrowIcon from '@assets/images/goBack.svg';
 
 const timeoutText = {
   ru: (
     <>
-      Похоже, ответ на ваш вопрос содержит большое количество связей и его загрузка может
+      Похоже, результат вашего действия содержит большое количество связей и его загрузка может
       выполняться дольше обычного.
       <span className={styles.waitText}>Пожалуйста, подождите...</span>
     </>
   ),
   en: (
     <>
-      Your answer contains a large number of links, loading may take more time.
+      Result of your action contains a large number of links, loading may take more time.
       <span className={styles.waitText}>Please wait...</span>
     </>
   ),
 };
 
 interface IProps {
-  question: number;
+  action: number;
 }
 
-export const Scn = ({ question }: IProps) => {
+export const Scn = ({ action }: IProps) => {
   const [tree, setTree] = useState<IScnNode | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,7 +57,7 @@ export const Scn = ({ question }: IProps) => {
     addToast(
       <Notification
         type="warning"
-        title={{ ru: 'Загрузка большого ответа', en: 'Loading complex answer' }}
+        title={{ ru: 'Загрузка большого ответа', en: 'Loading complex result' }}
         // @ts-ignore
         text={timeoutText}
       />,
@@ -88,7 +87,7 @@ export const Scn = ({ question }: IProps) => {
 
   const requestScn = useCallback(async () => {
     setTimeout();
-    const scnRes = await getScnTree(question, onRequestStarted);
+    const scnRes = await getScnTree(action, onRequestStarted);
 
     if (!scnRes) {
       setTree(null);
@@ -105,18 +104,18 @@ export const Scn = ({ question }: IProps) => {
     }
     const isTimeoutError =
       scnRes.response?.status === 404 &&
-      scnRes.response.data === 'Timeout waiting for answer translation';
+      scnRes.response.data === 'Timeout waiting for result translation';
     if (!isTimeoutError) {
       resetTimeoutToast();
       return addError({ ru: 'Не удалось получить SCn', en: `It's failed to get SCn` });
     }
     timeoutRequestCountRef.current++;
     requestScn();
-  }, [setTimeout, question, resetTimeoutToast, addError, translate, clearTimeout]);
+  }, [setTimeout, action, resetTimeoutToast, addError, translate, clearTimeout]);
 
-  const onAskQuestion = async (addr: number) => {
+  const onInitiateAction = async (addr: number) => {
     const { uiMenuViewFullSemanticNeighborhood } =
-      await scUtils.findKeynodes(DEFAULT_COMMAND_SYSTEM_ID);
+      await scUtils.searchKeynodes(DEFAULT_COMMAND_SYSTEM_ID);
     const cmdRes = await doCommand(uiMenuViewFullSemanticNeighborhood.value, addr);
 
     if (isAxiosError(cmdRes)) {
@@ -124,7 +123,7 @@ export const Scn = ({ question }: IProps) => {
       addError({ ru: 'Не удалось выполнить запрос', en: 'Failed to handle the request' });
       return null;
     }
-    return cmdRes.data.question;
+    return cmdRes.data.action;
   };
 
   useEffect(() => {
@@ -157,8 +156,8 @@ export const Scn = ({ question }: IProps) => {
       scgUrl={scgUrl}
       isLoading={isLoading}
       renderRequestPanel={renderRequestPanel}
-      onAskQuestion={onAskQuestion}
-      question={question}
+      onInitiateAction={onInitiateAction}
+      action={action}
       className={styles.container}
     />
   );

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IRootState } from '@store/model';
 
 export interface IRequest {
-  question: number;
+  action: number;
 }
 interface IInitialState {
   requests: IRequest[];

@@ -15,29 +15,29 @@ interface IProps {
 }
 
 export const HistoryPanel = (props: IProps) => {
-  const match = useMatch(routes.QUESTION);
+  const match = useMatch(routes.ACTION);
 
-  const { goToActiveFormatQuestion } = useScNavigation();
+  const { goToActiveFormatAction } = useScNavigation();
 
-  const onBtnClick = (question: string) => () => {
-    goToActiveFormatQuestion(question);
+  const onBtnClick = (action: string) => () => {
+    goToActiveFormatAction(action);
   };
 
   return (
     <>
       {!props.isLoading && (
         <div className={styles.historyPanelWrap}>
-          {props.requests.map(({ question }, ind) => (
+          {props.requests.map(({ action }, ind) => (
             <ScTag
               key={ind}
               as="span"
               className={classNames(styles.historyBtn, {
-                [styles.historyBtnActive]: String(question) === match?.params.question,
+                [styles.historyBtnActive]: String(action) === match?.params.action,
               })}
-              addr={question}
-              onClick={onBtnClick(String(question))}
+              addr={action}
+              onClick={onBtnClick(String(action))}
             >
-              <ScLangText addrOrSystemId={question} defaultText={String(question)} />
+              <ScLangText addrOrSystemId={action} defaultText={String(action)} />
             </ScTag>
           ))}
         </div>

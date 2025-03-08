@@ -5,22 +5,22 @@ import { scUtils } from '@api';
 import { removeFromCache } from '@api/requests/scn';
 import { ConfirmAction } from '@components/ConfirmAction';
 import { scgUrl } from '@constants';
+import { useScNavigation } from '@hooks/useScNavigation';
 import { addRequest } from '@store/requestHistorySlice';
 import { confirmClearScenePopupContent, confirmDeletePopupContent } from './constants';
 import { Frame, StyledSpinner, Wrap } from './styled';
 
 import { EWindowEvents, ITarget, IWindowEventData } from './types';
-import { useScNavigation } from '@hooks/useScNavigation';
 
 interface IProps {
-  question?: number;
+  action?: number;
   className?: string;
   show?: boolean;
 }
 
 const SPINER_COLOR = '#5896C0';
 
-export const Scg: FC<IProps> = ({ question, className, show = false }) => {
+export const Scg: FC<IProps> = ({ action, className, show = false }) => {
   const [isReady, setIsready] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [targetNode, setTargetNode] = useState<ITarget | null>(null);
@@ -36,8 +36,8 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
 
   const onCommandExecuted = (data: IWindowEventData) => {
     if (!data.payload || !data.payload['state'] || !data.payload['response']) return;
-    dispatch(addRequest({ question: Number(data.payload.response.question) }));
-    scNavigation.goToActiveFormatQuestion(data.payload.response.question);
+    dispatch(addRequest({ action: Number(data.payload.response.action) }));
+    scNavigation.goToActiveFormatAction(data.payload.response.action);
   };
   useEffect(() => {
     const iframe = ref.current;
@@ -60,23 +60,23 @@ export const Scg: FC<IProps> = ({ question, className, show = false }) => {
           break;
       }
     };
-  }, [question]);
+  }, [action]);
 
   useEffect(() => {
     (async () => {
-      if (!isReady || !show || !question) return;
+      if (!isReady || !show || !action) return;
       const iframe = ref.current;
       if (!iframe) return;
-      const { ...rest } = await scUtils.findKeynodes(langToKeynode[lang]);
+      const { ...rest } = await scUtils.searchKeynodes(langToKeynode[lang]);
       const activeLangKeynode = rest[snakeToCamelCase(langToKeynode[lang])];
-      removeFromCache(question);
+      removeFromCache(action);
       iframe.contentWindow &&
         iframe.contentWindow.postMessage(
-          { type: 'renderScg', addr: question, lang: activeLangKeynode.value },
+          { type: 'renderScg', addr: action, lang: activeLangKeynode.value },
           '*',
         );
     })();
-  }, [isReady, question, show, lang]);
+  }, [isReady, action, show, lang]);
 
   targetRef.current = targetNode?.element || null;
 

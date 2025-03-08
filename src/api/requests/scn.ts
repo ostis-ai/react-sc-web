@@ -10,8 +10,8 @@ interface IReturnScnTree {
   tree: IScnNode;
 }
 
-const requestScnTree = async (question: number): Promise<IReturnScnTree | AxiosError | null> => {
-  const res = await translate(question, 'format_scn_json', 'lang_ru');
+const requestScnTree = async (action: number): Promise<IReturnScnTree | AxiosError | null> => {
+  const res = await translate(action, 'format_scn_json', 'lang_ru');
   if (isAxiosError(res)) return res;
   const { link } = res.data;
   const [{ data }] = await client.getLinkContents([new ScAddr(link)]);
@@ -29,17 +29,17 @@ const DEFAULT_CACHE_SIZE = 50;
 const memoizedScnTree = (cacheSize = DEFAULT_CACHE_SIZE) => {
   const cache = new Map<number, IReturnScnTree>();
 
-  const removeFromCache = (question: number) => cache.delete(question);
+  const removeFromCache = (action: number) => cache.delete(action);
 
   const request = async (
-    question: number,
+    action: number,
     onRequestStarted?: () => void,
   ): Promise<IReturnScnTree | AxiosError | null> => {
-    const nodeInCache = cache.get(question);
+    const nodeInCache = cache.get(action);
     if (nodeInCache) return nodeInCache;
 
     onRequestStarted?.();
-    const newNode = await requestScnTree(question);
+    const newNode = await requestScnTree(action);
 
     if (newNode === null) {
       return null;
@@ -47,7 +47,7 @@ const memoizedScnTree = (cacheSize = DEFAULT_CACHE_SIZE) => {
 
     if (isAxiosError(newNode)) return newNode;
 
-    cache.set(question, newNode);
+    cache.set(action, newNode);
     if (cache.size > cacheSize) shiftMap(cache, 1);
 
     return newNode;

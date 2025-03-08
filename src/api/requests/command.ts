@@ -3,7 +3,7 @@ import { API_URL } from '@constants';
 import { objectToFormData } from '@utils';
 
 interface IDoComandResult {
-  question: number;
+  action: number;
 }
 
 export const doCommand = (cmdAddr: number, ...args: number[]) => {

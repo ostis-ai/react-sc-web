@@ -11,7 +11,13 @@ interface IProps {
   className?: string;
 }
 
-export const ConfirmAction: FC<IProps> = ({ onComplete, onClose, title, content, completeBtnText = 'Подтвердить' }) => {
+export const ConfirmAction: FC<IProps> = ({
+  onComplete,
+  onClose,
+  title,
+  content,
+  completeBtnText = 'Подтвердить',
+}) => {
   const onCompleteFunc = () => {
     onComplete();
     onClose();
