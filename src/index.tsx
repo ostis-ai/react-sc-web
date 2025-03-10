@@ -4,16 +4,18 @@ import {
   ScUtilsProvider,
   TLanguage,
   ToastProvider,
+  defaultLightTheme,
 } from 'ostis-ui-lib';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
 import { App } from '@components/App';
 import { store } from '@store/index';
 
 import './assets/styles/index.scss';
 import { client } from './api';
-import { BrowserRouter } from 'react-router-dom';
 
 const element = document.getElementById('root')!;
 const root = createRoot(element);
@@ -33,7 +35,9 @@ root.render(
           <ScUtilsProvider>
             <ToastProvider>
               <BrowserRouter>
-                <App />
+                <ThemeProvider theme={defaultLightTheme}>
+                  <App />
+                </ThemeProvider>
               </BrowserRouter>
             </ToastProvider>
           </ScUtilsProvider>
