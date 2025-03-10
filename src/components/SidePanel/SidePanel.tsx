@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { getHistory } from '@api/requests/userHistory';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
@@ -12,7 +11,7 @@ import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { HistoryPanel } from '@components/HistoryPanel';
 import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
-import { selectUser, setFormat } from '@store/commonSlice';
+import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
 import styles from './SidePanel.module.scss';
 
@@ -21,7 +20,6 @@ interface IProps {
 }
 
 export const SidePanel: FC<IProps> = ({ className }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);

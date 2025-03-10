@@ -14,5 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Use ThemeProvider with defaultLightTheme
 - HTML tags in sc-links
 - Production build

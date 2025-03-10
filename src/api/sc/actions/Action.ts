@@ -42,7 +42,7 @@ export class Action {
     const { actionInitiated } = await scUtils.searchKeynodes('action_initiated');
 
     const construction = new ScConstruction();
-    construction.createEdge(ScType.ConstPermPosArc, actionInitiated, actionNode);
+    construction.generateConnector(ScType.ConstPermPosArc, actionInitiated, actionNode);
     client.generateElements(construction);
   };
 

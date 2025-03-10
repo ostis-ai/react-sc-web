@@ -21,9 +21,9 @@ interface IProps {
 const SPINER_COLOR = '#5896C0';
 
 export const Scg: FC<IProps> = ({ action, className, show = false }) => {
-  const [isReady, setIsready] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [targetNode, setTargetNode] = useState<ITarget | null>(null);
+  const [targetNode] = useState<ITarget | null>(null);
   const [isConfirmDeletePopupShown, showConfirmDeletePopup, hideConfirmDeletePopup] =
     useBooleanState(false);
   const [isConfirmClearScenePopupShown, showConfirmClearScenePopup, hideConfirmClearScenePopup] =
@@ -46,7 +46,7 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     window.onmessage = function (event: MessageEvent<IWindowEventData>) {
       switch (event.data.type) {
         case EWindowEvents.onInitializationFinished:
-          setIsready(true);
+          setIsReady(true);
           setIsLoading(false);
           break;
         case EWindowEvents.deleteScgElement:
