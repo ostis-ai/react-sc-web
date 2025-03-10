@@ -28,7 +28,7 @@ export const SearchField: FC<IProps> = ({ className }) => {
     if (!searchValue) return setOptions(null);
 
     setIsLoading(true);
-    const [searchResult = []] = await client.getLinksContentsByContentSubstrings([searchValue]);
+    const [searchResult = []] = await client.searchLinkContentsByContentSubstrings([searchValue]);
 
     const transformedSearchResult = [
       ...new Set(searchResult.filter((string) => string.length < MAX_SIZE)),

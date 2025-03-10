@@ -60,9 +60,9 @@ const DropDownOption = ({
 
   const defaultOnMouseDown = htmlProps.onMouseDown;
 
-  const optionIsDiabled = optionGroupContext?.disabled || disabled;
+  const optionIsDisabled = optionGroupContext?.disabled || disabled;
 
-  const childrenOrHiglightedChildren = useMemo(
+  const childrenOrHighlightedChildren = useMemo(
     () =>
       typeof children === 'string' && defaultHighlighted ? (
         <Highlight>{children}</Highlight>
@@ -83,17 +83,17 @@ const DropDownOption = ({
             readOnly
           />
         )}
-        {childrenOrHiglightedChildren}
+        {childrenOrHighlightedChildren}
       </>
     ),
-    [showCheckbox, selectValue, value, disabled, childrenOrHiglightedChildren],
+    [showCheckbox, selectValue, value, disabled, childrenOrHighlightedChildren],
   );
 
   const ref = useRef<HTMLDivElement>(null);
 
   const renderDefaultOption = useCallback(
-    () => (multiple ? defaultMultipleOption : childrenOrHiglightedChildren),
-    [multiple, defaultMultipleOption, childrenOrHiglightedChildren],
+    () => (multiple ? defaultMultipleOption : childrenOrHighlightedChildren),
+    [multiple, defaultMultipleOption, childrenOrHighlightedChildren],
   );
 
   const onClick = useCallback(() => onOptionClick?.(value), [onOptionClick, value]);
@@ -110,10 +110,10 @@ const DropDownOption = ({
   const option = useMemo(
     () => ({
       value,
-      disabled: optionIsDiabled,
+      disabled: optionIsDisabled,
       ref,
     }),
-    [value, optionIsDiabled],
+    [value, optionIsDisabled],
   );
 
   const resultChildren = useMemo(
@@ -137,7 +137,7 @@ const DropDownOption = ({
     <DropdownOption
       {...htmlProps}
       className={classNames(htmlProps.className, {
-        [styles.option_disabled]: optionIsDiabled,
+        [styles.option_disabled]: optionIsDisabled,
         [styles.option_selected]: selectValue === value,
         [styles.option_active]: hoverValue === value,
       })}
@@ -163,7 +163,7 @@ const ConstantOption = ({
     useConstantSearchSelectContext();
   const optionGroupContext = useOptionGroupContext();
 
-  const optionIsDiabled = optionGroupContext?.disabled || disabled;
+  const optionIsDisabled = optionGroupContext?.disabled || disabled;
 
   const defaultRenderChip = useCallback(() => <>{children}</>, [children]);
 
@@ -183,11 +183,11 @@ const ConstantOption = ({
   const option = useMemo(
     () => ({
       value,
-      disabled: optionIsDiabled,
+      disabled: optionIsDisabled,
       children: resultChildren,
       renderChip: resultRenderChip,
     }),
-    [value, optionIsDiabled, resultChildren, resultRenderChip],
+    [value, optionIsDisabled, resultChildren, resultRenderChip],
   );
 
   useEffect(() => {
@@ -212,7 +212,7 @@ const DropDownOptionWrapper = (props: IProps) => {
         text,
         dropDownSelectContext?.searchValue,
         dropDownSelectContext?.highlightFormat,
-      ).shouldHiglight,
+      ).shouldHighlight,
   );
 
   const onAddTextToHighlight = useCallback(

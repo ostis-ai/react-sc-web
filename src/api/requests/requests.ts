@@ -1,6 +1,4 @@
-import { langToKeynode, TLanguage } from 'ostis-ui-lib';
-import { ScAddr } from 'ts-sc-client';
-import { client, request, scUtils } from '@api';
+import { request, scUtils } from '@api';
 import { API_URL } from '@constants';
 import { objectToFormData, snakeToCamelCase } from '@utils';
 

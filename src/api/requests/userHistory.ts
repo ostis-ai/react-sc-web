@@ -11,7 +11,7 @@ export const appendHistoryItem = async (itemAddr: number, userAddr: number) => {
   return await doCommand(uiMenuViewAddActionToUserHistory.value, userAddr, itemAddr);
 };
 
-export const getHistory = async (userAddr: number) => {
+export const getHistory = async (_: number) => {
   const { uiMenuViewGetUserActionHistory } = await scUtils.searchKeynodes(
     'ui_menu_view_get_user_action_history',
   );
