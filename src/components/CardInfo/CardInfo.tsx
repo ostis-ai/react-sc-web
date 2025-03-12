@@ -1,9 +1,6 @@
-import styles from './CardInfo.module.scss';
-import { ScAddr } from 'ts-sc-client';
+import { langToKeynode, useLanguage } from 'ostis-ui-lib';
 import { useState, useEffect } from 'react';
-import { CardComponentType } from '@components/Card/types';
-import CloseIcon from '@assets/images/CloseIcon.svg';
-import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
+import { ScAddr } from 'ts-sc-client';
 import {
   searchComponentMainIdentifier,
   searchComponentAuthor,
@@ -14,9 +11,12 @@ import {
   searchComponentInstallationMethod,
   searchComponentNote,
 } from '@api/requests/getSpecification';
+import CloseIcon from '@assets/images/CloseIcon.svg';
+import { CardComponentType } from '@components/Card/types';
+import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
+import styles from './CardInfo.module.scss';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
-import { langToKeynode, useLanguage } from "ostis-ui-lib";
 
 interface CardInfoProps {
   scAddr: ScAddr;
@@ -35,10 +35,9 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
   const [logoComponent, setLogoComponent] = useState<React.ReactNode>();
   const [subtitleClassName, setSubtitleClassName] = useState<string>();
-  const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>(
-  );
+  const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>();
 
-  const lang = useLanguage()
+  const lang = useLanguage();
   useEffect(() => {
     if (type) {
       setLogoComponent(getCardLogo(type));
@@ -99,67 +98,66 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
     <div
       className={styles.container}
       onClick={(event) => {
-            setShowComponent(undefined);
+        setShowComponent(undefined);
       }}
     >
       <div className={styles.wrapper} onClick={handleWrapperClick}>
-          <div className={styles.cardInfo}>
-              <div className={styles.logo}>{logoComponent}</div>
-              <div className={styles.info}>
-                  <div className={styles.infoItem}>
-                      <div className={styles.title}>{name}</div>
-                      <div className={styles.tool}>
-                          <div className={subtitleClassName}>{type}</div>
-                          <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
-                              <CloseIcon className={styles.closeIcon} />
-                          </button>
-                      </div>
-                  </div>
-                  <div className={styles.subtitle}>{note}</div>
+        <div className={styles.cardInfo}>
+          <div className={styles.logo}>{logoComponent}</div>
+          <div className={styles.info}>
+            <div className={styles.infoItem}>
+              <div className={styles.title}>{name}</div>
+              <div className={styles.tool}>
+                <div className={subtitleClassName}>{type}</div>
+                <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
+                  <CloseIcon className={styles.closeIcon} />
+                </button>
               </div>
-          </div>
-          <div className={styles.scrollable}>
-
-        {explanation && (
-          <div className={styles.annotation}>
-            <div className={styles.blockName}>Примечание</div>
-            <div className={styles.subtitle}>{explanation}</div>
-          </div>
-        )}
-
-        {dependencies && dependencies.size > 0 && (
-          <div className={styles.dependencies}>
-            <div className={styles.blockName}>Зависимости компонента</div>
-            {Array.from(dependencies.entries()).map(([scAddr, value]) => (
-              <div
-                className={styles.componentDependencies}
-                onClick={() => setShowComponent(scAddr)}
-              >
-                {value}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className={styles.address}>
-          <div className={styles.blockName}>Адрес хранилища</div>
-          <div className={styles.storageAddress}>
-            <a href={github} target="_blank" rel="noopener noreferrer">
-              {github}
-            </a>
+            </div>
+            <div className={styles.subtitle}>{note}</div>
           </div>
         </div>
+        <div className={styles.scrollable}>
+          {explanation && (
+            <div className={styles.annotation}>
+              <div className={styles.blockName}>Примечание</div>
+              <div className={styles.subtitle}>{explanation}</div>
+            </div>
+          )}
 
-        <div className={styles.installationMethod}>
-          <div className={styles.blockName}>Метод установки</div>
-          <div className={styles.componentImg}>{installationMethodImg}</div>
-        </div>
+          {dependencies && dependencies.size > 0 && (
+            <div className={styles.dependencies}>
+              <div className={styles.blockName}>Зависимости компонента</div>
+              {Array.from(dependencies.entries()).map(([scAddr, value]) => (
+                <div
+                  className={styles.componentDependencies}
+                  onClick={() => setShowComponent(scAddr)}
+                >
+                  {value}
+                </div>
+              ))}
+            </div>
+          )}
 
-        <div className={styles.autorship}>
-          <div className={styles.blockName}>Автор</div>
-          <div className={styles.subtitle}>{author}</div>
+          <div className={styles.address}>
+            <div className={styles.blockName}>Адрес хранилища</div>
+            <div className={styles.storageAddress}>
+              <a href={github} target="_blank" rel="noopener noreferrer">
+                {github}
+              </a>
+            </div>
+          </div>
+
+          <div className={styles.installationMethod}>
+            <div className={styles.blockName}>Метод установки</div>
+            <div className={styles.componentImg}>{installationMethodImg}</div>
+          </div>
+
+          <div className={styles.autorship}>
+            <div className={styles.blockName}>Автор</div>
+            <div className={styles.subtitle}>{author}</div>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );

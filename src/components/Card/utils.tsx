@@ -1,12 +1,12 @@
-import React from 'react';
 import classNames from 'classnames';
-import styles from './Card.module.scss';
-import { CardComponentType } from '@components/Card/types';
+import React from 'react';
 
 import Interface from '@assets/images/DefaultPluginImages/Interface.svg';
 import KnowledgeBase from '@assets/images/DefaultPluginImages/KnowledgeBase.svg';
 import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';
 import Subsystem from '@assets/images/DefaultPluginImages/Subsystem.svg';
+import { CardComponentType } from '@components/Card/types';
+import styles from './Card.module.scss';
 
 export const getCardLogo = (type: CardComponentType): React.ReactNode => {
   switch (type) {

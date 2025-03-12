@@ -1,11 +1,11 @@
+import { useTranslate } from 'ostis-ui-lib';
 import React from 'react';
+import { ScAddr } from 'ts-sc-client';
+import GithubIcon from '@assets/images/GithubIcon.svg';
 import styles from './Card.module.scss';
 import { CardComponentType } from './types';
-import { ScAddr } from 'ts-sc-client';
 import { getCardLogo, getSubtitleClassName, truncateString } from './utils';
 import { initiateComponentInstallAgent } from '../../api/sc/install/install';
-import GithubIcon from '@assets/images/GithubIcon.svg';
-import { useTranslate } from 'ostis-ui-lib';
 
 export interface ComponentCardProps {
   name: string;
@@ -39,11 +39,11 @@ export const Card: React.FC<ComponentCardProps> = ({
 
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>
-              <div className={subtitleClassName}>{type}</div>
+            <div className={subtitleClassName}>{type}</div>
           </div>
-        <div className={styles.title}>{name}</div>
+          <div className={styles.title}>{name}</div>
 
-        <div className={styles.description}>{description}</div>
+          <div className={styles.description}>{description}</div>
         </div>
       </div>
 

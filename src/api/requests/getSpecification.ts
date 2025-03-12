@@ -1,12 +1,12 @@
-import { searchAddrById } from '@api/sc/search/search';
 import { ScAddr, ScTemplate, ScType } from 'ts-sc-client';
+import { client, helper, scUtils } from '@api/sc';
 import { Action } from '@api/sc/actions/Action';
-import {client, helper, scUtils} from '@api/sc';
+import { searchAddrById } from '@api/sc/search/search';
 import { CardComponentType } from '@components/Card/types';
 import { InstallMethodType } from '@components/CardInfo/types';
 
 export const searchSpecifications = async () => {
-  const action = new Action("action_components_search");
+  const action = new Action('action_components_search');
   const agentResult = await action.initiate();
 
   if (!agentResult) return [];
@@ -29,7 +29,7 @@ export const searchComponentBySpecification = async (specification: ScAddr) => {
   const componentAlias = '_component';
   const { conceptReusableComponent } = await scUtils.searchKeynodes('concept_reusable_component');
   template.triple(specification, ScType.VarPermPosArc, [ScType.VarNode, componentAlias]);
-  template.triple(conceptReusableComponent, ScType.VarPermPosArc, [ScType.VarNode, componentAlias,]);
+  template.triple(conceptReusableComponent, ScType.VarPermPosArc, [ScType.VarNode, componentAlias]);
   const result = await client.searchByTemplate(template);
   if (!result.length) {
     const errorStr = `Cannot find component of specification with ScAddr ${specification.value}`;
@@ -61,7 +61,8 @@ export const searchComponentGit = async (component: ScAddr) => {
 
 export const searchComponentInstallationMethod = async (component: ScAddr) => {
   const installationTypes: { [key: string]: InstallMethodType } = {
-    concept_reusable_dynamically_installed_component: InstallMethodType.DynamicallyInstalledComponent,
+    concept_reusable_dynamically_installed_component:
+      InstallMethodType.DynamicallyInstalledComponent,
     concept_reusable_component_requiring_restart: InstallMethodType.ReusableComponent,
   };
   const installationTypesScAddr = new Map<string, ScAddr>();
@@ -80,19 +81,19 @@ export const searchComponentInstallationMethod = async (component: ScAddr) => {
 
     const result = await client.searchByTemplate(template);
     const resultScAddr = result.length ? result[0].get(resultAlias) : undefined;
-    if (resultScAddr?.value === component.value) return installationTypes[installationType];;
+    if (resultScAddr?.value === component.value) return installationTypes[installationType];
   }
 
   return undefined;
 };
 
 export const searchComponentSystemIdentifier = async (component: ScAddr) => {
-  return helper.getSystemIdentifier(component)
+  return helper.getSystemIdentifier(component);
 };
 
 export const searchComponentMainIdentifier = async (component: ScAddr, lang: string) => {
-    return helper.getMainIdentifier(component, lang)
-}
+  return helper.getMainIdentifier(component, lang);
+};
 
 export const searchComponentAuthor = async (component: ScAddr) => {
   const template = new ScTemplate();

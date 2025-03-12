@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import styles from './SwitchMode.module.scss';
 import { Link, useLocation } from 'react-router-dom';
-import { routes } from '@constants';
 import AskAiPageButton from '@assets/images/AskAiPageButton.svg';
 import AskAiPageButtonFocus from '@assets/images/AskAiPageButtonFocus.svg';
-import ScnPageButton from '@assets/images/ScnPageButton.svg';
-import ScnPageButtonFocus from '@assets/images/ScnPageButtonFocus.svg';
 import LibraryPageButton from '@assets/images/LibraryPageButton.svg';
 import LibraryPageButtonFocus from '@assets/images/LibraryPageButtonFocus.svg';
+import ScnPageButton from '@assets/images/ScnPageButton.svg';
+import ScnPageButtonFocus from '@assets/images/ScnPageButtonFocus.svg';
+import { routes } from '@constants';
+import styles from './SwitchMode.module.scss';
 
 export const SwitchMode = () => {
   const [activePage, setActivePage] = useState<string | '/'>();
