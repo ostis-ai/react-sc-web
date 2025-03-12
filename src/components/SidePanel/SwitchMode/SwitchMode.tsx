@@ -40,13 +40,13 @@ export const SwitchMode = () => {
           <ScnPageButton />
         )}
       </Link>
-      <Link
+      {/* <Link
         to={routes.ASK_AI}
         className={styles.switchModeButton}
         onClick={() => handlePageClick(routes.ASK_AI)}
       >
         {activePage === routes.ASK_AI ? <AskAiPageButtonFocus /> : <AskAiPageButton />}
-      </Link>
+      </Link> */}
       <Link
         to={routes.LIBRARY}
         className={styles.switchModeButton}
