@@ -7,7 +7,7 @@ import { useScNavigation } from '@hooks/useScNavigation';
 import { debounce } from '@utils';
 
 import styles from './SearchField.module.scss';
-import { searchAddrById } from '../../api/sc/search/search';
+import { searchAddrById } from '@api/sc/search/search';
 
 const MAX_SIZE = 200;
 const DEBOUNCE_TIMEOUT = 300;

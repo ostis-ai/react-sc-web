@@ -530,7 +530,6 @@ export const Select = forwardRef<HTMLSelectElement, SearchSelectProps>(
             className={classNames(styles.input, {
               [styles.input_hidden]: (!isSearchPanelOpen || modeIsSelect) && !isEmpty,
             })}
-            tabIndex={-1}
             ref={inputRef}
             placeholder={isEmpty ? placeholder : undefined}
             disabled={modeIsSelect}

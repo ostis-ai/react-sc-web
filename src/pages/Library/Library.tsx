@@ -8,13 +8,13 @@ import FilterIcon from '@assets/images/filterIcon.svg';
 import styles from './Library.module.scss';
 import { CardComponentType } from '@components/Card/types';
 import {
-  findSpecifiactions,
-  findComponentGit,
-  getComponent,
-  findComponentSystemIdentifier,
-  findComponentExplanation,
-  findComponentType,
-} from '../../api/requests/getSpecification';
+  searchSpecifications,
+  searchComponentUsingGit,
+  searchComponentBySpecification,
+  searchComponentSystemIdentifier,
+  searchComponentExplanation,
+  searchComponentType,
+} from '@api/requests/getSpecification';
 import { ScAddr } from 'ts-sc-client';
 
 interface CardInterface {
@@ -36,15 +36,15 @@ const Library = () => {
   const translate = useTranslate();
 
   useEffect(() => {
-    fetchSpecifiactions();
+    fetchSpecifications();
   }, []);
 
   useEffect(() => {
     fetchCards();
   }, [specifications]);
 
-  const fetchSpecifiactions = async () => {
-    const specifications = await findSpecifiactions();
+  const fetchSpecifications = async () => {
+    const specifications = await searchSpecifications();
     setSpecifications(specifications);
   };
 
@@ -64,12 +64,12 @@ const Library = () => {
 
   const fetchComponentCard = async (specification: ScAddr) => {
     try {
-      const component = await getComponent(specification);
+      const component = await searchComponentBySpecification(specification);
       const [systemIdentifier, type, git, explanation] = await Promise.all([
-        findComponentSystemIdentifier(component),
-        findComponentType(component),
-        findComponentGit(component),
-        findComponentExplanation(component),
+        searchComponentSystemIdentifier(component),
+        searchComponentType(component),
+        searchComponentUsingGit(component),
+        searchComponentExplanation(component),
       ]);
       const card: CardInterface = {
         name: systemIdentifier ? (systemIdentifier as string) : '...',
@@ -128,7 +128,7 @@ const Library = () => {
           <div className={styles.header}>
             <Input
               className={styles.searchField}
-              placeholder={translate({ ru: 'Поиск компонент', en: 'Search for components' })}
+              placeholder={translate({ ru: 'Поиск компонентов', en: 'Search for components' })}
               iconLeft={<SearchIcon />}
               onChange={handleSearchChange}
             />

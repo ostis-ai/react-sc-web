@@ -30,10 +30,10 @@ export const SwitchMode = () => {
       <Link
         to={routes.MAIN}
         className={styles.switchModeButton}
-        onClick={() => handlePageClick(routes.QUESTION)}
+        onClick={() => handlePageClick(routes.ACTION)}
       >
         {activePage === routes.MAIN ||
-        activePage === routes.QUESTION ||
+        activePage === routes.ACTION ||
         activePage === routes.COMMAND ? (
           <ScnPageButtonFocus />
         ) : (

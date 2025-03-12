@@ -5,15 +5,15 @@ import { CardComponentType } from '@components/Card/types';
 import CloseIcon from '@assets/images/CloseIcon.svg';
 import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
 import {
-  findComponentAuthor,
-  findComponentGit,
-  findComponentDeps,
-  findComponentSystemIdentifier,
-  findComponentExplanation,
-  findComponentType,
-  findComponentInstallationMethod,
-  findComponentNote,
-} from '../../api/requests/getSpecification';
+  searchComponentAuthor,
+  searchComponentUsingGit,
+  searchComponentDependencies,
+  searchComponentSystemIdentifier,
+  searchComponentExplanation,
+  searchComponentType,
+  searchComponentInstallationMethod,
+  searchComponentNote,
+} from '@api/requests/getSpecification';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
 
@@ -62,14 +62,14 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
         dependencies,
         authors,
       ] = await Promise.all([
-        findComponentSystemIdentifier(component),
-        findComponentType(component),
-        findComponentGit(component),
-        findComponentExplanation(component),
-        findComponentNote(component),
-        findComponentInstallationMethod(component),
-        findComponentDeps(component),
-        findComponentAuthor(component),
+        searchComponentSystemIdentifier(component),
+        searchComponentType(component),
+        searchComponentUsingGit(component),
+        searchComponentExplanation(component),
+        searchComponentNote(component),
+        searchComponentInstallationMethod(component),
+        searchComponentDependencies(component),
+        searchComponentAuthor(component),
       ]);
 
       setName(systemIdentifier ? (systemIdentifier as string).replace(/_/g, ' ') : '...');
