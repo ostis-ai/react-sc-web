@@ -40,7 +40,6 @@ const memoizedScnTree = (cacheSize = DEFAULT_CACHE_SIZE) => {
 
     onRequestStarted?.();
     const newNode = await requestScnTree(action);
-    console.log(newNode);
 
     if (newNode === null) {
       return null;
