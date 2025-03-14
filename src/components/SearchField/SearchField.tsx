@@ -1,13 +1,12 @@
-import { useTranslate } from 'ostis-ui-lib';
+import { useTranslate, Select, Option } from 'ostis-ui-lib';
 import { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import { client } from '@api';
+import { searchAddrById } from '@api/sc/search/search';
 import SearchIcon from '@assets/images/Search.svg';
-import { Option, Select } from '@components/input/Select';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { debounce } from '@utils';
 
 import styles from './SearchField.module.scss';
-import { searchAddrById } from '../../api/sc/search/search';
 
 const MAX_SIZE = 200;
 const DEBOUNCE_TIMEOUT = 300;
@@ -75,7 +74,6 @@ export const SearchField: FC<IProps> = ({ className }) => {
       onChange={onChange}
       emptyMessage={emptyMessage}
       iconsLeft={<SearchIcon />}
-      autoFocus
     >
       {(options || []).map((option) => (
         <Option key={option} value={option} className={styles.option}>

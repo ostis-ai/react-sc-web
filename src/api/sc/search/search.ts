@@ -21,7 +21,7 @@ const searchNodeByIdentifier = async (linkAddr: ScAddr, identification: ScAddr) 
 };
 
 export const searchAddrById = async (str: string) => {
-  const [linkAddrs] = await client.getLinksByContents([str]);
+  const [linkAddrs] = await client.searchLinksByContents([str]);
 
   const { nrelMainIdtf, nrelSystemIdentifier } = await scUtils.searchKeynodes(
     'nrel_system_identifier',

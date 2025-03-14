@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Library page with component search and install functionality
+- Section decomposition panel
 - Changelog
 - Docker support
 

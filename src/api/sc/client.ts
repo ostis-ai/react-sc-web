@@ -1,9 +1,10 @@
-import { ScClient } from 'ts-sc-client';
+import { ScClient, ScHelper } from 'ts-sc-client';
 import { SC_URL } from '@constants';
 
 const TIMEOUT = 2000;
 
 export let client: ScClient;
+export let helper: ScHelper;
 let onError: () => void;
 let onClose: () => void;
 
@@ -12,7 +13,7 @@ const getClient = () => {
   if (onClose) client.removeEventListener('close', onClose);
 
   client = new ScClient(SC_URL);
-
+  helper = new ScHelper(client);
   onError = () => {
     console.error('error connecting to ts-client, trying to reconnect in 2 seconds');
     setTimeout(getClient, TIMEOUT);

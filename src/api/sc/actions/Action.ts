@@ -55,21 +55,21 @@ export class Action {
       eventId: number,
     ) => {
       if (anotherAddr.isValid() && anotherAddr.equal(actionFinished)) {
-        client.eventsDestroy(eventId);
+        client.destroyElementaryEventSubscriptions(eventId);
         onResponse();
       }
     };
 
     const eventParams = new ScEventSubscriptionParams(
       actionNode,
-      ScEventType.AfterGenerateOutgoingArc,
+      ScEventType.AfterGenerateIncomingArc,
       onActionFinished,
     );
 
-    client.eventsCreate(eventParams);
+    client.createElementaryEventSubscriptions(eventParams);
   };
 
-  private findResultCircuit = async (actionNode: ScAddr) => {
+  private searchResultCircuit = async (actionNode: ScAddr) => {
     const { nrelResult } = await scUtils.searchKeynodes('nrel_result');
 
     const circuitAlias = '_circuit';
@@ -133,7 +133,7 @@ export class Action {
         if (!actionNode) return resolve(null);
 
         const onResponse = async () => {
-          resolve(await this.findResultCircuit(actionNode));
+          resolve(await this.searchResultCircuit(actionNode));
         };
         await this.subscribeToResult(actionNode, onResponse);
         await this.initiateAction(actionNode);
