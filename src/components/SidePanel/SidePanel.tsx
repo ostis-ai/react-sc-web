@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { DecompositionPanel, Scn, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getHistory } from '@api/requests/userHistory';
