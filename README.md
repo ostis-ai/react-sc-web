@@ -64,7 +64,7 @@ Change the `docker-compose.yml` using any editor to allow the origin of react-sc
 ```yaml
 services:
   web:
-     image: ostis/sc-web:0.8.1-Unlock
+     image: ostis/sc-web:0.9.0
      build:
        context: ./sc-web
      restart: unless-stopped
