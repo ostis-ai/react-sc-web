@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from '@components/Layout';
 import { routes, DEFAULT_COMMAND_PATH } from '@constants';
+import { About } from '@pages/About';
 import { Action } from '@pages/Action';
 import { Command } from '@pages/Command';
 import { Library } from '@pages/Library';
@@ -23,6 +24,7 @@ export const Router = () => {
           <Route path={routes.COMMAND} element={<Command />} />
           <Route path={routes.ACTION} element={<Action />} />
           <Route path={routes.LIBRARY} element={<Library />} />
+          <Route path={routes.ABOUT} element={<About />} />
         </Route>
       </Routes>
     </Suspense>

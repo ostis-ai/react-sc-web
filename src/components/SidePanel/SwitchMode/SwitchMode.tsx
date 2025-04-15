@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import AboutPageButton from '@assets/images/AboutPageButton.svg';
+import AboutPageButtonFocus from '@assets/images/AboutPageButtonFocus.svg';
 import AskAiPageButton from '@assets/images/AskAiPageButton.svg';
 import AskAiPageButtonFocus from '@assets/images/AskAiPageButtonFocus.svg';
 import LibraryPageButton from '@assets/images/LibraryPageButton.svg';
@@ -39,6 +41,13 @@ export const SwitchMode = () => {
         ) : (
           <ScnPageButton />
         )}
+      </Link>
+      <Link
+        to={routes.ABOUT}
+        className={styles.switchModeButton}
+        onClick={() => handlePageClick(routes.ABOUT)}
+      >
+        {activePage === routes.ABOUT ? <AboutPageButtonFocus /> : <AboutPageButton />}
       </Link>
       {/* <Link
         to={routes.ASK_AI}
