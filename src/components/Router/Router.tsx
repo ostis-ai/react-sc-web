@@ -10,7 +10,7 @@ import { Main } from '@pages/Main';
 
 export const Router = () => {
   return (
-    <Suspense fallback={<>loading...</>}>
+    <Suspense fallback={<></>}>
       <Routes>
         <Route
           path={routes.MAIN}

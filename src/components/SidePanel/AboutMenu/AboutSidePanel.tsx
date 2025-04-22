@@ -1,5 +1,6 @@
-import { Select, useTranslate } from 'ostis-ui-lib';
+import { Select, Spinner, useTranslate } from 'ostis-ui-lib';
 import { useCallback, useEffect, useState } from 'react';
+import { SPINER_COLOR } from '@constants';
 
 import SearchIcon from '@assets/images/Search.svg';
 import { IMenuItem, getInitialMenuData } from './Menu';
@@ -12,6 +13,7 @@ export const AboutSidePanel = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [menu, setMenu] = useState<IMenuItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [inputKey, setInputKey] = useState(0);
 
   useEffect(() => {
     setIsLoading(true);
@@ -96,6 +98,7 @@ export const AboutSidePanel = () => {
   return (
     <>
       <Select
+        key={inputKey}
         className={styles.searchField}
         mode="search"
         value={searchTerm}
@@ -105,10 +108,11 @@ export const AboutSidePanel = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         iconsLeft={<SearchIcon />}
         showOptions={false}
+        onBlur={(prev) => {setInputKey(prev => prev + 1);}}
       />
 
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner className={styles.spiner} appearance={SPINER_COLOR} />
       ) : displayedMenu.length > 0 ? (
         <NavigationList menu={displayedMenu} onToggleExpand={handleToggleExpand} />
       ) : searchTerm ? (

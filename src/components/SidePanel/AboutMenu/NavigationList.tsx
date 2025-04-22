@@ -1,4 +1,4 @@
-import { ScLangText, TTexts, useTranslate } from 'ostis-ui-lib';
+import { useTranslate } from 'ostis-ui-lib';
 import { useDispatch } from 'react-redux';
 import ChevronDown from '@assets/images/chevronDown.svg';
 import { setAboutText } from '@store/aboutSlice';
