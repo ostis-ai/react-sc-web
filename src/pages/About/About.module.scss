@@ -1,40 +1,189 @@
+/* Container for the Markdown content */
 .markdownContent {
-  /* Стили для самого контейнера, если нужно (отступы, фон и т.д.) */
-  padding: 1rem;
-  height: 100%; /* Пример для прокрутки */
-  overflow-y: auto; /* Пример для прокрутки */
-  padding-right: 4.5rem; 
+  padding: 1rem 4.5rem 1rem 1rem; /* Original padding-right kept, added others */
+  height: 100%; /* Adjust as needed */
+  overflow-y: auto; /* Enable vertical scroll if content overflows */
+  max-width: 980px; /* Optional: Set a max width like GitHub [2] */
+  margin: 0 auto; /* Optional: Center the content block */
+  box-sizing: border-box;
+  line-height: 1.6; /* Base line height */
 }
 
+/* Paragraphs */
 .markdownContent p {
-  /* Стили для параграфов */
   margin-bottom: 1em;
-  line-height: 1.6;
-  text-align: justify;
+  /* text-align: justify; /* Uncomment if justified text is desired */
+}
+
+/* Headings (h1-h6) */
+.markdownContent h1,
+.markdownContent h2,
+.markdownContent h3,
+.markdownContent h4,
+.markdownContent h5,
+.markdownContent h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdownContent h1 {
+  font-size: 2em; /* Larger for main title */
+  border-bottom: 1px solid #eaecef; /* Optional separator */
+  padding-bottom: 0.3em;
 }
 
 .markdownContent h2 {
-  /* Стили для заголовков h2 */
-  font-size: 1.75em;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  font-weight: 600;
+  font-size: 1.75em; /* User's original size */
+  border-bottom: 1px solid #eaecef; /* Optional separator */
+  padding-bottom: 0.3em;
 }
 
+.markdownContent h3 {
+  font-size: 1.5em;
+}
+
+.markdownContent h4 {
+  font-size: 1.25em;
+}
+
+.markdownContent h5 {
+  font-size: 1em;
+}
+
+.markdownContent h6 {
+  font-size: 0.875em;
+  color: #586069; /* Often smaller and lighter */
+}
+
+/* Handle bold text within headings (prevents double bolding if heading is already bold) */
+.markdownContent h1 strong,
+.markdownContent h2 strong,
+.markdownContent h3 strong,
+.markdownContent h4 strong,
+.markdownContent h5 strong,
+.markdownContent h6 strong {
+ font-weight: inherit;
+}
+
+
+/* Unordered Lists */
 .markdownContent ul {
-  /* Стили для неупорядоченных списков */
   list-style: disc;
+  margin-left: 2em; /* Keep user's indentation */
+  margin-bottom: 1em;
+  padding-left: 1em; /* Ensure space for bullets */
+  /* text-align: justify; /* Uncomment if justified text is desired */
+}
+
+/* Ordered Lists */
+.markdownContent ol {
+  list-style: decimal;
   margin-left: 2em;
   margin-bottom: 1em;
-  text-align: justify;
-  /* max-height: 300px; */ /* Если нужна прокрутка для списков */
-  /* overflow-y: auto; */ /* Если нужна прокрутка для списков */
+  padding-left: 1em; /* Ensure space for numbers */
 }
 
-.markdownContent code {
-  /* Стили для инлайн-кода */
-  background-color: #f0f0f0;
+/* List Items */
+.markdownContent li {
+  margin-bottom: 0.5em; /* Space between items */
+}
+
+/* Inline Code (within paragraphs, lists, etc.) */
+.markdownContent p code,
+.markdownContent li code,
+.markdownContent h1 code, /* Add other parent elements as needed */
+.markdownContent em code,
+.markdownContent strong code {
+  background-color: rgba(27, 31, 35, 0.05); /* Subtle background */
   padding: 0.2em 0.4em;
-  border-radius: 3px;
-  font-family: monospace;
+  margin: 0 0.2em;
+  border-radius: 6px; /* Slightly more rounded */
+  font-family: monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier;
+  font-size: 0.85em; /* Typically slightly smaller */
+  color: #333;
+}
+
+/* Code Blocks */
+.markdownContent pre {
+  background-color: #f6f8fa; /* Light background for block */
+  border: 1px solid #eaecef;
+  border-radius: 6px;
+  padding: 1em;
+  margin-bottom: 1em;
+  overflow-x: auto; /* Allow horizontal scroll for long lines */
+  font-family: monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier;
+  font-size: 0.85em;
+  line-height: 1.45;
+}
+
+/* Code inside Code Blocks (reset inline styles) */
+.markdownContent pre code {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  font-family: inherit; /* Inherit monospace font from pre */
+  font-size: inherit; /* Inherit size from pre */
+  color: inherit; /* Inherit color from pre */
+  line-height: inherit; /* Inherit line height */
+}
+
+/* Blockquotes */
+.markdownContent blockquote {
+  border-left: 4px solid #dfe2e5; /* Standard quote border */
+  margin-left: 0; /* Reset default browser margin */
+  margin-right: 0;
+  padding: 0 1em; /* Padding left and right */
+  color: #586069; /* Muted text color */
+  /* font-style: italic; */ /* Optional: make quote italic */
+  margin-bottom: 1em;
+}
+
+/* Paragraphs inside blockquotes often need less margin */
+.markdownContent blockquote p {
+  margin-bottom: 0.5em;
+}
+.markdownContent blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Images */
+.markdownContent img {
+  max-width: 100%; /* Make images responsive */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Allow centering with margin */
+  margin: 1em auto; /* Center images with vertical spacing */
+  border-radius: 4px; /* Optional: slightly rounded corners */
+  background-color: #fff; /* Background for transparent images */
+}
+
+/* Links */
+.markdownContent a {
+  color: #0366d6; /* Standard link blue */
+  text-decoration: none;
+}
+
+.markdownContent a:hover {
+  text-decoration: underline;
+}
+
+/* Bold Text */
+.markdownContent strong {
+  font-weight: 600; /* Use semi-bold */
+}
+
+/* Italic Text */
+.markdownContent em {
+  font-style: italic;
+}
+
+/* Horizontal Rule */
+.markdownContent hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #e1e4e8;
+  border: 0;
 }
