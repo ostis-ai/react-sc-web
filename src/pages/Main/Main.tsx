@@ -52,7 +52,7 @@ const Main = () => {
 
   return (
     <div className={styles.wrapper}>
-      <StyledSwitchScgScn tab={activeTab} onTabClick={onChange} />
+      {location.pathname !== routes.ABOUT && location.pathname !== routes.LIBRARY && <StyledSwitchScgScn tab={activeTab} onTabClick={onChange} />}
       <Outlet />
     </div>
   );
