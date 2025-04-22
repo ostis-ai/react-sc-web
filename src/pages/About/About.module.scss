@@ -77,30 +77,30 @@
  font-weight: inherit;
 }
 
-/* Unordered Lists - Using ::before for custom bullet styling */
+/* --- List Styling --- */
+
+/* Unordered Lists - Base Styling */
 .markdownContent ul {
-  list-style: none; /* Remove the default bullet */
-  padding-left: 2em; /* Maintain list indentation (adjust as needed) */
-  /* Other ul styles if needed */
+  list-style: none; /* Remove the default bullet for custom approach */
+  padding-left: 2em; /* Indentation for the list block (adjust as needed) */
+  margin-bottom: 1em;
   text-align: justify;
 }
 
-.markdownContent li {
+/* Unordered List Items - Specific styling for custom bullets */
+.markdownContent ul li {
   position: relative; /* Needed for ::before positioning */
   padding-left: 1.5em; /* Create space on the left for our custom bullet */
   margin-bottom: 0.5em; /* Standard margin between list items */
   text-align: justify; /* Keep list item text left-aligned */
 }
 
-.markdownContent li::before {
+/* Custom Bullet for Unordered List Items Only */
+.markdownContent ul li::before {
   content: '\2022'; /* Unicode character for the standard bullet • */
-  /* Or use other symbols like: '■' (square) or '★' (star) */
-
   position: absolute; /* Take the bullet out of the text flow */
   left: 0; /* Position it at the left within the li's padding */
   top: 0; /* Align to the top of the line (can be adjusted, e.g., 0.1em) */
-  /* Alternatively, use line-height for vertical centering if li's line-height is fixed */
-  /* line-height: 1.6; */ /* Should match li's line-height */
 
   /* --- Bullet size and appearance settings --- */
   font-size: 1.5em; /* Increase bullet size (adjust value) */
@@ -114,22 +114,30 @@
   text-align: center; /* Center the bullet character within its block */
 }
 
-/* Ordered Lists */
+/* Ordered Lists - Standard styling */
 .markdownContent ol {
-  /* Standard styles for ol */
-  list-style: decimal;
-  margin-left: 2em;
+  list-style: decimal; /* Use standard numbers */
+  margin-left: 2em; /* Adjust margin if needed */
   margin-bottom: 1em;
   padding-left: 1em; /* Ensure space for numbers */
-  text-align: justify;
+  text-align: justify; /* Lists are usually left-aligned */
 }
 
-/* List Items (General - applies to ol li as well if not overridden) */
-/* .markdownContent li { ... already defined above ... } */
+/* Ordered List Items - Standard styling (no custom bullet) */
+.markdownContent ol li {
+  margin-bottom: 0.5em; /* Standard margin between list items */
+  padding-left: 0.5em; /* Optional: add slight padding */
+  text-align: justify; /* Keep list item text left-aligned */
+  /* No ::before rule here, so it uses the default 'decimal' marker */
+}
+
+
+/* --- End of List Styling --- */
+
 
 /* Inline Code */
 .markdownContent p code,
-.markdownContent li code, /* Code within list items */
+.markdownContent li code, /* Code within ANY list item */
 .markdownContent h1 code, /* Add other parent elements as needed */
 .markdownContent em code,
 .markdownContent strong code {
