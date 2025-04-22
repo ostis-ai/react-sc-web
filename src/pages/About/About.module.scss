@@ -1,18 +1,27 @@
 /* Container for the Markdown content */
 .markdownContent {
-  padding: 1rem 4.5rem 1rem 1rem; /* Original padding-right kept, added others */
+  /* Make the content area wider (adjust as needed) */
+  max-width: 1200px;
+
+  /* Keep it centered */
+  margin: 0 auto;
+  margin-right: 100px;
+
+  /* Reduce and balance left/right padding (adjust as needed) */
+  padding: 1rem 2rem; /* 1rem top/bottom, 2rem left/right */
+
   height: 100%; /* Adjust as needed */
   overflow-y: auto; /* Enable vertical scroll if content overflows */
-  max-width: 980px; /* Optional: Set a max width like GitHub [2] */
-  margin: 0 auto; /* Optional: Center the content block */
   box-sizing: border-box;
   line-height: 1.6; /* Base line height */
+  font-family: Roboto;
+  font-size: 18px;
 }
 
 /* Paragraphs */
 .markdownContent p {
   margin-bottom: 1em;
-  /* text-align: justify; /* Uncomment if justified text is desired */
+  text-align: justify; /* Apply justified alignment */
 }
 
 /* Headings (h1-h6) */
@@ -26,16 +35,17 @@
   margin-bottom: 0.75em;
   font-weight: 600;
   line-height: 1.25;
+  text-align: left; /* Headings are usually left-aligned */
 }
 
 .markdownContent h1 {
-  font-size: 2em; /* Larger for main title */
+  font-size: 2em;
   border-bottom: 1px solid #eaecef; /* Optional separator */
   padding-bottom: 0.3em;
 }
 
 .markdownContent h2 {
-  font-size: 1.75em; /* User's original size */
+  font-size: 1.75em;
   border-bottom: 1px solid #eaecef; /* Optional separator */
   padding-bottom: 0.3em;
 }
@@ -57,7 +67,7 @@
   color: #586069; /* Often smaller and lighter */
 }
 
-/* Handle bold text within headings (prevents double bolding if heading is already bold) */
+/* Handle bold text within headings */
 .markdownContent h1 strong,
 .markdownContent h2 strong,
 .markdownContent h3 strong,
@@ -67,32 +77,59 @@
  font-weight: inherit;
 }
 
-
-/* Unordered Lists */
+/* Unordered Lists - Using ::before for custom bullet styling */
 .markdownContent ul {
-  list-style: disc;
-  margin-left: 2em; /* Keep user's indentation */
-  margin-bottom: 1em;
-  padding-left: 1em; /* Ensure space for bullets */
-  /* text-align: justify; /* Uncomment if justified text is desired */
+  list-style: none; /* Remove the default bullet */
+  padding-left: 2em; /* Maintain list indentation (adjust as needed) */
+  /* Other ul styles if needed */
+  text-align: justify;
+}
+
+.markdownContent li {
+  position: relative; /* Needed for ::before positioning */
+  padding-left: 1.5em; /* Create space on the left for our custom bullet */
+  margin-bottom: 0.5em; /* Standard margin between list items */
+  text-align: justify; /* Keep list item text left-aligned */
+}
+
+.markdownContent li::before {
+  content: '\2022'; /* Unicode character for the standard bullet • */
+  /* Or use other symbols like: '■' (square) or '★' (star) */
+
+  position: absolute; /* Take the bullet out of the text flow */
+  left: 0; /* Position it at the left within the li's padding */
+  top: 0; /* Align to the top of the line (can be adjusted, e.g., 0.1em) */
+  /* Alternatively, use line-height for vertical centering if li's line-height is fixed */
+  /* line-height: 1.6; */ /* Should match li's line-height */
+
+  /* --- Bullet size and appearance settings --- */
+  font-size: 1.5em; /* Increase bullet size (adjust value) */
+  font-weight: bold; /* Make the bullet bold (optional) */
+  color: #333; /* Bullet color (can be changed) */
+
+  /* --- Important for alignment --- */
+  display: inline-block; /* Helps with alignment */
+  width: 1em; /* Explicitly set width so text doesn't overlap */
+  margin-left: -0.75em; /* Nudge the bullet slightly left for nice placement (adjust value) */
+  text-align: center; /* Center the bullet character within its block */
 }
 
 /* Ordered Lists */
 .markdownContent ol {
+  /* Standard styles for ol */
   list-style: decimal;
   margin-left: 2em;
   margin-bottom: 1em;
   padding-left: 1em; /* Ensure space for numbers */
+  text-align: justify;
 }
 
-/* List Items */
-.markdownContent li {
-  margin-bottom: 0.5em; /* Space between items */
-}
+/* List Items (General - applies to ol li as well if not overridden) */
+/* .markdownContent li { ... already defined above ... } */
 
-/* Inline Code (within paragraphs, lists, etc.) */
+/* Inline Code */
 .markdownContent p code,
-.markdownContent li code,
+.markdownContent li code, /* Code within list items */
 .markdownContent h1 code, /* Add other parent elements as needed */
 .markdownContent em code,
 .markdownContent strong code {
@@ -116,6 +153,7 @@
   font-family: monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier;
   font-size: 0.85em;
   line-height: 1.45;
+  text-align: left; /* Code blocks should be left-aligned */
 }
 
 /* Code inside Code Blocks (reset inline styles) */
@@ -128,6 +166,7 @@
   font-size: inherit; /* Inherit size from pre */
   color: inherit; /* Inherit color from pre */
   line-height: inherit; /* Inherit line height */
+  text-align: left; /* Ensure code inside pre is left-aligned */
 }
 
 /* Blockquotes */
@@ -137,13 +176,13 @@
   margin-right: 0;
   padding: 0 1em; /* Padding left and right */
   color: #586069; /* Muted text color */
-  /* font-style: italic; */ /* Optional: make quote italic */
   margin-bottom: 1em;
 }
 
-/* Paragraphs inside blockquotes often need less margin */
+/* Paragraphs inside blockquotes */
 .markdownContent blockquote p {
   margin-bottom: 0.5em;
+  text-align: justify; /* Apply justified alignment here too */
 }
 .markdownContent blockquote p:last-child {
   margin-bottom: 0;
