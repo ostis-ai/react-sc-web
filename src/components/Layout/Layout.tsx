@@ -30,9 +30,9 @@ export const Layout: FC<IProps> = ({ children }) => {
         </Link>
       </div>
       <header className={styles.header}>
-        <div className={styles.languageWrapper}>
+        {/* <div className={styles.languageWrapper}>
           <Language />
-        </div>
+        </div> */}
       </header>
       <SidePanelWrapper>
         <SidePanel className={styles.sideBar} />
