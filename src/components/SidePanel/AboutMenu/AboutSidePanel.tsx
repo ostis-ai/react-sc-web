@@ -1,8 +1,8 @@
 import { Select, Spinner, useTranslate } from 'ostis-ui-lib';
 import { useCallback, useEffect, useState } from 'react';
+import SearchIcon from '@assets/images/Search.svg';
 import { SPINER_COLOR } from '@constants';
 
-import SearchIcon from '@assets/images/Search.svg';
 import { IMenuItem, getInitialMenuData } from './Menu';
 import { NavigationList } from './NavigationList';
 
@@ -108,7 +108,9 @@ export const AboutSidePanel = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         iconsLeft={<SearchIcon />}
         showOptions={false}
-        onBlur={(prev) => {setInputKey(prev => prev + 1);}}
+        onBlur={(prev) => {
+          setInputKey((prev) => prev + 1);
+        }}
       />
 
       {isLoading ? (

@@ -1,15 +1,12 @@
-import ReactMarkdown from 'react-markdown';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
+import ReactMarkdown from 'react-markdown';
+import { useDispatch, useSelector } from 'react-redux';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeKatex from 'rehype-katex';
-import { selectCurrentAboutText } from '@store/aboutSlice';
-import { clearAboutText } from '@store/aboutSlice';
-
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import AboutMetasystem from '@assets/docs/AboutMetasystem.md';
+import { selectCurrentAboutText, clearAboutText } from '@store/aboutSlice';
 
 import styles from './About.module.scss';
 
@@ -26,8 +23,8 @@ const About = () => {
   return (
     <>
       <div className={styles.markdownContent}>
-        <ReactMarkdown 
-          children={currentText} 
+        <ReactMarkdown
+          children={currentText}
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeKatex]}
         />

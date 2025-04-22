@@ -1,6 +1,5 @@
+import AboutStandard from '@assets/docs/AboutStandard.md';
 import { IRawMenuItem } from './Menu';
-
-import AboutStandard from '@assets/docs/AboutStandard.md'
 
 export const rawMenuItems: IRawMenuItem[] = [
   {

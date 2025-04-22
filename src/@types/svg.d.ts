@@ -3,7 +3,7 @@ declare module '*.svg' {
   export default FunctionComponent<SVGAttributes<SVGElement>>;
 }
 
-declare module "*.md" {
-  const value: string; // Treats the import as a path/URL string by default
+declare module '*.md' {
+  const value: string;
   export default value;
 }
