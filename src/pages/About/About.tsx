@@ -1,8 +1,9 @@
 import ReactMarkdown from 'react-markdown';
 import { useSelector } from 'react-redux';
 import remarkGfm from 'remark-gfm';
-import { AboutIntro } from '@components/SidePanel/AboutMenu/MenuData';
 import { selectCurrentAboutText } from '@store/aboutSlice';
+
+import AboutMetasystem from '@assets/docs/AboutMetasystem.md';
 
 import styles from './About.module.scss';
 
@@ -15,7 +16,7 @@ const About = () => {
         {currentText ? (
           <ReactMarkdown children={currentText} remarkPlugins={[remarkGfm]} />
         ) : (
-          <ReactMarkdown children={AboutIntro} remarkPlugins={[remarkGfm]} />
+          <ReactMarkdown children={AboutMetasystem} remarkPlugins={[remarkGfm]} />
         )}
       </div>
     </>

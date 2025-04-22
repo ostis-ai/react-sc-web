@@ -47,6 +47,10 @@ module.exports = {
         test: /.svg$/,
         use: ['@svgr/webpack'],
       },
+      {
+        test: /\.md$/,
+        use: 'raw-loader'
+      }
     ],
   },
   resolve: {
