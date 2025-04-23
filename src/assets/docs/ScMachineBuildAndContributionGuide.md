@@ -136,7 +136,7 @@ mkdir kb
 ./build/Release/bin/sc-machine -e build/Release/lib/extensions -s kb.bin
 ```
 
-Вы также можете проверить форматирование кода, собрать sc-machine с санитайзерами и другое. Чтобы узнать больше, перейдите на страницу [CMake flags](cmake_flags.md).
+Вы также можете проверить форматирование кода, собрать sc-machine с санитайзерами и другое. Чтобы узнать больше, перейдите на [страницу документации sc-машины, описывающую CMake флаги](https://ostis-ai.github.io/sc-machine/build/cmake_flags/).
 
 ## Начало разработки sc-machine с системными зависимостями
 
@@ -249,7 +249,7 @@ mkdir kb
 ./build/Release/bin/sc-machine -e build/Release/lib/extensions -s kb.bin
 ```
 
-Вы также можете проверить форматирование кода, собрать sc-machine с санитайзерами и другое. Чтобы узнать больше, перейдите на страницу [CMake flags](cmake_flags.md).
+Вы также можете проверить форматирование кода, собрать sc-machine с санитайзерами и другое. Чтобы узнать больше, перейдите на [страницу документации sc-машины, описывающую CMake флаги](https://ostis-ai.github.io/sc-machine/build/cmake_flags/).
 
 # Contributing
 
@@ -371,7 +371,7 @@ git rebase --abort
 - Обновите лог измений;
 - Обновите документацию;
 - Покройте новый функционал тестами;
-- Ваш код должен соответствовать [кодстайлу](docs/dev/codestyle.md).
+- Ваш код должен соответствовать [кодстайлу](https://ostis-ai.github.io/sc-machine/dev/codestyle/).
 
 ### Создание Pull Request
 
