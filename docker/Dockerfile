@@ -1,4 +1,4 @@
-FROM node:18-alpine as build
+FROM node:23-slim as build
 
 WORKDIR /sc-web
 COPY [ "package.json", "package-lock.json", "tsconfig.json", "./" ]
@@ -12,6 +12,6 @@ ARG API_URL
 
 RUN npm run build
 
-FROM caddy:2.7-alpine as final
+FROM caddy:2.10-alpine as final
 
 COPY --from=build /sc-web/build/ /sc-web/build/
