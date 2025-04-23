@@ -167,7 +167,7 @@ git rebase upstream/main
 git rebase --abort
 ```
 
-* Задать вопрос при возникновении проблем можно в [Element](https://app.element.io/index.html#/room/#ostis_tech_support:matrix.org).
+* Задать вопрос при возникновении проблем можно в [Telegram](https://t.me/+HrKrqkgj0-w3Njgy).
 
 ## Формат коммитов
 
