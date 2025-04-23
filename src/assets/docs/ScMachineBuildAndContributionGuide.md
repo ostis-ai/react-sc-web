@@ -2,7 +2,7 @@
 
 > Сборка sc-machine невозможна на Windows.
 
-Это руководство содержит краткую информацию для разработчиков, чтобы быстро начать работу с sc-machine. Вы всегда можете узнать больше о [системе сборки sc-machine](build_system.md).
+Это руководство содержит краткую информацию для разработчиков, чтобы быстро начать работу с sc-machine. Вы всегда можете узнать больше о системе сборки sc-machine на [соответствующей странице ее документации](https://ostis-ai.github.io/sc-machine/build/build_system/).
 
 ## Установка проекта
 
@@ -296,7 +296,7 @@ git rebase --abort
 
 ```
 
-* Или задайте вопрос в [Element](https://app.element.io/index.html#/room/#ostis_tech_support:matrix.org).
+* Или задайте вопрос в [Telegram](https://t.me/+HrKrqkgj0-w3Njgy).
 
 ## Формат сообщений коммитов
 
