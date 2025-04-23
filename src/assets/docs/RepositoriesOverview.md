@@ -34,9 +34,9 @@ tex2scs-translator представляет собой инструмент дл
 
 **Связанные репозитории:**
 - Требует [sc-mahcine](#sc-machine) в качестве бекенда;
-- Исползует [sc-web](https://github.com/ostis-ai/sc-web) и [react-sc-web](https://github.com/ostis-ai/react-sc-web) в качестве интерфейса;
+- Исползует [sc-web](#sc-web) и [react-sc-web](#react-sc-web) в качестве интерфейса;
 - Имеет в совем составе py-часть, использующую [py-sc-kpm](#py-sc-kpm) и [py-sc-client](#py-sc-client);
-- Использует протранслированный в `.scs` [ostis-standard](https://github.com/ostis-ai/ostis-standard) в качестве базы знаний;
+- Использует протранслированный в `.scs` [ostis-standard](#ostis-standard) в качестве базы знаний;
 - Также использует [sc-component-manager](#sc-component-manager) и [scp-machine](#scp-machine).
 
 <a id="sc-web"></a>
