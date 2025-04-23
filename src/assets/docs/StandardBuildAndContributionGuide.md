@@ -56,7 +56,7 @@ texmaker book.tex Contents/chapter0.tex
 
 Для корректного отображения библиографических источников и некоторых иных элементов требуется сборка с использованием LatexMk. Выбрать его можно в меню сборки как позано на изображении ниже:
 
-<img src="LatexMk_Texmaker.png" width="300"></img>
+<img src="/docsImages/LatexMk_Texmaker.png" width="300"></img>
 
 ### *TeXstudio*
 
@@ -82,7 +82,7 @@ texstudio book.tex Contents/chapter0.tex
 
 Для корректного отображения библиографических источников и некоторых иных элементов требуется сборка с использованием LatexMk. Выбрать его можно в меню tools как позано на изображении ниже:
 
-<img src="LatexMk_TexStudio.png" width="400"></img>
+<img src="/docsImages/LatexMk_TexStudio.png" width="400"></img>
 
 ### *IDE JetBrains*
 
@@ -106,7 +106,7 @@ sudo snap install pycharm-community --classic
 ](https://plugins.jetbrains.com/plugin/9473-texify-idea) и [PDF Viewer](https://plugins.jetbrains.com/plugin/14494-pdf-viewer).
 
 Сделать это можно в разделе плагинов в настройках, как показано на изображении ниже:
-<img src="JetBrains_plugins.png" width="450"></img>
+<img src="/docsImages/JetBrains_plugins.png" width="450"></img>
 
 Далее необходимо настроить конфигурацию:
 - Компилятор: `Latexmk`;
@@ -116,7 +116,7 @@ sudo snap install pycharm-community --classic
 - Выходная папка совпадет с папкой проекта.
 
 Пример настроенной конфигурации приведен на скрине:
-<img src="JetBrains_config.png" width="480"></img>
+<img src="/docsImages/JetBrains_config.png" width="480"></img>
 
 > Ctrl+Click - переход от кода к месту в pdf.
 

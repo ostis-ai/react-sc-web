@@ -166,4 +166,4 @@ Python реализация клиента для связи с sc-сервер�
 
 > Также на схеме не отражены зависимости [ostis-web-platform](#ostis-web-platform) ввиду того, что она не используется в последних версиях. Просмотреть их можно в [соответствующем пункте данного документа](#ostis-web-platform).
 
-<img src="ostis_ai_repos_dependecy_graph.png"></img>
+<img src="/docsImages/ostis_ai_repos_dependecy_graph.png"></img>
