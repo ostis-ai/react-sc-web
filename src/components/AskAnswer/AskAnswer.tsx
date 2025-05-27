@@ -1,27 +1,23 @@
-import { useToast, useTranslate } from 'ostis-ui-lib';
+import { useToast, useTranslate, Spinner, useLanguage } from 'ostis-ui-lib';
 
-import { useLocation } from 'react-router-dom';
 import { ChangeEvent, useEffect, useReducer, useState, useRef, useCallback } from 'react';
-
-import { Spinner, useLanguage } from 'ostis-ui-lib';
-import { SPINER_COLOR } from '@constants';
-import { AskElement } from './AskElement';
-import { TextItem } from '@components/AskAnswer/AskElement/AnswerText';
-
-import styles from './AskAnswer.module.scss';
-import { AskInput } from '@components/AskInput';
-
-import { getHintButtonHandler } from 'src/constants/hintButtons';
-import { getDescriptionById } from '@api/requests/getDescription';
 import { useDispatch, useSelector } from 'react-redux';
-import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
+import { useLocation } from 'react-router-dom';
+
+import { getDescriptionById } from '@api/requests/getDescription';
+import { TextItem } from '@components/AskAnswer/AskElement/AnswerText';
+import { AskInput } from '@components/AskInput';
 import { Notification } from '@components/Notification';
+import { SPINER_COLOR } from '@constants';
+import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
+import { getHintButtonHandler } from 'src/constants/hintButtons';
+import styles from './AskAnswer.module.scss';
+import { AskElement } from './AskElement';
 
 interface NavigateState {
   query?: string;
   isHintButton: boolean;
 }
-
 
 export const AskAnswer = () => {
   const state = useLocation().state as NavigateState;
@@ -59,17 +55,19 @@ export const AskAnswer = () => {
     }
 
     if (answer) {
-      const items: TextItem[] = [];
-      items.push({
-        type: 'normal',
-        content: answer,
-      });
+      const items: TextItem[] = [
+        {
+          type: 'normal',
+          content: answer,
+        },
+      ];
       dispatch(addInHistory({ query, answer: items }));
     } else {
       const items: TextItem[] = [];
       items.push({
         type: 'normal',
-        content: 'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
+        content:
+          'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
       });
       dispatch(addInHistory({ query, answer: items }));
       // dispatch(
