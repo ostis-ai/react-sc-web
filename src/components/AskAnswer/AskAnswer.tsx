@@ -59,17 +59,28 @@ export const AskAnswer = () => {
     }
 
     if (answer) {
-      dispatch(addInHistory({ query, answer }));
+      const items: TextItem[] = [];
+      items.push({
+        type: 'normal',
+        content: answer,
+      });
+      dispatch(addInHistory({ query, answer: items }));
     } else {
-      dispatch(
-        addInHistory({
-          query,
-          answer: translate({
-            ru: 'К сожалению, в настоящее время нет информации, соответствующей вашему вопросу в базе знаний. Приносим извинения за неудобства.',
-            en: 'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
-          }),
-        }),
-      );
+      const items: TextItem[] = [];
+      items.push({
+        type: 'normal',
+        content: 'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
+      });
+      dispatch(addInHistory({ query, answer: items }));
+      // dispatch(
+      //   addInHistory({
+      //     query,
+      //     answer: translate({
+      //       ru: 'К сожалению, в настоящее время нет информации, соответствующей вашему вопросу в базе знаний. Приносим извинения за неудобства.',
+      //       en: 'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
+      //     }),
+      //   }),
+      // );
     }
 
     setIsLoading(false);

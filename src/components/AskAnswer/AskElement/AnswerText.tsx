@@ -26,14 +26,14 @@ export interface TextItem {
   content: string;
 }
 
-// export const AnswerText: React.FC<{
-//   items: TextItem[];
-// }> = ({ items }) => {
-//   return (
-//     <div>
-//       {items.map((item, index) => (
-//         <CollapsibleText key={index} {...item} />
-//       ))}
-//     </div>
-//   );
-// };
+export const AnswerText: React.FC<{
+  items: TextItem[];
+}> = ({ items }) => {
+  return (
+    <div>
+      {items.map((item, index) => (
+        <CollapsibleText key={index} {...item} />
+      ))}
+    </div>
+  );
+};
