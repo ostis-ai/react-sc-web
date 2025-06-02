@@ -136,7 +136,7 @@ export const getDescriptionByAddr = async (elementAddr: number) => {
 // };
 
 export const getDescriptionById = async (id: string, lang: TLanguage) => {
-  console.log("k");
+  const languageNode = await getLanguage(lang);
   const action = new Action('action_reply_to_message');
   const constr = new ScConstruction();
   constr.createLink(ScType.LinkConst, new ScLinkContent(id, ScLinkContentType.String));
@@ -149,7 +149,7 @@ export const getDescriptionById = async (id: string, lang: TLanguage) => {
 
   const res = await client.templateGenerate(textLinkTemplate);
 
-  await action.addArgs(linkAddr);
+  await action.addArgs(linkAddr, languageNode);
 
   const answerAddr = await action.initiate();
 
