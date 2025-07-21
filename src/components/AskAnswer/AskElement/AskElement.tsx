@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styles from './AskElement.module.scss';
-//import { AnswerText } from '@components/AskAnswer/AskElement/AnswerText';
+import { AnswerText } from '@components/AskAnswer/AskElement/AnswerText';
 
 import AskAIMessageIcon from '@assets/images/AskAIMessageIcon.svg';
 
@@ -15,7 +15,7 @@ export const AskElement: FC<IProps> = ({ query, answer }) => {
       <div className={styles.elementQuery}>{query}</div>
       <div className={styles.elementAnswer}>
         <div>{<AskAIMessageIcon />}</div>
-        {/* <div><AnswerText items={answer} /></div> */}
+        { <div><AnswerText items={answer} /></div> }
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TextItem } from '@components/AskAnswer/AskElement/AnswerText';
 import { IRootState } from '@store/model';
 
 export interface IRequest {
   query: string;
-  answer: any;
+  answer: TextItem[];
 }
 
 interface IInitialState {
