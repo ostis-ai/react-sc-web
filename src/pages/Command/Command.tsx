@@ -1,15 +1,15 @@
-import { Spinner, useTranslate } from 'ostis-ui-lib';
 import { useCallback, useEffect, useState } from 'react';
 import { generatePath, useMatch, useNavigate } from 'react-router';
 import { appendHistoryItem } from '@api/requests/userHistory';
 import { isAxiosError } from '@api/utils';
-import { routes, SPINER_COLOR } from '@constants';
+import { routes } from '@constants';
 import { useDispatch, useErrorToast, useSelector } from '@hooks';
 import { selectArgAddrs } from '@store';
 import { selectUserAddr } from '@store/commonSlice';
 import { addRequest } from '@store/requestHistorySlice';
+import { Spinner, useTranslate } from 'ostis-ui-lib';
 
-import styles from './Command.module.scss';
+import styles from './Command.module.css';
 
 import { debouncedExecuteCommand } from './utils';
 
@@ -77,7 +77,7 @@ const Command = () => {
     executeCommand();
   }, [executeCommand]);
 
-  if (isLoading) return <Spinner className={styles.spiner} appearance={SPINER_COLOR} />;
+  if (isLoading) return <Spinner className={styles.spiner} appearance="#5896C0" />;
 
   return null;
 };

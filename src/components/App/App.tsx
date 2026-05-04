@@ -1,14 +1,15 @@
-import { isAxiosError } from 'axios';
 import { nanoid } from 'nanoid';
-import { CommandProvider, ContextMenuProvider, useScUtils, useTranslate } from 'ostis-ui-lib';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { getContext } from '@api/requests/requests';
+import { isAxiosError } from '@api/utils';
 import { Router } from '@components/Router';
 import { DEFAULT_COMMAND_SYSTEM_ID, DEFAULT_SYSTEM_ID } from '@constants';
+import { useAppDispatch } from '@hooks/redux';
 import { useErrorToast } from '@hooks/useErrorToast';
 import { useScNavigation } from '@hooks/useScNavigation';
-import { addArg, selectArgs } from '@store/index';
+import { addArg, selectArgs, fetchUserByToken } from '@store/index';
+import { CommandProvider, ContextMenuProvider, useScUtils, useTranslate } from 'ostis-ui-lib';
 
 export const App = () => {
   const { goToActiveFormatCommand } = useScNavigation();
@@ -18,8 +19,12 @@ export const App = () => {
   const arrArgs = useSelector(selectArgs);
 
   const addError = useErrorToast();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const translate = useTranslate();
+
+  useEffect(() => {
+    dispatch(fetchUserByToken());
+  }, [dispatch]);
 
   const onExecuteCommand = useCallback((addr?: number | string, command?: number | string) => {
     goToActiveFormatCommand(addr ?? DEFAULT_SYSTEM_ID, command ?? DEFAULT_COMMAND_SYSTEM_ID);

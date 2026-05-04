@@ -1,11 +1,11 @@
 import classNames from 'classnames';
-import { ScLangText, ScTag } from 'ostis-ui-lib';
 import { useMatch } from 'react-router';
 import { routes } from '@constants';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { IRequest } from '@store/requestHistorySlice';
+import { ScLangText, ScTag } from 'ostis-ui-lib';
 
-import styles from './HistoryPanel.module.scss';
+import styles from './HistoryPanel.module.css';
 
 import { Skeleton } from './Skeleton';
 

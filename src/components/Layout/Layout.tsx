@@ -3,13 +3,15 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Logo from '@assets/images/Logo.svg';
 import { Language } from '@components/Language';
+import { ProfileDropdown } from '@components/ProfileDropdown';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
+import { ThemeToggle } from '@components/ThemeToggle';
 
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
-import styles from './Layout.module.scss';
+import styles from './Layout.module.css';
 
 export interface IProps {
   children?: ReactNode;
@@ -30,7 +32,9 @@ export const Layout: FC<IProps> = ({ children }) => {
         </Link>
       </div>
       <header className={styles.header}>
-        <div className={styles.languageWrapper}>
+        <div className={styles.headerControls}>
+          <ProfileDropdown />
+          <ThemeToggle />
           <Language />
         </div>
       </header>

@@ -1,11 +1,11 @@
 import classNames from 'classnames';
-import { useTranslate } from 'ostis-ui-lib';
 import { Component, ErrorInfo, ReactNode } from 'react';
 import ArrowIcon from '@assets/images/goBack.svg';
 import { Button } from '@components/Button';
 import { useBackNavigation } from '@hooks/useBackNavigation';
+import { useTranslate } from 'ostis-ui-lib';
 
-import styles from './ErrorBoundary.module.scss';
+import styles from './ErrorBoundary.module.css';
 
 interface Props {
   children?: ReactNode;

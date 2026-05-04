@@ -1,20 +1,10 @@
-import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 import { generatePath, Outlet, useLocation, useMatch, useNavigate } from 'react-router';
-import { styled } from 'styled-components';
 import { routes } from '@constants';
 import { useDispatch } from '@hooks/redux';
 import { setFormat } from '@store/commonSlice';
+import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 
-import styles from './Main.module.scss';
-
-const StyledSwitchScgScn = styled(SwitchScgScn)`
-  position: absolute;
-
-  right: 24px;
-  top: 0;
-
-  z-index: 5;
-`;
+import styles from './Main.module.css';
 
 const Main = () => {
   const commandMatch = useMatch(routes.COMMAND);
@@ -52,7 +42,9 @@ const Main = () => {
 
   return (
     <div className={styles.wrapper}>
-      <StyledSwitchScgScn tab={activeTab} onTabClick={onChange} />
+      <div className={styles.switch}>
+        <SwitchScgScn tab={activeTab} onTabClick={onChange} />
+      </div>
       <Outlet />
     </div>
   );
