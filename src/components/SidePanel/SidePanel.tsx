@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getHistory } from '@api/requests/userHistory';
+import { scUtils } from '@api';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
 import Sections from '@assets/images/Sections.svg';
@@ -10,10 +10,12 @@ import { Accordion } from '@components/Accordion';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { HistoryPanel } from '@components/HistoryPanel';
 import { SearchField } from '@components/SearchField';
+import { FEATURES } from '@constants/features';
 import { useSelector } from '@hooks';
 import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
-import styles from './SidePanel.module.scss';
+import { DecompositionPanel, ScTag, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import styles from './SidePanel.module.css';
 import { SwitchMode } from './SwitchMode';
 
 interface IProps {
@@ -30,18 +32,43 @@ export const SidePanel: FC<IProps> = ({ className }) => {
   const translate = useTranslate();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [sectionAddr, setSectionAddr] = useState<number | null>(null);
+  const [historyAddr, setHistoryAddr] = useState<number | null>(null);
 
   const requests = useSelector(selectRequests);
+
+  useEffect(() => {
+    const fetchAddrs = async () => {
+      try {
+        const { uiStartScElement, uiSection, uiHistory } = await scUtils.searchKeynodes(
+          'ui_start_sc_element',
+          'ui_section',
+          'ui_history'
+        );
+        if (uiSection?.value) setSectionAddr(uiSection.value);
+        if (uiHistory?.value) setHistoryAddr(uiHistory.value);
+      } catch (e) {
+        console.error('Failed to get addrs:', e);
+      }
+    };
+    fetchAddrs();
+  }, []);
 
   useEffect(() => {
     if (!user) return;
     setIsLoading(true);
     (async () => {
-      const history = await getHistory(user.sc_addr);
+      try {
+        const history = await getHistory(user.sc_addr);
 
-      if (!history) return;
-      dispatch(setRequests(history));
-      setIsLoading(false);
+        if (history) {
+          dispatch(setRequests(history));
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, [dispatch, user]);
 
@@ -60,38 +87,78 @@ export const SidePanel: FC<IProps> = ({ className }) => {
           <SwitchMode />
 
           <div>
-            <Accordion
-              header={translate({ ru: 'Разделы', en: 'Sections' })}
-              leftIcon={<Sections />}
-              rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
-              onRightClick={onAddClick}
-              expanded
-            >
-              <ErrorBoundary
-                title={translate({
-                  ru: 'Ошибка получения декомпозиции',
-                  en: 'Error requesting a decomposition',
-                })}
-                paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
-                className={styles.errorBoundary}
+            {FEATURES.enableContextMenuOnHistory && sectionAddr ? (
+              <ScTag addr={sectionAddr} showMenu={true}>
+                <Accordion
+                  header={translate({ ru: 'Разделы', en: 'Sections' })}
+                  leftIcon={<Sections />}
+                  rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
+                  onRightClick={onAddClick}
+                  expanded
+                >
+                  <ErrorBoundary
+                    title={translate({
+                      ru: 'Ошибка получения декомпозиции',
+                      en: 'Error requesting a decomposition',
+                    })}
+                    paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
+                    className={styles.errorBoundary}
+                  >
+                    {<DecompositionPanel className="dark-decomposition" />}
+                  </ErrorBoundary>
+                </Accordion>
+              </ScTag>
+            ) : (
+              <Accordion
+                header={translate({ ru: 'Разделы', en: 'Sections' })}
+                leftIcon={<Sections />}
+                rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
+                onRightClick={onAddClick}
+                expanded
               >
-                {<DecompositionPanel />}
-              </ErrorBoundary>
-            </Accordion>
+                <ErrorBoundary
+                  title={translate({
+                    ru: 'Ошибка получения декомпозиции',
+                    en: 'Error requesting a decomposition',
+                  })}
+                  paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
+                  className={styles.errorBoundary}
+                >
+                  {<DecompositionPanel className="dark-decomposition" />}
+                </ErrorBoundary>
+              </Accordion>
+            )}
           </div>
           <div className={styles.decompositionAndHistoryPanels}>
-            <Accordion header={translate({ ru: 'История', en: 'History' })} leftIcon={<Clock />}>
-              <ErrorBoundary
-                title={translate({
-                  ru: 'Ошибка получения истории',
-                  en: 'Error requesting a history',
-                })}
-                paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
-                className={styles.errorBoundary}
-              >
-                <HistoryPanel requests={requests} isLoading={isLoading} />
-              </ErrorBoundary>
-            </Accordion>
+            {FEATURES.enableContextMenuOnHistory && historyAddr ? (
+              <ScTag addr={historyAddr} showMenu={true}>
+                <Accordion header={translate({ ru: 'История', en: 'History' })} leftIcon={<Clock />}>
+                  <ErrorBoundary
+                    title={translate({
+                      ru: 'Ошибка получения истории',
+                      en: 'Error requesting a history',
+                    })}
+                    paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
+                    className={styles.errorBoundary}
+                  >
+                    <HistoryPanel requests={requests} isLoading={isLoading} />
+                  </ErrorBoundary>
+                </Accordion>
+              </ScTag>
+            ) : (
+              <Accordion header={translate({ ru: 'История', en: 'History' })} leftIcon={<Clock />}>
+                <ErrorBoundary
+                  title={translate({
+                    ru: 'Ошибка получения истории',
+                    en: 'Error requesting a history',
+                  })}
+                  paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
+                  className={styles.errorBoundary}
+                >
+                  <HistoryPanel requests={requests} isLoading={isLoading} />
+                </ErrorBoundary>
+              </Accordion>
+            )}
           </div>
         </div>
       </div>

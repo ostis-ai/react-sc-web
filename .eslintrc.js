@@ -9,11 +9,13 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
   ],
-  ignorePatterns: ['node_modules', 'build', 'webpack'],
+  ignorePatterns: ['node_modules', 'build', 'webpack', 'src/vendor'],
   rules: {
     'arrow-parens': 'warn',
     'no-console': 'warn',
     'import/no-unresolved': 'error',
+    'import/default': 'off',
+    'import/namespace': 'off',
     'import/order': [
       'warn',
       {
@@ -35,6 +37,9 @@ module.exports = {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
     'import/resolver': {
+      webpack: {
+        config: './webpack/webpack.config.js',
+      },
       typescript: {
         project: './tsconfig.json',
       },
