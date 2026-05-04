@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { Field, IFieldProps } from '@components/Field';
-import { Input, IProps as IProps } from '@components/input/Input';
+import { Input, IProps as IProps } from '@components/Input/Input';
 
 export const InputField = forwardRef<HTMLInputElement, IProps & IFieldProps>((props, ref) => {
   const { label, extraText, className, ...restProps } = props;
@@ -11,5 +11,6 @@ export const InputField = forwardRef<HTMLInputElement, IProps & IFieldProps>((pr
     </Field>
   );
 });
+
 
 InputField.displayName = 'InputField';

@@ -1,4 +1,4 @@
-import { IScnNode, Scn as ScnBase, useToast, useTranslate } from 'ostis-ui-lib';
+import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { doCommand } from '@api/requests/command';
@@ -17,9 +17,10 @@ import {
 } from '@constants';
 import { useErrorToast } from '@hooks/useErrorToast';
 import { useLazyTimeout } from '@hooks/useTimeout';
+import { IScnNode, Scn as ScnBase, useToast, useTranslate } from 'ostis-ui-lib';
 
-import styles from './Scn.module.scss';
-import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.scss';
+import styles from './Scn.module.css';
+import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.css';
 
 const timeoutText = {
   ru: (
@@ -158,7 +159,7 @@ export const Scn = ({ action }: IProps) => {
       renderRequestPanel={renderRequestPanel}
       onInitiateAction={onInitiateAction}
       action={action}
-      className={styles.container}
+      className={classNames(styles.container, 'dark-scn')}
     />
   );
 };

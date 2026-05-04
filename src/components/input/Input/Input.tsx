@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import { InputStatus, refSetter } from 'ostis-ui-lib';
 import {
   FocusEvent,
   forwardRef,
@@ -10,10 +9,11 @@ import {
   useRef,
   useState,
 } from 'react';
+import { InputStatus, refSetter } from 'ostis-ui-lib';
 
 import AuthPassword from './assets/authorization-password.svg';
 import AuthPasswordCrossed from './assets/eyeCrossed.svg';
-import styles from './Input.module.scss';
+import styles from './Input.module.css';
 
 export interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   iconLeft?: ReactNode;

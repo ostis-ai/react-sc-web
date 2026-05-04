@@ -1,20 +1,20 @@
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider as ScThemeProvider } from 'styled-components';
+import { App } from '@components/App';
+import { store } from '@store/index';
+import { ThemeProvider, useThemeContext } from '@themes/index';
 import {
   LanguageProvider,
   ClientProvider,
   ScUtilsProvider,
   TLanguage,
   ToastProvider,
-  defaultLightTheme,
 } from 'ostis-ui-lib';
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
-import { App } from '@components/App';
-import { store } from '@store/index';
 
-import './assets/styles/index.scss';
+import './assets/styles/index.css';
 import { client } from './api';
 
 const element = document.getElementById('root')!;
@@ -27,6 +27,16 @@ const getDefaultLanguage = () => {
   return langInLocalStorage || defaultLang;
 };
 
+const AppWithTheme = () => {
+  const { styledTheme } = useThemeContext();
+
+  return (
+    <ScThemeProvider theme={styledTheme}>
+      <App />
+    </ScThemeProvider>
+  );
+};
+
 root.render(
   <StrictMode>
     <LanguageProvider defaultLanguage={getDefaultLanguage()}>
@@ -35,8 +45,8 @@ root.render(
           <ScUtilsProvider>
             <ToastProvider>
               <BrowserRouter>
-                <ThemeProvider theme={defaultLightTheme}>
-                  <App />
+                <ThemeProvider>
+                  <AppWithTheme />
                 </ThemeProvider>
               </BrowserRouter>
             </ToastProvider>

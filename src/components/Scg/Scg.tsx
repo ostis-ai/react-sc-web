@@ -1,5 +1,5 @@
-import { langToKeynode, snakeToCamelCase, useBooleanState, useLanguage, Popup } from 'ostis-ui-lib';
-import { FC, useEffect, useRef, useState } from 'react';
+import classNames from 'classnames';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { scUtils } from '@api';
 import { removeFromCache } from '@api/requests/scn';
@@ -7,10 +7,18 @@ import { ConfirmAction } from '@components/ConfirmAction';
 import { scgUrl } from '@constants';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { addRequest } from '@store/requestHistorySlice';
+import {
+  langToKeynode,
+  snakeToCamelCase,
+  useBooleanState,
+  useLanguage,
+  Popup,
+  Spinner,
+} from 'ostis-ui-lib';
 import { confirmClearScenePopupContent, confirmDeletePopupContent } from './constants';
-import { Frame, StyledSpinner, Wrap } from './styled';
+import styles from './Scg.module.css';
 
-import { EWindowEvents, ITarget, IWindowEventData } from './types';
+import { EWindowEvents, IWindowEventData } from './types';
 
 interface IProps {
   action?: number;
@@ -23,28 +31,30 @@ const SPINER_COLOR = '#5896C0';
 export const Scg: FC<IProps> = ({ action, className, show = false }) => {
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [targetNode] = useState<ITarget | null>(null);
   const [isConfirmDeletePopupShown, showConfirmDeletePopup, hideConfirmDeletePopup] =
     useBooleanState(false);
   const [isConfirmClearScenePopupShown, showConfirmClearScenePopup, hideConfirmClearScenePopup] =
     useBooleanState(false);
   const ref = useRef<HTMLIFrameElement>(null);
-  const targetRef = useRef<HTMLElement | null>(null);
   const lang = useLanguage();
   const dispatch = useDispatch();
   const scNavigation = useScNavigation();
 
-  const onCommandExecuted = (data: IWindowEventData) => {
-    if (!data.payload || !data.payload['state'] || !data.payload['response']) return;
-    dispatch(addRequest({ action: Number(data.payload.response.action) }));
-    scNavigation.goToActiveFormatAction(data.payload.response.action);
-  };
+  const onCommandExecuted = useCallback(
+    (data: IWindowEventData) => {
+      if (!data.payload || !data.payload['state'] || !data.payload['response']) return;
+      dispatch(addRequest({ action: Number(data.payload.response.action) }));
+      scNavigation.goToActiveFormatAction(data.payload.response.action);
+    },
+    [dispatch, scNavigation],
+  );
+
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
 
-    window.onmessage = function (event: MessageEvent<IWindowEventData>) {
-      switch (event.data.type) {
+    const handleMessage = (event: MessageEvent<IWindowEventData>) => {
+      switch (event.data?.type) {
         case EWindowEvents.onInitializationFinished:
           setIsReady(true);
           setIsLoading(false);
@@ -60,7 +70,18 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
           break;
       }
     };
-  }, [action]);
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [
+    action,
+    onCommandExecuted,
+    showConfirmDeletePopup,
+    showConfirmClearScenePopup,
+  ]);
 
   useEffect(() => {
     (async () => {
@@ -77,8 +98,6 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
         );
     })();
   }, [isReady, action, show, lang]);
-
-  targetRef.current = targetNode?.element || null;
 
   return (
     <>
@@ -112,10 +131,10 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
           />
         </Popup>
       )}
-      <Wrap show={show} className={className}>
-        {isLoading && <StyledSpinner appearance={SPINER_COLOR} />}
-        <Frame src={scgUrl} ref={ref} title="SCg codes" />
-      </Wrap>
+      <div className={classNames(styles.wrap, show && styles.wrapShow, className)}>
+        {isLoading && <Spinner className={styles.spinner} appearance={SPINER_COLOR} />}
+        <iframe className={styles.frame} src={scgUrl} ref={ref} title="SCg codes" />
+      </div>
     </>
   );
 };
