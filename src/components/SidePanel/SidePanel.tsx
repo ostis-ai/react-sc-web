@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getHistory } from '@api/requests/userHistory';
@@ -13,7 +12,8 @@ import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
 import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
-import styles from './SidePanel.module.scss';
+import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
+import styles from './SidePanel.module.css';
 import { SwitchMode } from './SwitchMode';
 
 interface IProps {
@@ -37,11 +37,17 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     if (!user) return;
     setIsLoading(true);
     (async () => {
-      const history = await getHistory(user.sc_addr);
+      try {
+        const history = await getHistory(user.sc_addr);
 
-      if (!history) return;
-      dispatch(setRequests(history));
-      setIsLoading(false);
+        if (history) {
+          dispatch(setRequests(history));
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, [dispatch, user]);
 
@@ -75,7 +81,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                 className={styles.errorBoundary}
               >
-                {<DecompositionPanel />}
+                {<DecompositionPanel className="dark-decomposition" />}
               </ErrorBoundary>
             </Accordion>
           </div>

@@ -1,6 +1,7 @@
+import classNames from 'classnames';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 
-import { StyledButton } from './styled';
+import styles from './Button.module.css';
 
 export type TAppearance = 'primaryLarge' | 'primaryAction' | 'secondaryAction';
 interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,8 +17,11 @@ export const Button = ({
   ...restProps
 }: IButton) => {
   return (
-    <StyledButton appearance={appearance} {...restProps} className={className}>
+    <button
+      className={classNames(styles.button, styles[`button_${appearance}`], className)}
+      {...restProps}
+    >
       {children}
-    </StyledButton>
+    </button>
   );
 };
