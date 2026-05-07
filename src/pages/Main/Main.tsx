@@ -1,20 +1,10 @@
-import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 import { generatePath, Outlet, useLocation, useMatch, useNavigate } from 'react-router';
-import { styled } from 'styled-components';
 import { routes } from '@constants';
 import { useDispatch } from '@hooks/redux';
 import { setFormat } from '@store/commonSlice';
+import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 
-import styles from './Main.module.scss';
-
-const StyledSwitchScgScn = styled(SwitchScgScn)`
-  position: absolute;
-
-  right: 24px;
-  top: 0;
-
-  z-index: 5;
-`;
+import styles from './Main.module.css';
 
 const Main = () => {
   const commandMatch = useMatch(routes.COMMAND);
@@ -26,6 +16,15 @@ const Main = () => {
   const dispatch = useDispatch();
 
   const activeTab = location.pathname.includes('scg') ? 'scg' : 'scn';
+  const switchTooltip =
+    activeTab === 'scg'
+      ? 'Текущий режим SCg-код. Нажмите, чтобы переключиться на SCn-код'
+      : 'Текущий режим SCn-код. Нажмите, чтобы переключиться на SCg-код';
+  const libraryPath = routes.LIBRARY.endsWith('/') ? routes.LIBRARY.slice(0, -1) : routes.LIBRARY;
+  const isLibraryRoute =
+    location.pathname === routes.LIBRARY ||
+    location.pathname === libraryPath ||
+    location.pathname.startsWith(`${libraryPath}/`);
 
   const onChange = (newActiveTab: TScLanguageTab) => {
     dispatch(setFormat(newActiveTab));
@@ -52,7 +51,11 @@ const Main = () => {
 
   return (
     <div className={styles.wrapper}>
-      <StyledSwitchScgScn tab={activeTab} onTabClick={onChange} />
+      {!isLibraryRoute && (
+        <div className={styles.switch} title={switchTooltip} aria-label={switchTooltip}>
+          <SwitchScgScn tab={activeTab} onTabClick={onChange} />
+        </div>
+      )}
       <Outlet />
     </div>
   );

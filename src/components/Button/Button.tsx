@@ -1,6 +1,7 @@
+import classNames from 'classnames';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 
-import { StyledButton } from './styled';
+import styles from './Button.module.css';
 
 export type TAppearance = 'primaryLarge' | 'primaryAction' | 'secondaryAction';
 interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -15,9 +16,19 @@ export const Button = ({
   className,
   ...restProps
 }: IButton) => {
+  const stringChildren = typeof children === 'string' ? children.trim() : '';
+  const defaultTooltip = stringChildren || undefined;
+  const title = restProps.title ?? defaultTooltip;
+  const ariaLabel = restProps['aria-label'] ?? defaultTooltip;
+
   return (
-    <StyledButton appearance={appearance} {...restProps} className={className}>
+    <button
+      className={classNames(styles.button, styles[`button_${appearance}`], className)}
+      title={title}
+      aria-label={ariaLabel}
+      {...restProps}
+    >
       {children}
-    </StyledButton>
+    </button>
   );
 };

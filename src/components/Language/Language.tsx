@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { TLanguage, useLanguageContext } from 'ostis-ui-lib';
 
-import styles from './language.module.scss';
+import styles from './language.module.css';
 
 export const Language = () => {
   const { lang, setLang } = useLanguageContext();
@@ -19,6 +19,7 @@ export const Language = () => {
             [styles.activeLanguage]: lang === 'en',
           })}
           onClick={setLanguage('en')}
+          title="Switch interface language to English"
         >
           En
         </span>
@@ -28,6 +29,7 @@ export const Language = () => {
             [styles.activeLanguage]: lang === 'ru',
           })}
           onClick={setLanguage('ru')}
+          title="Переключить язык интерфейса на русский"
         >
           Ru
         </span>

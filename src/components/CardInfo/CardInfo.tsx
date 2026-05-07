@@ -1,5 +1,4 @@
-import { langToKeynode, useLanguage } from 'ostis-ui-lib';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ScAddr } from 'ts-sc-client';
 import {
   searchComponentMainIdentifier,
@@ -14,7 +13,8 @@ import {
 import CloseIcon from '@assets/images/CloseIcon.svg';
 import { CardComponentType } from '@components/Card/types';
 import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
-import styles from './CardInfo.module.scss';
+import { langToKeynode, useLanguage } from 'ostis-ui-lib';
+import styles from './CardInfo.module.css';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
 
@@ -38,6 +38,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>();
 
   const lang = useLanguage();
+
   useEffect(() => {
     if (type) {
       setLogoComponent(getCardLogo(type));
@@ -51,8 +52,8 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
     }
   }, [installMethod]);
 
-  const fetchComponent = async (component: ScAddr) => {
-    try {
+  const fetchComponent = useCallback(
+    async (component: ScAddr) => {
       const [
         mainIdentifier,
         type,
@@ -81,15 +82,13 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
       setNote(note ? (note as string) : '...');
       setDependencies(dependencies);
       setAuthor(authors ? authors.join(', ') : '...');
-    } catch (error) {
-      console.error('Error fetching component specification:', error);
-      throw error;
-    }
-  };
+    },
+    [lang],
+  );
 
   useEffect(() => {
     fetchComponent(scAddr);
-  });
+  }, [scAddr, fetchComponent]);
 
   const handleWrapperClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -97,7 +96,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   return (
     <div
       className={styles.container}
-      onClick={(event) => {
+      onClick={() => {
         setShowComponent(undefined);
       }}
     >
@@ -109,7 +108,13 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
               <div className={styles.title}>{name}</div>
               <div className={styles.tool}>
                 <div className={subtitleClassName}>{type}</div>
-                <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
+                <button
+                  className={styles.closeButton}
+                  onClick={() => setShowComponent(undefined)}
+                  type="button"
+                  title="Закрыть карточку компонента"
+                  aria-label="Закрыть карточку компонента"
+                >
                   <CloseIcon className={styles.closeIcon} />
                 </button>
               </div>
@@ -130,8 +135,10 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
               <div className={styles.blockName}>Зависимости компонента</div>
               {Array.from(dependencies.entries()).map(([scAddr, value]) => (
                 <div
+                  key={scAddr.value}
                   className={styles.componentDependencies}
                   onClick={() => setShowComponent(scAddr)}
+                  title={`Открыть зависимость: ${value}`}
                 >
                   {value}
                 </div>

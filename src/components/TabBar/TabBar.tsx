@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { FC } from 'react';
 
-import styles from './TabBar.module.scss';
+import styles from './TabBar.module.css';
 
 import { ITab } from './types';
 
@@ -23,6 +23,8 @@ export const TabBar: FC<IProps> = ({ className, activeTab, tabs, onChange }) => 
           })}
           key={tab.value}
           onClick={() => onChange(tab.value)}
+          title={tab.title}
+          aria-label={tab.title}
         >
           <div className={styles.tabWrapper}>
             <div

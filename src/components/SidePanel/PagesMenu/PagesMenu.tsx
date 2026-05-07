@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import styles from './PagesMenu.module.scss';
+import styles from './PagesMenu.module.css';
 
 export interface IProps {
   icon: ReactNode;
@@ -10,7 +10,7 @@ export interface IProps {
 
 export const PagesMenu = ({ icon, text, onClick }: IProps) => {
   return (
-    <div className={styles.pagesMenu} onClick={onClick}>
+    <div className={styles.pagesMenu} onClick={onClick} title={text} aria-label={text}>
       {icon}
       {text}
     </div>

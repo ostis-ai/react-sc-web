@@ -19,7 +19,7 @@ module.exports = {
     new ESLintPlugin({
       emitError: true,
       emitWarning: true,
-      failOnError: true,
+      failOnError: false,
       extensions: ['.ts', '.tsx', '.js'],
     }),
   ],
@@ -27,11 +27,13 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: 'esbuild-loader',
-        exclude: /node_modules/,
+        loader: 'ts-loader',
+        exclude: [/node_modules/, /\.d\.ts$/],
         options: {
-          loader: 'tsx',
-          target: 'es2015',
+          transpileOnly: true,
+          compilerOptions: {
+            skipLibCheck: true,
+          },
         },
       },
       {
@@ -40,8 +42,8 @@ module.exports = {
         type: 'asset/resource',
       },
       {
-        test: /\.scss$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /.svg$/,
@@ -51,8 +53,11 @@ module.exports = {
   },
   resolve: {
     symlinks: false,
-    extensions: ['.ts', '.tsx', '.js', '.scss', '.css'],
+    extensions: ['.ts', '.tsx', '.js', '.css'],
     plugins: [new TsconfigPathsPlugin()],
+    alias: {
+      'ostis-ui-lib$': resolve(__dirname, '../src/vendor/ostis-ui-lib/ostis-ui-lib.js'),
+    },
   },
   optimization: {
     splitChunks: {

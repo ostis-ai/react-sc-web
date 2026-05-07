@@ -1,10 +1,10 @@
 import classNames from 'classnames';
-import { useTranslate } from 'ostis-ui-lib';
 import { useLocation } from 'react-router';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { Scg } from '@components/Scg';
+import { useTranslate } from 'ostis-ui-lib';
 
-import styles from './ScgPage.module.scss';
+import styles from './ScgPage.module.css';
 
 export const ScgPage = () => {
   const location = useLocation();
@@ -31,7 +31,18 @@ export const ScgPage = () => {
       })}
       shouldReturn
     >
-      <Scg className={styles.scg} action={action} show={!!scgMatch} />
+      <div
+        title={translate({
+          ru: 'Область отображения и редактирования результата в формате SCg-кода',
+          en: 'Result view and edit area in SCg format',
+        })}
+        aria-label={translate({
+          ru: 'Область отображения SCg-кода',
+          en: 'SCg code view area',
+        })}
+      >
+        <Scg className={styles.scg} action={action} show={!!scgMatch} />
+      </div>
     </ErrorBoundary>
   );
 };

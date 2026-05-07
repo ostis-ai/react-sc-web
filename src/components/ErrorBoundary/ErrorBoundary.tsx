@@ -1,11 +1,11 @@
 import classNames from 'classnames';
-import { useTranslate } from 'ostis-ui-lib';
 import { Component, ErrorInfo, ReactNode } from 'react';
 import ArrowIcon from '@assets/images/goBack.svg';
 import { Button } from '@components/Button';
 import { useBackNavigation } from '@hooks/useBackNavigation';
+import { useTranslate } from 'ostis-ui-lib';
 
-import styles from './ErrorBoundary.module.scss';
+import styles from './ErrorBoundary.module.css';
 
 interface Props {
   children?: ReactNode;
@@ -29,7 +29,12 @@ function GoBack() {
 
   const translate = useTranslate();
   return (
-    <Button appearance="secondaryAction" className={styles.backButton} onClick={goBack}>
+    <Button
+      appearance="secondaryAction"
+      className={styles.backButton}
+      onClick={goBack}
+      title={translate({ ru: 'Вернуться к предыдущему действию', en: 'Go back' })}
+    >
       <ArrowIcon />
       {translate({ ru: 'Вернуться к предыдущему действию', en: 'Go back' })}
     </Button>

@@ -8,17 +8,35 @@ module.exports = merge(config, {
     minimize: false,
   },
   devServer: {
+    host: '0.0.0.0',
     port: process.env.PORT? process.env.PORT : '3000',
     hot: true,
     open: true,
     liveReload: true,
     historyApiFallback: true,
+    allowedHosts: 'all',
+    proxy: [
+      {
+        context: ['/api'],
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    ],
+    watchFiles: {
+      options: {
+        usePolling: true,
+      },
+    },
     client: {
       overlay: {
         errors: true,
         warnings: false,
       },
     },
+  },
+  watchOptions: {
+    poll: 1000,
+    aggregateTimeout: 300,
   },
   output: {
     publicPath: '/',
