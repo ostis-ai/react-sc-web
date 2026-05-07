@@ -11,14 +11,16 @@ export const appendHistoryItem = async (itemAddr: number, userAddr: number) => {
   return await doCommand(uiMenuViewAddActionToUserHistory.value, userAddr, itemAddr);
 };
 
-export const getHistory = async (_: number) => {
+export const getHistory = async () => {
   const { uiMenuViewGetUserActionHistory } = await scUtils.searchKeynodes(
     'ui_menu_view_get_user_action_history',
   );
 
   const res = await doCommand(uiMenuViewGetUserActionHistory.value);
 
-  if (isAxiosError(res)) return null;
+  if (isAxiosError(res)) {
+    return [];
+  }
 
   const actionNode = new ScAddr(res.data.action);
 
